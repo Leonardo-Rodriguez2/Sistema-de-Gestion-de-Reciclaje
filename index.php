@@ -1,63 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoCusco - Servicio de Recolección Corporativa y Residencial</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    .hero-section {
-      background: linear-gradient(rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9)), url('https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-      padding: 100px 0;
-      color: white;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
-    .hero-section h1 { font-weight: 700; font-size: 3rem; }
-    .features-section { background-color: #f8f9fa; padding: 80px 0; }
-    
-    /* Cómo funciona */
-    .steps-section { padding: 80px 0; background-color: white; }
-    .step-circle {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background-color: #ECFDF5;
-      color: #10B981;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem; font-weight: bold;
-      margin: 0 auto 20px;
-      border: 3px solid #10B981;
-    }
-    
-    /* Por qué elegirnos */
-    .why-choose-us { background-color: #064E3B; color: white; padding: 80px 0; }
-    .why-icon { color: #34D399; font-size: 2.5rem; margin-bottom: 20px; }
-    
-    /* Testimonios */
-    .testimonials-section { padding: 80px 0; background-color: #f8f9fa; }
-    .testimonial-card {
-      background: white; border-radius: 12px; padding: 30px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: none;
-      position: relative;
-    }
-    .quote-icon { position: absolute; top: 20px; right: 20px; font-size: 3rem; color: #ECFDF5; z-index: 0; }
-    .testimonial-content { position: relative; z-index: 1; }
-    .client-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
+<?php
+$title = "EcoCusco - Servicio de Recolección Corporativa y Residencial";
 
-    .stats-section { background-color: #10B981; color: white; padding: 60px 0; text-align: center; }
-    .footer { background-color: #1F2937; color: white; padding: 60px 0; }
-    .footer a { color: #9CA3AF; text-decoration: none; transition: 0.3s;}
-    .footer a:hover { color: white; }
-    .btn-custom { background-color: #059669; color: white; border: none; padding: 12px 30px; font-weight: 600; font-size: 1.1rem; border-radius: 8px;}
-    .btn-custom:hover { background-color: #047857; color: white; }
-    .card-feature { transition: transform 0.3s ease; border: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-radius: 12px;}
-    .card-feature:hover { transform: translateY(-5px); }
-  </style>
-</head>
-<body>
-  <!-- HEADER INCLUIDO DESDE components/header.php -->
-  <?php include 'components/header.php'; ?>
-
+ob_start();
+?>
   <section class="hero-section">
     <div class="container">
       <div class="row align-items-center">
@@ -65,7 +10,7 @@
           <span class="badge bg-light text-success mb-3 px-3 py-2 fs-6 rounded-pill">Expertos en Recolección y Reciclaje</span>
           <h1>Líderes en Gestión Ambiental Integral en Cusco</h1>
           <p class="lead mb-4 mt-3">Proveemos soluciones integrales de recolección de residuos para zonas comerciales y residenciales. Deja que nos encarguemos de mantener tu barrio limpio, saludable y 100% sustentable con tecnología de punta.</p>
-          <a href="servicios.php" class="btn btn-light text-success fw-bold px-4 py-3 me-3 rounded-pill shadow-sm">Ver Planes Disponibles</a>
+          <a href="/reciclaje/views/public/servicios.php" class="btn btn-light text-success fw-bold px-4 py-3 me-3 rounded-pill shadow-sm">Ver Planes Disponibles</a>
           <a href="#contacto" class="btn btn-outline-light px-4 py-3 rounded-pill fw-bold">Contactar a un Asesor</a>
         </div>
       </div>
@@ -109,7 +54,7 @@
         </div>
       </div>
       <div class="text-center mt-5">
-          <a href="servicios.php" class="btn btn-custom px-5 py-3 rounded-pill shadow">Descubre las diferencias entre Planes</a>
+          <a href="/reciclaje/views/public/servicios.php" class="btn btn-custom px-5 py-3 rounded-pill shadow">Descubre las diferencias entre Planes</a>
       </div>
     </div>
   </section>
@@ -266,7 +211,7 @@
       <p class="lead text-muted mx-auto mb-5" style="max-width: 700px;">
         Nuestros asesores completan decenas de visitas semanales. Separa la tuya hoy mismo, descubre nuestras ventajas comparativas y protege el medio ambiente al confiar en verdaderos expertos logísticos.
       </p>
-      <a href="nosotros.php" class="btn btn-custom btn-lg shadow-sm px-5 py-3 rounded-pill">Llenar Solicitud de Contratación <i class="fas fa-file-signature ms-2"></i></a>
+      <a href="/reciclaje/views/public/nosotros.php" class="btn btn-custom btn-lg shadow-sm px-5 py-3 rounded-pill">Llenar Solicitud de Contratación <i class="fas fa-file-signature ms-2"></i></a>
     </div>
   </section>
 
@@ -292,42 +237,51 @@
       </div>
     </div>
   </section>
+<?php
+$extra_css = "
+    .hero-section {
+      background: linear-gradient(rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9)), url('https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+      padding: 100px 0;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    .hero-section h1 { font-weight: 700; font-size: 3rem; }
+    .features-section { background-color: #f8f9fa; padding: 80px 0; }
+    
+    /* Cómo funciona */
+    .steps-section { padding: 80px 0; background-color: white; }
+    .step-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background-color: #ECFDF5;
+      color: #10B981;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: bold;
+      margin: 0 auto 20px;
+      border: 3px solid #10B981;
+    }
+    
+    /* Por qué elegirnos */
+    .why-choose-us { background-color: #064E3B; color: white; padding: 80px 0; }
+    .why-icon { color: #34D399; font-size: 2.5rem; margin-bottom: 20px; }
+    
+    /* Testimonios */
+    .testimonials-section { padding: 80px 0; background-color: #f8f9fa; }
+    .testimonial-card {
+      background: white; border-radius: 12px; padding: 30px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: none;
+      position: relative;
+    }
+    .quote-icon { position: absolute; top: 20px; right: 20px; font-size: 3rem; color: #ECFDF5; z-index: 0; }
+    .testimonial-content { position: relative; z-index: 1; }
+    .client-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-right: 15px; }
 
-  <footer class="footer" id="contacto">
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-md-4">
-          <h5 class="fw-bold text-white mb-3"><i class="fas fa-leaf text-success me-2"></i> EcoCusco Empresarial</h5>
-          <p class="text-muted pe-4">Transformando la recolección de basura en una cadena limpia, justa y sostenible mediante la gestión tercerizada. Contribuimos desde la base.</p>
-        </div>
-        <div class="col-md-2">
-          <h6 class="fw-bold text-white mb-3">Compañía</h6>
-          <ul class="list-unstyled">
-            <li class="mb-2"><a href="nosotros.php">Sobre Nosotros</a></li>
-            <li class="mb-2"><a href="servicios.php">Nuestros Planes</a></li>
-            <li class="mb-2"><a href="nosotros.php">Casos y Estadísticas</a></li>
-            <li class="mb-2"><a href="reportes.php">Portal Cívico</a></li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <h6 class="fw-bold text-white mb-3">Contacto Comercial</h6>
-          <p class="mb-2 text-muted"><i class="fas fa-envelope text-success me-2"></i> ventas@ecocusco.com</p>
-          <p class="mb-2 text-muted"><i class="fas fa-phone text-success me-2"></i> +51 084 254 365</p>
-          <p class="mb-2 text-muted"><i class="fas fa-map-marker-alt text-success me-2"></i> Av. Cultura 1230, Cusco Sur, Perú</p>
-        </div>
-        <div class="col-md-3">
-          <h6 class="fw-bold text-white mb-3">Portal de Afiliados</h6>
-          <p class="text-muted text-sm mb-3">Si ya cuentas con servicio contratado para tu vivienda, ingresa con las credenciales entregadas por tu junta vecinal.</p>
-          <a href="login.php" class="btn btn-outline-success btn-sm w-100 py-2">Acceder a Mi Cuenta Seguro</a>
-        </div>
-      </div>
-      <hr class="mt-5 mb-4 border-secondary">
-      <div class="text-center text-muted small">
-        &copy; <?php echo date('Y'); ?> EcoCusco Holdings S.A.C. Todos los derechos reservados.
-      </div>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    .stats-section { background-color: #10B981; color: white; padding: 60px 0; text-align: center; }
+    .btn-custom { background-color: #059669; color: white; border: none; padding: 12px 30px; font-weight: 600; font-size: 1.1rem; border-radius: 8px;}
+    .btn-custom:hover { background-color: #047857; color: white; }
+    .card-feature { transition: transform 0.3s ease; border: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-radius: 12px;}
+    .card-feature:hover { transform: translateY(-5px); }
+";
+$content = ob_get_clean();
+include __DIR__ . '/views/layouts/public_layout.php';
+?>

@@ -4,7 +4,7 @@ require_once 'data/conexion.php';
 
 // Redirigir al login si no hay sesión
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: /reciclaje/views/public/login.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     session_destroy();
-    header("Location: login.php");
+    header("Location: /reciclaje/views/public/login.php");
     exit;
 }
 
@@ -115,52 +115,35 @@ $view_path = '';
 
 switch($user['rol_id']) {
     case 1: // ADMIN
-        if ($page == 'dashboard' || $page == 'usuarios') {
-            $view_path = 'views/admin_dashboard_view.php';
-        } else {
-             $view_path = 'views/admin_dashboard_view.php'; // Default Admin
-        }
+        $view_path = 'views/admin_dashboard_view.php';
         break;
         
     case 2: // GESTOR
-        if ($page == 'dashboard' || $page == 'cobros') {
-            $view_path = 'views/gestor_dashboard_view.php';
-        } else {
-            $view_path = 'views/gestor_dashboard_view.php'; // Default Gestor
-        }
+        $view_path = 'views/gestor_dashboard_view.php';
         break;
         
     case 3: // RECOLECTOR
-        if ($page == 'dashboard' || $page == 'rutas') {
-            $view_path = 'views/recolector_dashboard_view.php';
-        } else {
-            $view_path = 'views/recolector_dashboard_view.php'; // Default Recolector
-        }
+        $view_path = 'views/recolector_dashboard_view.php';
         break;
         
     case 4: // USUARIO VECINO
-        if ($page == 'dashboard' || $page == 'mis_pagos') {
-            $view_path = 'views/usuario_dashboard_view.php';
-        } else if ($page == 'reportar') {
-            header("Location: reportes.php"); exit;
-        } else {
-            $view_path = 'views/usuario_dashboard_view.php';
+        if ($page == 'reportar') {
+            header("Location: /reciclaje/views/public/reportes.php"); 
+            exit;
         }
+        $view_path = 'views/usuario_dashboard_view.php';
         break;
         
     default:
         die("Rol desconocido");
 }
 
-// Si la vista existe, cargarla. Si no (aún no migrada), mostrar error (deberíamos migrar los .php originales)
+// Cargar la vista
 if (file_exists($view_path)) {
     require_once $view_path;
 } else {
-    // Fallback provisional si la vista aún no está en views/
-    if ($user['rol_id'] == 1) require_once 'admin_dashboard.php';
-    if ($user['rol_id'] == 2) require_once 'gestor_pagos_dashboard.php';
-    if ($user['rol_id'] == 3) require_once 'recolector_dashboard.php';
-    if ($user['rol_id'] == 4) require_once 'usuario_dashboard.php';
+    die("Error: La vista no existe.");
 }
+?>
 
 ?>

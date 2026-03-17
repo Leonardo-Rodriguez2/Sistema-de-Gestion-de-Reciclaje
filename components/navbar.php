@@ -186,15 +186,15 @@
 </head>
 <body>
     <div class="cabecera">
-        <div class="titulo">EcoCusco</div>
+        <div class="titulo">EPSIC</div>
         <div class="menu">
-            <a href="index.php">Inicio</a>
-            <a href="servicios.php">Servicios / Planes</a>
-            <a href="reportes.php">Reportar</a>
-            <a href="nosotros.php">Nosotros / Datos</a>
+            <a href="/reciclaje/index.php">Inicio</a>
+            <a href="/reciclaje/views/public/servicios.php">Servicios / Planes</a>
+            <a href="/reciclaje/views/public/reportes.php">Reportar</a>
+            <a href="/reciclaje/views/public/nosotros.php">Nosotros / Datos</a>
         </div>
         <div class="menu">
-            <a href="login.php" class="btn-cliente">Área de Clientes</a>
+            <a href="/reciclaje/views/public/login.php" class="btn-cliente">Área de Clientes</a>
         </div>
     </div>
 <br>
