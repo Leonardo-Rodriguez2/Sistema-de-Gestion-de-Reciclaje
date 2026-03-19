@@ -10,8 +10,8 @@ $page = $page ?? 'dashboard';
         <?php if ($rol_id == 1): // ADMIN ?>
             <li><a href="router.php?page=dashboard" class="<?= ($page == 'dashboard') ? 'active' : '' ?>">Dashboard General</a></li>
             <li><a href="router.php?page=usuarios" class="<?= ($page == 'usuarios') ? 'active' : '' ?>">Gestión de Usuarios</a></li>
-            <li><a href="router.php?page=zonas" class="<?= ($page == 'zonas') ? 'active' : '' ?>">Zonas y Barrios</a></li>
-            <li><a href="router.php?page=reportes" class="<?= ($page == 'reportes') ? 'active' : '' ?>">Reportes del Sistema</a></li>
+            <!-- <li><a href="router.php?page=zonas" class="<?= ($page == 'zonas') ? 'active' : '' ?>">Zonas y Barrios</a></li>
+            <li><a href="router.php?page=reportes" class="<?= ($page == 'reportes') ? 'active' : '' ?>">Reportes del Sistema</a></li> -->
         
         <?php elseif ($rol_id == 2): // GESTOR ?>
             <li><a href="router.php?page=dashboard" class="<?= ($page == 'dashboard') ? 'active' : '' ?>">Resumen de Cobros</a></li>

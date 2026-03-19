@@ -189,9 +189,9 @@
         <div class="titulo">EPSIC</div>
         <div class="menu">
             <a href="/reciclaje/index.php">Inicio</a>
-            <a href="/reciclaje/views/public/servicios.php">Servicios / Planes</a>
+            <a href="/reciclaje/views/public/servicios.php">Servicios</a>
             <a href="/reciclaje/views/public/reportes.php">Reportar</a>
-            <a href="/reciclaje/views/public/nosotros.php">Nosotros / Datos</a>
+            <a href="/reciclaje/views/public/nosotros.php">Nosotros</a>
         </div>
         <div class="menu">
             <a href="/reciclaje/views/public/login.php" class="btn-cliente">Área de Clientes</a>

@@ -1,23 +1,10 @@
 <?php
-session_start();
-require_once 'data/conexion.php';
+// recolector_dashboard_view.php
+// Rediseñado con Componentes y Helper
 
-// Verificar que la sesión exista
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+$user = check_dashboard_access([1, 3]);
 
-// Verificar que el usuario tenga rol de Recolector (rol_id = 3) o superior
-$stmt = $pdo->prepare("SELECT u.nombre, u.apellido, u.rol_id, r.nombre as rol_nombre FROM usuarios u JOIN roles r ON u.rol_id = r.id WHERE u.id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$user || ($user['rol_id'] != 1 && $user['rol_id'] != 3)) {
-    die("Acceso denegado. Se requiere nivel de Recolector.");
-}
-
-// Obtener reportes activos (En proceso o Pendiente de asignar)
+// Obtener reportes activos
 $reportesStmt = $pdo->query("
     SELECT r.id, r.ubicacion_nombre, r.tipo_residuo, r.descripcion, r.cantidad, r.estado, r.fecha_reporte, u.nombre, u.apellido 
     FROM reportes r
@@ -27,36 +14,24 @@ $reportesStmt = $pdo->query("
 ");
 $reportes_lista = $reportesStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Variables para el layout
 $title = "Recolector - EcoCusco";
 $primary_color = "#4F46E5";
 $secondary_color = "#4338CA";
 $bg_color = "#EEF2FF";
-$header_title = "Mis Rutas y Pendientes";
-$header_subtitle = "Módulo Logístico y de Recolección";
+$header_title = "Rutas de Recolección";
+$header_subtitle = "Módulo Logístico";
 $user_greeting = "Hola";
 
 ob_start();
 ?>
-    <!-- Stats -->
-    <section class="grid">
-      <div class="card">
-        <h3>Reportes por Atender</h3>
-        <div class="value"><?php echo count($reportes_lista); ?></div>
-      </div>
-      <div class="card">
-        <h3>Material Recolectado Hoy</h3>
-        <div class="value">0.0 kg</div>
-      </div>
-    </section>
+    <!-- Feedback Messages -->
+    <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
-    <!-- Alertas -->
-    <?php if(isset($mensaje_exito)): ?>
-      <div style="background: #DBEAFE; color: #1E40AF; padding: 15px; border-radius: 8px; margin-bottom: 20px;">✓ <?php echo $mensaje_exito; ?></div>
-    <?php endif; ?>
-    <?php if(isset($mensaje_error)): ?>
-      <div style="background: #FEE2E2; color: #991B1B; padding: 15px; border-radius: 8px; margin-bottom: 20px;">✕ <?php echo $mensaje_error; ?></div>
-    <?php endif; ?>
+    <!-- Stats -->
+    <?php render_dashboard_stats([
+        ['title' => 'Reportes Pendientes', 'value' => count($reportes_lista), 'color' => '#4F46E5', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 7m0 10V7m0 0L9 4"></path></svg>'],
+        ['title' => 'Recolectado Hoy', 'value' => '0.0 kg', 'color' => '#10B981', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>']
+    ]); ?>
 
     <!-- Report Table -->
     <section class="table-container">
@@ -65,7 +40,7 @@ ob_start();
         <thead>
           <tr>
             <th>Ubicación</th>
-            <th>Tipo de Residuo</th>
+            <th>Residuo</th>
             <th>Cantidad</th>
             <th>Reportado Por</th>
             <th>Estado</th>
@@ -74,17 +49,21 @@ ob_start();
         </thead>
         <tbody>
           <?php if(empty($reportes_lista)): ?>
-            <tr><td colspan="6" style="text-align:center;">No hay reportes pendientes para recolectar hoy. ¡Buen trabajo!</td></tr>
+            <tr><td colspan="6" style="text-align:center;">No hay reportes pendientes para recolectar hoy.</td></tr>
           <?php else: ?>
             <?php foreach ($reportes_lista as $r): ?>
             <tr>
-              <td style="font-weight: 500;"><?php echo htmlspecialchars($r['ubicacion_nombre']); ?> <br> <small style="color:#6B7280;font-weight:400;"><?php echo htmlspecialchars($r['descripcion']); ?></small></td>
-              <td><?php echo htmlspecialchars($r['tipo_residuo']); ?></td>
-              <td style="font-weight: 700; color: #374151;"><?php echo number_format($r['cantidad'], 2); ?> kg</td>
-              <td><?php echo htmlspecialchars($r['nombre'] . ' ' . $r['apellido']); ?><br><small><?php echo date('d/m/Y H:i', strtotime($r['fecha_reporte'])); ?></small></td>
-              <td>
-                <span class="badge <?php echo str_replace(' ', '-', strtolower($r['estado'])); ?>"><?php echo htmlspecialchars($r['estado']); ?></span>
+              <td style="font-weight: 600;">
+                <?php echo htmlspecialchars($r['ubicacion_nombre']); ?>
+                <br><small style="color:#6B7280; font-weight:400;"><?php echo htmlspecialchars($r['descripcion']); ?></small>
               </td>
+              <td><?php echo htmlspecialchars($r['tipo_residuo']); ?></td>
+              <td style="font-weight: 700; color: #111827;"><?php echo number_format($r['cantidad'], 2); ?> kg</td>
+              <td>
+                <?php echo htmlspecialchars($r['nombre'] . ' ' . $r['apellido']); ?>
+                <br><small><?php echo date('d/m/Y H:i', strtotime($r['fecha_reporte'])); ?></small>
+              </td>
+              <td><span class="badge <?php echo str_replace(' ', '-', strtolower($r['estado'])); ?>"><?php echo htmlspecialchars($r['estado']); ?></span></td>
               <td>
                 <form action="router.php?page=dashboard" method="POST" style="margin:0;">
                   <input type="hidden" name="form_type" value="completar_reporte">
@@ -98,6 +77,13 @@ ob_start();
         </tbody>
       </table>
     </section>
+
+<style>
+    .table-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px; border-bottom: 1px solid #E5E7EB; color: #6B7280; font-size: 12px; text-transform: uppercase; }
+    td { padding: 15px 12px; border-bottom: 1px solid #F3F4F6; }
+</style>
 
 <?php
 $content = ob_get_clean();

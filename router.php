@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'data/conexion.php';
+require_once 'data/dashboard_helper.php';
 
 // Redirigir al login si no hay sesión
 if (!isset($_SESSION['user_id'])) {
@@ -97,12 +98,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POS
     }
 }
 
-// Lógica: Marcar Reporte como Recogido (Solo Recolector o Admin)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] == 'completar_reporte' && isset($_POST['reporte_id'])) {
+// Lógica: Completar Reporte (Solo Recolector o Admin)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] === 'completar_reporte' && isset($_POST['reporte_id'])) {
     if ($user['rol_id'] == 1 || $user['rol_id'] == 3) {
         $stmtR = $pdo->prepare("UPDATE reportes SET estado = 'Completado' WHERE id = ?");
         $stmtR->execute([$_POST['reporte_id']]);
         $mensaje_exito = "Punto de recolección marcado como completado.";
+    }
+}
+
+// Lógica Admin: Gestión de Usuarios
+if ($user['rol_id'] == 1 && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Agregar Usuario
+    if (isset($_POST['action']) && $_POST['action'] === 'add_user') {
+        $nombre = trim($_POST['nombre']);
+        $apellido = trim($_POST['apellido']);
+        $email = trim($_POST['email']);
+        $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_BCRYPT) : password_hash('123456', PASSWORD_BCRYPT);
+        $rol_id = (int)$_POST['rol_id'];
+
+        try {
+            $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, apellido, email, password_hash, rol_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$nombre, $apellido, $email, $password, $rol_id]);
+            $mensaje_exito = "Usuario agregado correctamente.";
+        } catch (PDOException $e) {
+            $mensaje_error = "Error: El correo electrónico ya existe.";
+        }
+    }
+
+    // Editar Usuario
+    if (isset($_POST['action']) && $_POST['action'] === 'edit_user') {
+        $id = (int)$_POST['user_id'];
+        $nombre = trim($_POST['nombre']);
+        $apellido = trim($_POST['apellido']);
+        $email = trim($_POST['email']);
+        $rol_id = (int)$_POST['rol_id'];
+
+        try {
+            if (!empty($_POST['password'])) {
+                $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                $stmt = $pdo->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, rol_id = ?, password_hash = ? WHERE id = ?");
+                $stmt->execute([$nombre, $apellido, $email, $rol_id, $password, $id]);
+            } else {
+                $stmt = $pdo->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, rol_id = ? WHERE id = ?");
+                $stmt->execute([$nombre, $apellido, $email, $rol_id, $id]);
+            }
+            $mensaje_exito = "Usuario actualizado correctamente.";
+        } catch (PDOException $e) {
+            $mensaje_error = "Error al actualizar el usuario.";
+        }
+    }
+
+    // Eliminar Usuario
+    if (isset($_POST['action']) && $_POST['action'] === 'delete_user') {
+        $id = (int)$_POST['user_id'];
+        if ($id != $user['id']) { // Evitar eliminarse a sí mismo
+            try {
+                // Primero ver si tiene reportes, viviendas, etc. (En un sistema real usaríamos borrado lógico)
+                // Aquí intentaremos el borrado físico si no hay dependencias fuertes
+                $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
+                $stmt->execute([$id]);
+                $mensaje_exito = "Usuario eliminado correctamente.";
+            } catch (PDOException $e) {
+                $mensaje_error = "No se puede eliminar el usuario porque tiene registros asociados (viviendas o reportes).";
+            }
+        } else {
+            $mensaje_error = "No puedes eliminar tu propia cuenta de administrador.";
+        }
     }
 }
 
