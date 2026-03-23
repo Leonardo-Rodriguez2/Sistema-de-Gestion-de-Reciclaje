@@ -1,6 +1,8 @@
 <?php
-// data/dashboard_helper.php
-// Funciones compartidas para todos los paneles de Dashboard
+// =============================================
+// app/helpers.php — Funciones de Ayuda Globales
+// Disponible en todas las vistas del dashboard.
+// =============================================
 
 function check_dashboard_access($allowed_roles = [1]) {
     global $pdo;

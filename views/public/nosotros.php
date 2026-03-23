@@ -1,10 +1,4 @@
 <?php
-// Cargar los datos de las estadísticas reales
-$datos = include('../../data/estadisticas.php');
-if (is_array($datos)) {
-    extract($datos); 
-}
-
 // Lógica Formulario Solicitud
 $mensaje_form = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST['form_type'] === 'solicitud') {
@@ -14,18 +8,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST
 }
 
 $title = "Nosotros | EcoCusco";
-$extra_head = '<!-- Chart JS para cargar los gráficos de data/estadisticas.php -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
-
 ob_start();
 ?>
-
+<main>
     <section class="hero">
-        <h1>Una ciudad limpia, el orgullo de todos</h1>
-        <p>Somos EcoCusco, la empresa líder en gestión de residuos sólidos en la ciudad imperial encargada de modernizar la recolección comunitaria.</p>
+        <h1>Una comunidad limpia, el orgullo de todos</h1>
+        <p>Somos EPSIC, la empresa líder en gestión de residuos sólidos en la ciudad imperial encargada de modernizar la recolección comunitaria.</p>
     </section>
-
-    <main class="container">
         
         <section class="section-about">
             <div class="about-text">
@@ -114,41 +103,6 @@ ob_start();
             </div>
         </div>
 
-    </main>
-
-    <!-- Estadísticas Reales extraídas de data/estadisticas.php -->
-    <?php if (isset($estadisticas)): ?>
-    <section class="section-stats">
-        <div class="container">
-            <h2>Nuestros Números nos Respaldan</h2>
-            <p class="subtitle">Cada kilo de residuo es una muestra de nuestro impacto. Datos extraídos en tiempo real de nuestras unidades operativas de las últimas 4 semanas.</p>
-            
-            <div class="stats-grid">
-                <?php foreach($estadisticas as $tipo => $d): 
-                    $cls = ($d['pct'] !== null ? ($d['pct'] >= 0 ? 'positive' : 'negative') : '');
-                    $txt = ($d['pct'] !== null ? (($d['pct'] >= 0 ? '↗ ' : '↘ ') . $d['pct'] . '% que el mes anterior') : '—');
-                ?>
-                <div class="stat-card">
-                    <div class="stat-label"><?= $tipo === 'Total' ? 'Volumen Total (Kg)' : $tipo.' (Kg)' ?></div>
-                    <div class="stat-value"><?= number_format($d['actual'], 0) ?></div>
-                    <div class="stat-trend <?= $cls ?>"><?= $txt ?></div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pasar variables PHP a JS -->
-    <script>
-        const meses = <?php echo json_encode($meses ?? []); ?>;
-        const valMensual = <?php echo json_encode($valMensual ?? []); ?>;
-        const mat = <?php echo json_encode($mat ?? []); ?>;
-        const valDist = <?php echo json_encode($valDist ?? []); ?>;
-    </script>
-    <script src="../../js/charts.js"></script>
-    <?php endif; ?>
-
-    <main class="container">
         <div class="cta-section">
             <h2>¿Es usted directivo de un Barrio o Condominio?</h2>
             <p>Modernice la recolección de basura de sus vecinos. Obten precios especiales corporativos mensuales, reportes en zona y la máxima higiene para todas sus viviendas.</p>

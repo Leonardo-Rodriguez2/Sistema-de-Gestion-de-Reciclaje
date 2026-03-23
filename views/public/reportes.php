@@ -1,32 +1,4 @@
 <?php
-// Conexión a la base de datos centralizada
-require_once '../../data/conexion.php';
-
-// Procesar formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validar y sanitizar entradas
-    $descripcion = htmlspecialchars($_POST['descripcion'] ?? '');
-    
-    // Incorporar ubicación en la descripción
-    $ubicacion = htmlspecialchars($_POST['ubicacion'] ?? '');
-    $descripcion_completa = "Ubicación: $ubicacion\n\n$descripcion";
-    
-    $tipo_residuo = isset($_POST['tipo_residuo']) ? implode(', ', $_POST['tipo_residuo']) : '';
-
-    // Insertar en base de datos usando solo las columnas existentes
-    try {
-        $sql = "INSERT INTO reportes (tipo_residuo, descripcion) VALUES (?, ?)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$tipo_residuo, $descripcion_completa]);
-        
-        // Redireccionar para evitar reenvío del formulario (opcional, pero buena práctica)
-        // header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
-        // exit();
-    } catch (PDOException $e) {
-        die("Error al guardar el reporte: " . $e->getMessage());
-    }
-}
-
 $title = "Reportar Incidentes | EcoCusco";
 ob_start();
 ?>

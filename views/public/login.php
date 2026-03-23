@@ -1,51 +1,22 @@
 <?php
 session_start();
+require_once '../../app/config.php';
+require_once '../../autoload.php';
 
-// Manejar cierre de sesión
+use app\controllers\loginController;
+
+// Delegar login/logout al controlador
+$loginCtrl = new loginController();
+
 if (isset($_GET['logout'])) {
-    session_destroy();
-    header("Location: /reciclaje/index.php");
-    exit;
+    $loginCtrl->cerrarSesion();
 }
 
-// Conexión a la base de datos centralizada
-require_once '../../data/conexion.php';
-
-// Procesar el formulario de inicio de sesión
+$error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-
-    // Validaciones básicas
-    if (empty($email) || empty($password)) {
-        $error = 'Por favor, completa todos los campos.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'El correo electrónico no es válido.';
-    } else {
-        // Verificar si el usuario existe en la base de datos
-        try {
-            $stmt = $pdo->prepare("SELECT id, password_hash, rol_id FROM usuarios WHERE email = :email");
-            $stmt->execute([':email' => $email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user && password_verify($password, $user['password_hash'])) {
-                // Credenciales correctas, iniciar sesión
-                session_regenerate_id(true);
-                $_SESSION['user_id'] = $user['id'];
-                
-                // Redirigir siempre al enrutador central
-                $redirect_url = '/reciclaje/router.php'; // Controlador único
-                header("Location: $redirect_url");
-                exit;
-            } else {
-                // Credenciales incorrectas
-                $error = 'Correo o contraseña incorrectos.';
-            }
-        } catch (PDOException $e) {
-            $error = 'Error al procesar el inicio de sesión.';
-        }
-    }
+    $error = $loginCtrl->iniciarSesion(); // Redirige si OK, devuelve mensaje si falla
 }
+
 
 $title = "Iniciar Sesión | EcoCusco";
 ob_start();

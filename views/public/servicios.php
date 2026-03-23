@@ -146,7 +146,7 @@ ob_start();
             
             <div class="accordion-item">
                 <div class="accordion-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
-                    ¿Tienen cobertura en toda la región de Cusco? <i class="fas fa-chevron-down"></i>
+                    ¿Tienen cobertura en toda la región? <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="accordion-body">
                     Actualmente operamos en el casco urbano de Cusco ciudad, Wanchaq, San Sebastián y Santiago. Estamos planificando la expansión hacia San Jerónimo y Poroy para el segundo semestre del año. Consúltanos para habilitar un circuito si tu asociación es grande.

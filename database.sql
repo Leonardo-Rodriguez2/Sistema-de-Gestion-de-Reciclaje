@@ -23,6 +23,8 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL UNIQUE,
+  `genero` enum('M', 'F', 'Otro') DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
   `password_hash` varchar(255) NOT NULL,
   `rol_id` int NOT NULL DEFAULT '4', -- Por defecto es 4 (usuario_vecino)
   `creado_en` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -71,14 +73,16 @@ CREATE TABLE `barrios` (
 DROP TABLE IF EXISTS `viviendas`;
 CREATE TABLE `viviendas` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `usuario_id` int NOT NULL, -- Propietario o responsable del pago
+  `jefe_cuadra_id` int NOT NULL, -- Jefe de cuadra asignado
   `barrio_id` int NOT NULL,
+  `propietario` varchar(100) NOT NULL, -- Nombre del dueño/responsable
+  `telefono` varchar(20) DEFAULT NULL,
   `direccion` varchar(255) NOT NULL,
   `numero_casa` varchar(20) DEFAULT NULL,
   `referencia` varchar(255) DEFAULT NULL,
   `fecha_registro` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  FOREIGN KEY (`jefe_cuadra_id`) REFERENCES `usuarios` (`id`),
   FOREIGN KEY (`barrio_id`) REFERENCES `barrios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -112,6 +116,60 @@ CREATE TABLE `pagos` (
   FOREIGN KEY (`gestor_id`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+DROP TABLE IF EXISTS `detalles_jefe_cuadra`;
+CREATE TABLE `detalles_jefe_cuadra` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL UNIQUE,
+  `barrio_id` int NOT NULL,
+  `dni` varchar(20) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `estado_civil` varchar(50) DEFAULT NULL,
+  `ocupacion` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`barrio_id`) REFERENCES `barrios`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `detalles_gestor`;
+CREATE TABLE `detalles_gestor` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL UNIQUE,
+  `dni` varchar(20) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `area` varchar(100) DEFAULT NULL,
+  `especialidad` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `detalles_recolector`;
+CREATE TABLE `detalles_recolector` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL UNIQUE,
+  `dni` varchar(20) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `licencia` varchar(50) DEFAULT NULL,
+  `turno` enum('Mañana', 'Tarde', 'Noche') DEFAULT 'Mañana',
+  `grupo_sanguineo` varchar(10) DEFAULT NULL,
+  `contacto_emergencia` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS `recaudaciones`;
+CREATE TABLE `recaudaciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `jefe_id` int NOT NULL,
+  `barrio_id` int NOT NULL,
+  `monto_total` decimal(10,2) NOT NULL,
+  `estado` enum('Pendiente', 'Verificado') DEFAULT 'Pendiente',
+  `fecha_recaudacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`jefe_id`) REFERENCES `usuarios` (`id`),
+  FOREIGN KEY (`barrio_id`) REFERENCES `barrios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- 4. Inserción de Datos Mínimos y de Ejemplo
 
@@ -120,7 +178,7 @@ INSERT INTO `roles` (`id`, `nombre`, `descripcion`) VALUES
 (1, 'Administrador', 'Control total del sistema, viviendas, barrios y usuarios.'),
 (2, 'Gestor de Pagos', 'Encargado de revisar cobros, validar pagos y generar reportes financieros.'),
 (3, 'Recolector', 'Encargado de ver las rutas, los reportes en proceso e ir a recoger los residuos.'),
-(4, 'Usuario', 'Vecino que reporta residuos y debe pagar por su recolección de casa.');
+(5, 'Jefe de Cuadra', 'Encargado de recibir el dinero, registrar viviendas y marcar sus pagos.');
 
 -- Insertar Usuarios de Ejemplo (La contraseña encriptada es '123456')
 -- password_hash de '123456' = $2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq
@@ -128,7 +186,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `email`, `password_hash`, `r
 (1, 'Admin', 'Sistema', 'admin@ecocusco.com', '$2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq', 1),
 (2, 'Julio', 'Pagos', 'gestor@ecocusco.com', '$2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq', 2),
 (3, 'Carlos', 'Recolector', 'recolector@ecocusco.com', '$2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq', 3),
-(4, 'Vecino', 'Ejemplo', 'vecino@gmail.com', '$2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq', 4);
+(5, 'Roberto', 'Jefe', 'jefe@ecocusco.com', '$2y$10$pLw2p4G/.8O9/R.M0yQeK.bU1.W5g/6X9mY23dDMBR.H0n45r8.Wq', 5);
 
 -- Insertar Barrios
 INSERT INTO `barrios` (`id`, `nombre`, `ciudad`) VALUES
@@ -136,10 +194,10 @@ INSERT INTO `barrios` (`id`, `nombre`, `ciudad`) VALUES
 (2, 'Santa Ana', 'Cusco'),
 (3, 'Wanchaq', 'Cusco');
 
--- Insertar Viviendas de ejemplo (asociadas al usuario 4 - Vecino)
-INSERT INTO `viviendas` (`id`, `usuario_id`, `barrio_id`, `direccion`, `numero_casa`) VALUES
-(1, 4, 1, 'Calle Tandapata', '120'),
-(2, 4, 3, 'Av. Garcilaso', '505');
+-- Insertar Viviendas de ejemplo (asociadas al Jefe de Cuadra 5)
+INSERT INTO `viviendas` (`id`, `jefe_cuadra_id`, `barrio_id`, `propietario`, `direccion`, `numero_casa`) VALUES
+(1, 5, 1, 'Familia Quispe', 'Calle Tandapata', '120'),
+(2, 5, 3, 'Familia Mamani', 'Av. Garcilaso', '505');
 
 -- Insertar Cobros de ejemplo para el Vecino
 INSERT INTO `cobros` (`id`, `vivienda_id`, `mes`, `anio`, `monto`, `fecha_emision`, `fecha_vencimiento`, `estado`) VALUES

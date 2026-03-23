@@ -15,22 +15,12 @@ $reportesStmt = $pdo->query("
 $reportes_lista = $reportesStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $title = "Recolector - EcoCusco";
-$primary_color = "#4F46E5";
-$secondary_color = "#4338CA";
-$bg_color = "#EEF2FF";
-$header_title = "Rutas de Recolección";
-$header_subtitle = "Módulo Logístico";
-$user_greeting = "Hola";
 
 ob_start();
 ?>
-    <!-- Feedback Messages -->
-    <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
-
-    <!-- Stats -->
     <?php render_dashboard_stats([
-        ['title' => 'Reportes Pendientes', 'value' => count($reportes_lista), 'color' => '#4F46E5', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 7m0 10V7m0 0L9 4"></path></svg>'],
-        ['title' => 'Recolectado Hoy', 'value' => '0.0 kg', 'color' => '#10B981', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>']
+        ['title' => 'Reportes Pendientes', 'value' => count($reportes_lista), 'color' => '#1E40AF', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 7m0 10V7m0 0L9 4"></path></svg>'],
+        ['title' => 'Recolectado Hoy', 'value' => '0.0 kg', 'color' => '#065F46', 'icon' => '<svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>']
     ]); ?>
 
     <!-- Report Table -->
@@ -78,15 +68,13 @@ ob_start();
       </table>
     </section>
 
-<style>
-    .table-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 12px; border-bottom: 1px solid #E5E7EB; color: #6B7280; font-size: 12px; text-transform: uppercase; }
-    td { padding: 15px 12px; border-bottom: 1px solid #F3F4F6; }
-</style>
+    <style>
+        .btn-action { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .btn-action:hover { background: var(--secondary); }
+    </style>
 
 <?php
 $content = ob_get_clean();
-include __DIR__ . '/layouts/dashboard_layout.php';
+include __DIR__ . '/../layouts/dashboard_layout.php';
 ?>
 

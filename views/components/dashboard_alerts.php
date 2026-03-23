@@ -23,17 +23,18 @@
 
 <style>
     .alert {
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 25px;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
         font-weight: 500;
+        font-size: 13px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         animation: slideDown 0.3s ease-out;
     }
-    .alert-success { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
-    .alert-error { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+    .alert-success { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .alert-error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
     
     @keyframes slideDown {
         from { transform: translateY(-10px); opacity: 0; }

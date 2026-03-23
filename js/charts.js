@@ -37,29 +37,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function cargarMas() {
-    // Obtener la cantidad de filas que ya están cargadas en la tabla
-    let offset = document.querySelectorAll('#tablaActividades tr').length;
-  
-    // Realizar la solicitud AJAX para obtener 10 reportes más
-    fetch(`index.php?offset=${offset}`)
-      .then(response => response.text())
-      .then(data => {
-        // Insertar las nuevas filas de la tabla en la parte final de la tabla
-        const tabla = document.getElementById('tablaActividades');
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, 'text/html');
-        const nuevasFilas = doc.querySelectorAll('#tablaActividades tr');
-        
-        nuevasFilas.forEach(fila => {
-          tabla.appendChild(fila);
-        });
-  
-        // Si no hay más datos, ocultar el botón "Ver más"
-        if (nuevasFilas.length === 0) {
-          document.getElementById('verMas').style.display = 'none';
-        }
-      })
-      .catch(error => console.error('Error al cargar más reportes:', error));
-  }
   
