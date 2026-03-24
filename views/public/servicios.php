@@ -5,13 +5,13 @@ ob_start();
 
     <section class="hero">
         <h1>Soluciones de Recolección a Medida</h1>
-        <p>Desde barrios organizados hasta complejos corporativos, diseñamos rutas eficientes para garantizar la higiene de su entorno con trazabilidad 100% digital.</p>
+        <p>Desde barrios organizados hasta complejos corporativos, diseñamos rutas eficientes para garantizar la higiene de su entorno.</p>
     </section>
 
     <div class="container">
         
         <div class="section-title">
-            <h2>Nuestros Planes de Servicio</h2>
+            <h2 class="mt-4">Nuestros Planes de Servicio</h2>
             <p>Conozca las diferentes modalidades de recolección y facturación mensual. Todos los planes incluyen acceso gratuito a nuestra Plataforma de Clientes.</p>
         </div>
 
@@ -25,7 +25,7 @@ ob_start();
                 <p class="service-desc">Para Comités, Urbanizaciones o Barrios completos que desean ordenar su recolección de forma unificada.</p>
                 
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Frecuencia Intradiaria (3 por sem.)</li>
+                    <li><i class="fas fa-check"></i> Frecuencia de pagos (3 por sem.)</li>
                     <li><i class="fas fa-check"></i> Perfil individual por cada familia</li>
                     <li><i class="fas fa-check"></i> Dashboard Financiero por Vivienda</li>
                     <li><i class="fas fa-check"></i> Recolección diferenciada básica</li>
@@ -42,11 +42,11 @@ ob_start();
                 <p class="service-desc">Atención exclusiva para Negocios, Restaurantes o Plazas Comerciales con gran volumen de generación diaria.</p>
                 
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Recolección Nocturna Diaria</li>
-                    <li><i class="fas fa-check"></i> Contenedores EcoCusco de regalo</li>
-                    <li><i class="fas fa-check"></i> Facturación corporativa mensual</li>
-                    <li><i class="fas fa-check"></i> Certificado Anual de Higiene</li>
-                    <li><i class="fas fa-check"></i> Capacitación a empleados</li>
+                    <li><i class="fas fa-check"></i> Frecuencia de pagos (3 por sem.)</li>
+                    <li><i class="fas fa-check"></i> Recolección privada al solicitar el servicio</li>
+                    <li><i class="fas fa-check"></i> Mas alcance de ruta de busqueda de basura </li>
+                    <li><i class="fas fa-check"></i>  </li>
+                    <li><i class="fas fa-check"></i> Mas capacidad al recoletar la basura </li>
                 </ul>
 
                 <a href="nosotros.php" class="btn-hire">Contactar a Ventas</a>
@@ -59,11 +59,11 @@ ob_start();
                 <p class="service-desc">Contratación por evento (Pago Único) para recolección de volúmenes excepcionales, desmonte o electrónicos.</p>
                 
                 <ul class="feature-list">
-                    <li><i class="fas fa-check"></i> Maquinaria Pesada disponible</li>
-                    <li><i class="fas fa-check"></i> Disposición certificada (RAEE)</li>
-                    <li><i class="fas fa-check"></i> Retiro de Muebles grandes</li>
-                    <li><i class="fas fa-check"></i> Limpieza post-construcción</li>
-                    <li><i class="fas fa-check"></i> Cero intermediarios</li>
+                    <li><i class="fas fa-check"></i> Maquinaria para ayudar Pesada disponible</li>
+                    <li><i class="fas fa-check"></i> Disposición certificada</li>
+                    <li><i class="fas fa-check"></i> Retiro de Muebles y aparatos electronicos grandes</li>
+                    <li><i class="fas fa-check"></i> Limpieza post-recolecion</li>
+                    <li><i class="fas fa-check"></i> Un equipo de trabajadores dispuestos a ayudar </li>
                 </ul>
 
                 <a href="nosotros.php" class="btn-hire">Agendar Recojo Único</a>
@@ -80,7 +80,7 @@ ob_start();
                 <div class="process-step">
                     <i class="fas fa-route"></i>
                     <h5 class="fw-bold">1. Planificación</h5>
-                    <p class="text-muted small">Mapeo GPS del barrio para optimizar la ruta y reducir la huella de carbono de nuestros camiones.</p>
+                    <p class="text-muted small">Mapeo del barrio para optimizar la ruta y reducir la huella de carbono de nuestros camiones.</p>
                 </div>
                 <div class="process-step">
                     <i class="fas fa-trash-can"></i>
@@ -90,7 +90,7 @@ ob_start();
                 <div class="process-step">
                     <i class="fas fa-recycle"></i>
                     <h5 class="fw-bold">3. Segregación</h5>
-                    <p class="text-muted small">Transportamos los residuos sólidos a plantas de transferencia donde se separa material reciclable (PET, Cartón).</p>
+                    <p class="text-muted small">Transportamos los residuos sólidos, recolecion y procesamos en nuestras instalaciones.</p>
                 </div>
                 <div class="process-step">
                     <i class="fas fa-earth-americas"></i>
@@ -102,7 +102,7 @@ ob_start();
 
         <!-- Tabla Comparativa -->
         <div class="compare-section text-center">
-            <h2 class="fw-bold mb-4" style="color: var(--dark); font-size: 28px;">¿Por qué cambiar a EcoCusco?</h2>
+            <h2 class="fw-bold mb-4" style="color: var(--dark); font-size: 28px;">¿Por qué cambiar a EPSIC?</h2>
             <p class="text-muted mb-4">La diferencia entre un servicio tercerizado corporativo y los métodos tradicionales.</p>
             
             <div style="overflow-x: auto;">
@@ -110,7 +110,7 @@ ob_start();
                     <thead>
                         <tr>
                             <th style="text-align: left; background: var(--light); color: var(--dark);">Característica del Servicio</th>
-                            <th style="background: var(--primary);">Con EcoCusco</th>
+                            <th style="background: var(--primary);">Con EPSIC</th>
                             <th style="background: #ef4444;">Recolección Informal o Pública</th>
                         </tr>
                     </thead>
@@ -149,7 +149,7 @@ ob_start();
                     ¿Tienen cobertura en toda la región? <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="accordion-body">
-                    Actualmente operamos en el casco urbano de Cusco ciudad, Wanchaq, San Sebastián y Santiago. Estamos planificando la expansión hacia San Jerónimo y Poroy para el segundo semestre del año. Consúltanos para habilitar un circuito si tu asociación es grande.
+                    Actualmente operamos en la region de socopo, bum-bum, pedraza. Estamos planificando la expansión hacia mas setores para el segundo semestre del año. Consúltanos para habilitar un circuito si tu asociación es grande.
                 </div>
             </div>
             
@@ -158,7 +158,7 @@ ob_start();
                     ¿Cómo se realiza el pago del Plan Vecinal? <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="accordion-body">
-                    Cada vivienda perteneciente a un Plan Vecinal recibe un usuario y contraseña. Al ingresar a nuestra Plataforma de Clientes, el vecino verá su estado de cuenta mensual y el Gestor del Barrio registrará los pagos consolidados. Las facturas son electrónicas.
+                    Para realizar el pago del Plan Vecinal, por favor comuníquese con su Jefe de Barrio. Puede pagar en efectivo o por medios digitales; sin embargo, es indispensable coordinar con el encargado para confirmar el proceso y asegurar que su pago sea debidamente registrado.
                 </div>
             </div>
 
@@ -167,15 +167,15 @@ ob_start();
                     ¿Qué ocurre si la basura recolectada sobrepasa mi plan? <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="accordion-body">
-                    Nuestro personal está capacitado para recoger la carga ordinaria. En caso de volúmenes excepcionales (como mudanzas o fiestas particulares), se reporta al sistema y se emite un recargo por "Recojo Especial" a esa sola vivienda o local comercial tras notificárselo vía correo electrónico.
+                    Nuestro personal está capacitado para recoger la carga ordinaria. En caso de volúmenes excepcionales, se reporta al sistema y se emite un recargo por "Recojo Especial" a esa sola vivienda o local comercial tras notificárnos.
                 </div>
             </div>
         </div>
 
         <div class="bottom-banner">
             <div class="content">
-                <h2 style="font-size:32px; margin-bottom: 20px;">¿No está seguro qué plan le conviene?</h2>
-                <p style="font-size:18px; margin-bottom: 30px;">Agende una reunión gratuita de 15 minutos con nuestros asesores de impacto ambiental. Evaluaremos la zona y el volumen para ofrecerle la mejor tarifa.</p>
+                <h2 style="font-size:32px; margin-bottom: 20px;">¿Si estas seguro qué nuestro plan te conviene?</h2>
+                <p style="font-size:18px; margin-bottom: 30px;">Agende una reunión gratuita con nuestros asesores de impacto ambiental. Evaluaremos la zona y el volumen para ofrecerle la mejor tarifa.</p>
                 <a href="nosotros.php" class="btn-hire" style="background:var(--primary); color:white; border:none; width:auto; padding: 15px 40px; border-radius:30px;">Ir a Formulario de Solicitud <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></a>
             </div>
         </div>
@@ -183,8 +183,19 @@ ob_start();
     </div>
 
 <?php
-$extra_css = "
-        :root {
+
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/public_layout.php';
+?>
+e gestión de recursos sólidos urbanos.
+    </footer>
+
+</body>
+</html>
+
+
+<style>
+            :root {
             --primary: #10B981;
             --primary-dark: #059669;
             --dark: #1F2937;
@@ -391,12 +402,4 @@ $extra_css = "
         @media (max-width: 900px) {
             .services-grid { grid-template-columns: 1fr; }
         }
-";
-$content = ob_get_clean();
-include __DIR__ . '/../layouts/public_layout.php';
-?>
-e gestión de recursos sólidos urbanos.
-    </footer>
-
-</body>
-</html>
+</style>

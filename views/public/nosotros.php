@@ -16,11 +16,11 @@ ob_start();
         <p>Somos EPSIC, la empresa líder en gestión de residuos sólidos en la ciudad imperial encargada de modernizar la recolección comunitaria.</p>
     </section>
         
-        <section class="section-about">
+        <section class="section-about container">
             <div class="about-text">
                 <h2>¿Quiénes Somos?</h2>
                 <p>Nuestra misión es transformar la forma en que los ciudadanos interactúan con el servicio de recolección de basura. A través de innovación tecnológica y rutas optimizadas, logramos que los vecindarios permanezcan libres de focos infecciosos.</p>
-                <p>Implementamos soluciones donde el vecino tiene el control y nuestro personal está digitalmente conectado, garantizando una atención transparente a cada barrio que contrata nuestro servicio corporativo.</p>
+                <p>Implementamos soluciones donde el vecino tiene el control y nuestro personal está digitalmente conectado, garantizando una atención transparente a cada barrio que contrata nuestro servicio.</p>
                 
                 <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div>
@@ -46,16 +46,16 @@ ob_start();
 
         <!-- Valores Corporativos -->
         <h2 class="text-center" style="font-size: 32px; color: var(--dark); margin-top: 40px; text-align: center;">Nuestros Valores</h2>
-        <div class="values-grid">
+        <div class="values-grid container mb-5" style="margin: 0 auto; display: flex; justify-content: center;">
             <div class="value-card">
                 <i class="fas fa-clock"></i>
                 <h3 style="margin-bottom: 15px;">Puntualidad Extrema</h3>
-                <p style="color: var(--text-gray); font-size: 14px;">El tiempo de nuestros clientes es oro. Operamos bajo cronogramas GPS estrictos que garantizan el recojo a la hora exacta acordada.</p>
+                <p style="color: var(--text-gray); font-size: 14px;">El tiempo de nuestros clientes es oro. Operamos bajo cronogramas estrictos que garantizan el recojo a la hora exacta acordada.</p>
             </div>
             <div class="value-card">
                 <i class="fas fa-leaf"></i>
                 <h3 style="margin-bottom: 15px;">Ecología Real</h3>
-                <p style="color: var(--text-gray); font-size: 14px;">Separamos, reciclamos y disponemos correctamente. Disminuimos el impacto de la ciudad en los entornos naturales del Cusco.</p>
+                <p style="color: var(--text-gray); font-size: 14px;">Separamos, reciclamos y disponemos correctamente. Disminuimos el impacto de la comunidad en los entornos naturales.</p>
             </div>
             <div class="value-card">
                 <i class="fas fa-handshake"></i>
@@ -75,7 +75,7 @@ ob_start();
             <h2 style="font-size: 32px; color: var(--dark); margin-bottom: 15px;">Nuestro Equipo Directivo y Operativo</h2>
             <p style="color: var(--text-gray); max-width: 600px; margin: 0 auto;">Profesionales comprometidos con el civismo y la ingeniería ambiental operativa.</p>
             
-            <div class="team-grid">
+            <div class="team-grid container" style="margin: 40px auto;">
                 <div class="team-card">
                     <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="CEO">
                     <div class="team-info">
@@ -104,7 +104,7 @@ ob_start();
         </div>
 
         <div class="cta-section">
-            <h2>¿Es usted directivo de un Barrio o Condominio?</h2>
+            <h2>¿Es usted jefe o encargado de un Barrio o Condominio?</h2>
             <p>Modernice la recolección de basura de sus vecinos. Obten precios especiales corporativos mensuales, reportes en zona y la máxima higiene para todas sus viviendas.</p>
             
             <?php if(!empty($mensaje_form)): ?>
@@ -120,15 +120,15 @@ ob_start();
                 <div class="form-grid">
                     <div>
                         <label>Nombre del Representante *</label>
-                        <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required>
+                        <input type="text" name="nombre" placeholder="" required>
                     </div>
                     <div>
                         <label>Teléfono Celular *</label>
-                        <input type="text" name="telefono" placeholder="Ej: 987654321" required>
+                        <input type="text" name="telefono" placeholder="" required>
                     </div>
                     <div>
                         <label>Barrio / Urbanización *</label>
-                        <input type="text" name="barrio" placeholder="Ej: Urb. Ttio" required>
+                        <input type="text" name="barrio" placeholder="" required>
                     </div>
                     <div>
                         <label>Tipo de Contrato</label>
@@ -143,13 +143,13 @@ ob_start();
 
                 <div style="margin-bottom: 20px; text-align: left;">
                     <label>Correo Electrónico *</label>
-                    <input type="email" name="correo" placeholder="correo@ejemplo.com" required>
+                    <input type="email" name="correo" placeholder="" required>
                 </div>
 
                 <button type="submit" class="cta-btn">Solicitar Cotización Gratuita <i class="fas fa-arrow-right"></i></button>
             </form>
             
-            <div style="margin-top: 25px; font-size: 14px; opacity: 0.6;">O llame al +51 084-556677 de Lunes a Viernes (08:00 - 18:00)</div>
+            <div style="margin-top: 25px; font-size: 14px; opacity: 0.6;">O llame al +51 000--000000 de Lunes a Viernes (08:00 - 18:00)</div>
         </div>
     </main>
 

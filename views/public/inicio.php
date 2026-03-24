@@ -95,7 +95,7 @@ ob_start();
           <h2 class="fw-bold mb-4 display-5">Más que camiones de basura, somos promotores de calidad de vida.</h2>
           <p class="lead mb-4 opacity-75">Nuestra infraestructura logística y digital nos pone a la vanguardia. Garantizamos un servicio impecable que añade valor a tu barrio y a la ciudad.</p>
           <ul class="list-unstyled">
-            <li class="mb-3 fs-5"><i class="fas fa-check-circle text-success me-3"></i> Trazabilidad GPS de camiones en ruta.</li>
+            <li class="mb-3 fs-5"><i class="fas fa-check-circle text-success me-3"></i> Trazabilidad de camiones en ruta.</li>
             <li class="mb-3 fs-5"><i class="fas fa-check-circle text-success me-3"></i> Personal unificado, uniformado y asegurado.</li>
             <li class="mb-3 fs-5"><i class="fas fa-check-circle text-success me-3"></i> Atención al cliente 24/7 para emergencias.</li>
             <li class="fs-5"><i class="fas fa-check-circle text-success me-3"></i> Promotores activos de certificación verde comercial.</li>
@@ -103,10 +103,10 @@ ob_start();
         </div>
         <div class="col-lg-6 offset-lg-1">
           <div class="row g-4 text-center">
-            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-shield-halved why-icon"></i><h4 class="fw-bold">100% Legal</h4><p class="small opacity-75 mb-0">Disposición final solo en rellenos sanitarios certificados por MINAM.</p></div></div>
-            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-hand-holding-dollar why-icon"></i><h4 class="fw-bold">Costos Claros</h4><p class="small opacity-75 mb-0">Sin sorpresas. Tarifas fijas estandarizadas facturadas vía web.</p></div></div>
-            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-seedling why-icon"></i><h4 class="fw-bold">Baja Emisión</h4><p class="small opacity-75 mb-0">Vehículos modernos con estándar Euro V limitados en ruido.</p></div></div>
-            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-laptop-code why-icon"></i><h4 class="fw-bold">Alta Tecnología</h4><p class="small opacity-75 mb-0">Sistema Web para gestionar reportes cívicos al instante.</p></div></div>
+            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-shield-halved why-icon"></i><h4 class="fw-bold">100% Legal</h4><p class="small opacity-75 mb-0">Disposición final solo en rellenos sanitarios certificado.</p></div></div>
+            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-hand-holding-dollar why-icon"></i><h4 class="fw-bold">Costos Claros</h4><p class="small opacity-75 mb-0">Sin sorpresas. Tarifas fijas estandarizadas facturadas.</p></div></div>
+            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-seedling why-icon"></i><h4 class="fw-bold">Baja Emisión</h4><p class="small opacity-75 mb-0">Vehículos modernos con estándar y limitados en ruido.</p></div></div>
+            <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-4"><i class="fas fa-laptop-code why-icon"></i><h4 class="fw-bold">Alta Tecnología</h4><p class="small opacity-75 mb-0">Sistema Web para gestionar reportes de incidentes al instante.</p></div></div>
           </div>
         </div>
       </div>
@@ -138,7 +138,12 @@ ob_start();
   </section>
 
 <?php
-$extra_css = "
+
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/public_layout.php';
+?>
+
+<style>
     .hero-section {
       background: linear-gradient(rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9)), url('https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
       padding: 100px 0; color: white; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
@@ -155,7 +160,4 @@ $extra_css = "
     .btn-custom:hover { background-color: #047857; color: white; }
     .card-feature { transition: transform 0.3s ease; border: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-radius: 12px;}
     .card-feature:hover { transform: translateY(-5px); }
-";
-$content = ob_get_clean();
-include __DIR__ . '/../layouts/public_layout.php';
-?>
+</style>

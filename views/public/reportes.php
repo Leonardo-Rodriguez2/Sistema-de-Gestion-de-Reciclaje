@@ -5,7 +5,7 @@ ob_start();
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Ayúdanos a mantener Cusco limpio</h1>
+        <h1>Ayúdanos a mantener la comunidad limpia</h1>
         <p>¿Notaste acumulación de basura o un contenedor desbordado? Reportarlo toma menos de un minuto y moviliza a nuestros equipos.</p>
     </section>
 
@@ -13,9 +13,9 @@ ob_start();
     <main class="container">
         <!-- Izquierda: Información Corporativa -->
         <div class="info-panel">
-            <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Personal de Limpieza de EcoCusco">
+            <img src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Personal de Limpieza de EPSIC">
             <h2>¿Por qué hacemos esto?</h2>
-            <p>En EcoCusco creemos que la higiene urbana es responsabilidad de todos. A través de este portal público, cualquier ciudadano puede enviarnos alertas inmediatas para atender zonas críticas que se encuentren fuera de nuestra ruta programada habitual.</p>
+            <p>En EPSIC creemos que la higiene urbana es responsabilidad de todos. A través de este portal público, cualquier ciudadano puede enviarnos alertas inmediatas para atender zonas críticas que se encuentren en nuestra ruta programada habitual.</p>
             
             <ul class="benefits-list">
                 <li>
@@ -70,36 +70,37 @@ ob_start();
                     <label>Dirección Exacta del Incidente *</label>
                     <input type="text" name="ubicacion" placeholder="Ej: Av. El Sol esq. Puente Rosario" required>
                     <div class="map-preview">
-                        [ Mapa Interactivo de Ubicación ]
+                        [ Imagen del insidente o de lo que deseas reportar ] 
+                        [ Opcional ]
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>¿Qué tipo de residuos prevalecen? (Elige máximo 3)</label>
+                    <label>¿Qué tipo de insidente desea reportar? (Elige máximo 3)</label>
                     <div class="residue-grid">
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Orgánicos" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-apple-whole"></i> Orgánicos</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="Basura acumulada en lugar indebido" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-dumpster"></i> Basura acumulada en lugar indebido</div>
                         </label>
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Plásticos" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-bottle-water"></i> Plásticos/PET</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="Contenedor lleno o desbordado" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-trash-alt"></i> Contenedor lleno o desbordado</div>
                         </label>
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Papel/Cartón" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-box-open"></i> Papel/Cartón</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="No pasó el camión recolector" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-truck"></i> No pasó el camión recolector</div>
                         </label>
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Vidrio" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-wine-bottle"></i> Vidrios Rotos</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="Quema o incendio de basura" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-fire"></i> Quema o incendio de basura en la comunidad</div>
                         </label>
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Electrónicos" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-tv"></i> Electrónicos</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="Animales esparciendo basura" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-dog"></i> Animales esparciendo basura</div>
                         </label>
                         <label class="residue-option">
-                            <input type="checkbox" name="tipo_residuo[]" value="Construcción" class="tipo-residuo">
-                            <div class="residue-card"><i class="fas fa-trowel-bricks"></i> Desmonte / Otros</div>
+                            <input type="checkbox" name="tipo_incidente[]" value="Vertido de residuos peligrosos" class="tipo-residuo">
+                            <div class="residue-card"><i class="fas fa-biohazard"></i> Vertido de residuos peligrosos</div>
                         </label>
                     </div>
                 </div>
@@ -135,25 +136,25 @@ ob_start();
                 </p>
                 <div class="impact-stats">
                     <div class="impact-stat-card">
-                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">4.5K</h3>
+                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">0</h3>
                         <p style="margin: 0; font-size: 14px; opacity: 0.9;">Reportes Atendidos</p>
                     </div>
                     <div class="impact-stat-card">
-                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">-12%</h3>
+                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">0</h3>
                         <p style="margin: 0; font-size: 14px; opacity: 0.9;">Focos Infecciosos</p>
                     </div>
                     <div class="impact-stat-card">
-                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">+8 Tn</h3>
-                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Cartón Rescatado</p>
+                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;"></h3>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;"></p>
                     </div>
                     <div class="impact-stat-card">
-                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;"><1h</h3>
+                        <h3 style="color: var(--primary); font-size: 28px; margin: 0 0 5px 0;">3h</h3>
                         <p style="margin: 0; font-size: 14px; opacity: 0.9;">Tiempo Resp. Promedio</p>
                     </div>
                 </div>
             </div>
             <div>
-                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Impacto Ambiental" style="width: 100%; border-radius: 12px; shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Impacto Ambiental" style="width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>
         </div>
     </section>
@@ -188,7 +189,7 @@ ob_start();
                     </div>
                 </div>
 
-                 <div class="case-card">
+                <div class="case-card">
                     <div class="case-images">
                         <div style="width:50%; background: #FFE4E6; display:flex; align-items:center; justify-content:center; color:#BE123C; font-weight:bold; font-size:18px;">Antes</div>
                         <div style="width:50%; background: #D1FAE5; display:flex; align-items:center; justify-content:center; color:#047857; font-weight:bold; font-size:18px;">Después</div>
@@ -204,8 +205,28 @@ ob_start();
     </section>
 
 <?php
-$extra_css = "
-        :root {
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/public_layout.php';
+?>
+
+<script>
+        // Limitar selección de checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.tipo-residuo');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const selected = document.querySelectorAll('.tipo-residuo:checked');
+                    if (selected.length > 3) {
+                        this.checked = false;
+                        alert('Por favor selecciona máximo 3 tipos principales para clasificar la alerta.');
+                    }
+                });
+            });
+        });
+</script>
+
+<style>
+    :root {
             --primary: #10B981;
             --primary-dark: #059669;
             --dark: #1F2937;
@@ -474,24 +495,4 @@ $extra_css = "
         @media (max-width: 900px) {
             .impact-container { grid-template-columns: 1fr; }
         }
-";
-$extra_head = "
-    <script>
-        // Limitar selección de checkboxes
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.tipo-residuo');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const selected = document.querySelectorAll('.tipo-residuo:checked');
-                    if (selected.length > 3) {
-                        this.checked = false;
-                        alert('Por favor selecciona máximo 3 tipos principales para clasificar la alerta.');
-                    }
-                });
-            });
-        });
-    </script>
-";
-$content = ob_get_clean();
-include __DIR__ . '/../layouts/public_layout.php';
-?>
+</style>
