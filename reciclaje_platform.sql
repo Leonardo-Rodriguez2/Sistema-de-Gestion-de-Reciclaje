@@ -81,17 +81,16 @@ CREATE TABLE `detalles_gestor` (
   `usuario_id` int(11) NOT NULL,
   `dni` varchar(20) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
-  `area` varchar(100) DEFAULT NULL,
-  `especialidad` varchar(100) DEFAULT NULL
+  `area` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `detalles_gestor`
 --
 
-INSERT INTO `detalles_gestor` (`id`, `usuario_id`, `dni`, `telefono`, `area`, `especialidad`) VALUES
-(2, 2, '12345678', '912345678', NULL, NULL),
-(3, 10, '31107189', '041612121', 'encargado de los cobros', 'contabilidad');
+INSERT INTO `detalles_gestor` (`id`, `usuario_id`, `dni`, `telefono`, `area`) VALUES
+(2, 2, '12345678', '912345678', NULL),
+(3, 10, '31107189', '041612121', 'encargado de los cobros');
 
 -- --------------------------------------------------------
 
@@ -105,18 +104,16 @@ CREATE TABLE `detalles_jefe_cuadra` (
   `barrio_id` int(11) NOT NULL,
   `dni` varchar(20) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
-  `direccion` varchar(255) DEFAULT NULL,
-  `estado_civil` varchar(50) DEFAULT NULL,
-  `ocupacion` varchar(100) DEFAULT NULL
+  `direccion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `detalles_jefe_cuadra`
 --
 
-INSERT INTO `detalles_jefe_cuadra` (`id`, `usuario_id`, `barrio_id`, `dni`, `telefono`, `direccion`, `estado_civil`, `ocupacion`) VALUES
-(3, 5, 1, '45678901', '987654321', NULL, NULL, NULL),
-(7, 9, 2, '31107192', '0416123243', NULL, NULL, 'programador');
+INSERT INTO `detalles_jefe_cuadra` (`id`, `usuario_id`, `barrio_id`, `dni`, `telefono`, `direccion`) VALUES
+(3, 5, 1, '45678901', '987654321', NULL),
+(7, 9, 2, '31107192', '0416123243', NULL);
 
 -- --------------------------------------------------------
 
@@ -129,9 +126,7 @@ CREATE TABLE `detalles_recolector` (
   `usuario_id` int(11) NOT NULL,
   `dni` varchar(20) DEFAULT NULL,
   `telefono` varchar(20) DEFAULT NULL,
-  `licencia` varchar(50) DEFAULT NULL,
   `turno` enum('Mañana','Tarde','Noche') DEFAULT 'Mañana',
-  `grupo_sanguineo` varchar(10) DEFAULT NULL,
   `contacto_emergencia` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -139,8 +134,8 @@ CREATE TABLE `detalles_recolector` (
 -- Volcado de datos para la tabla `detalles_recolector`
 --
 
-INSERT INTO `detalles_recolector` (`id`, `usuario_id`, `dni`, `telefono`, `licencia`, `turno`, `grupo_sanguineo`, `contacto_emergencia`) VALUES
-(3, 3, '87654321', '933445566', 'Q1234567', 'Mañana', 'O+', 'Maria Recolector (999888777)');
+INSERT INTO `detalles_recolector` (`id`, `usuario_id`, `dni`, `telefono`, `turno`, `contacto_emergencia`) VALUES
+(3, 3, '87654321', '933445566', 'Mañana', 'Maria Recolector (999888777)');
 
 -- --------------------------------------------------------
 

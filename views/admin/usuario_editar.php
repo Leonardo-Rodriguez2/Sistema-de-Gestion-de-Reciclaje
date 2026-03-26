@@ -4,9 +4,9 @@ $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 
 $sql = "SELECT u.*, r.nombre as rol_nombre,
-               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, dj.barrio_id, dj.estado_civil, dj.ocupacion,
-               dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area, dg.especialidad,
-               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.licencia as recolector_licencia, dr.turno as recolector_turno, dr.grupo_sanguineo, dr.contacto_emergencia
+               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, dj.barrio_id,
+               dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
+               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.turno as recolector_turno, dr.contacto_emergencia
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
         LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id
@@ -97,7 +97,6 @@ ob_start();
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="f-group"><label>Ocupación</label><input type="text" name="ocupacion" value="<?= $u['ocupacion'] ?>"></div>
                 </div>
             </div>
 
@@ -114,7 +113,6 @@ ob_start();
                 <h3>🚛 Recolector</h3>
                 <div class="f-grid">
                     <div class="f-group"><label>DNI</label><input type="text" name="dni_recolector" value="<?= $u['recolector_dni'] ?>"></div>
-                    <div class="f-group"><label>Licencia</label><input type="text" name="licencia" value="<?= $u['recolector_licencia'] ?>"></div>
                     <div class="f-group">
                         <label>Turno</label>
                         <select name="turno">

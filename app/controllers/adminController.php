@@ -94,39 +94,34 @@ class adminController extends mainModel {
     private function insertarDetallesRol($pdo, $user_id, $rol_id) {
         if ($rol_id == 5) { // Jefe de Cuadra
             $pdo->prepare(
-                "INSERT INTO detalles_jefe_cuadra (usuario_id, barrio_id, dni, telefono, direccion, estado_civil, ocupacion)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO detalles_jefe_cuadra (usuario_id, barrio_id, dni, telefono, direccion)
+                 VALUES (?, ?, ?, ?, ?)"
             )->execute([
                 $user_id,
                 (int)$_POST['barrio_id'],
                 $_POST['dni'] ?? null,
                 $_POST['telefono'] ?? null,
                 $_POST['direccion'] ?? null,
-                $_POST['estado_civil'] ?? null,
-                $_POST['ocupacion'] ?? null,
             ]);
         } elseif ($rol_id == 2) { // Gestor
             $pdo->prepare(
-                "INSERT INTO detalles_gestor (usuario_id, dni, telefono, area, especialidad)
-                 VALUES (?, ?, ?, ?, ?)"
+                "INSERT INTO detalles_gestor (usuario_id, dni, telefono, area)
+                 VALUES (?, ?, ?, ?)"
             )->execute([
                 $user_id,
                 $_POST['dni_gestor'] ?? null,
                 $_POST['telefono_gestor'] ?? null,
                 $_POST['area'] ?? null,
-                $_POST['especialidad'] ?? null,
             ]);
         } elseif ($rol_id == 3) { // Recolector
             $pdo->prepare(
-                "INSERT INTO detalles_recolector (usuario_id, dni, telefono, licencia, turno, grupo_sanguineo, contacto_emergencia)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO detalles_recolector (usuario_id, dni, telefono, turno, contacto_emergencia)
+                 VALUES (?, ?, ?, ?, ?)"
             )->execute([
                 $user_id,
                 $_POST['dni_recolector'] ?? null,
                 $_POST['telefono_recolector'] ?? null,
-                $_POST['licencia'] ?? null,
                 $_POST['turno'] ?? 'Mañana',
-                $_POST['grupo_sanguineo'] ?? null,
                 $_POST['contacto_emergencia'] ?? null,
             ]);
         }

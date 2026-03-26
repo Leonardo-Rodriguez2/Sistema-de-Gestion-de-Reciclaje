@@ -97,14 +97,6 @@ ob_start();
                         <label>Dirección</label>
                         <input type="text" name="direccion" placeholder="Ej. Calle Saphy 123">
                     </div>
-                    <div class="form-group">
-                        <label>Estado Civil</label>
-                        <input type="text" name="estado_civil" placeholder="Ej. Soltero/a">
-                    </div>
-                    <div class="form-group">
-                        <label>Ocupación</label>
-                        <input type="text" name="ocupacion" placeholder="Ej. Profesor">
-                    </div>
                 </div>
             </div>
 
@@ -124,10 +116,6 @@ ob_start();
                         <label>Área Responsable</label>
                         <input type="text" name="area" placeholder="Ej. Cobranza Norte">
                     </div>
-                    <div class="form-group">
-                        <label>Especialidad</label>
-                        <input type="text" name="especialidad" placeholder="Ej. Contabilidad">
-                    </div>
                 </div>
             </div>
 
@@ -144,20 +132,12 @@ ob_start();
                         <input type="text" name="telefono_recolector" placeholder="Ej. 987654321">
                     </div>
                     <div class="form-group">
-                        <label>Licencia de Conducir</label>
-                        <input type="text" name="licencia" placeholder="Ej. A-IIb">
-                    </div>
-                    <div class="form-group">
                         <label>Turno</label>
                         <select name="turno">
                             <option value="Mañana">Mañana</option>
                             <option value="Tarde">Tarde</option>
                             <option value="Noche">Noche</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Grupo Sanguíneo</label>
-                        <input type="text" name="grupo_sanguineo" placeholder="Ej. O+">
                     </div>
                     <div class="form-group">
                         <label>Contacto de Emergencia</label>

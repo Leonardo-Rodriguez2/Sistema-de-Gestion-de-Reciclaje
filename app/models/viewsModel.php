@@ -12,7 +12,6 @@ namespace app\models;
 
 class viewsModel extends mainModel {
 
-    // Lista blanca: qué páginas puede acceder cada carpeta de rol
     private $listaBlanca = [
         'admin' => [
             'dashboard',

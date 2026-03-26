@@ -4,9 +4,9 @@ $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 
 $sql = "SELECT u.*, r.nombre as rol_nombre,
-               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, b.nombre as barrio_nombre, dj.estado_civil, dj.ocupacion,
-               dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area, dg.especialidad,
-               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.licencia as recolector_licencia, dr.turno as recolector_turno, dr.grupo_sanguineo, dr.contacto_emergencia
+               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, b.nombre as barrio_nombre,
+               dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
+               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.turno as recolector_turno, dr.contacto_emergencia
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
         LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id LEFT JOIN barrios b ON dj.barrio_id = b.id
@@ -25,11 +25,11 @@ $header_title = "Perfil: " . $u['nombre'];
 // Mapeo de campos por rol para reducir bloques IF pesados
 $extra_info = [];
 if ($u['rol_id'] == 5) {
-    $extra_info = ['Título' => '🏠 Jefe de Cuadra', 'DNI' => $u['jefe_dni'], 'Tel' => $u['jefe_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['jefe_direccion'], 'Ocupación' => $u['ocupacion']];
+    $extra_info = ['Título' => '🏠 Jefe de Cuadra', 'DNI' => $u['jefe_dni'], 'Tel' => $u['jefe_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['jefe_direccion']];
 } elseif ($u['rol_id'] == 2) {
-    $extra_info = ['Título' => '💼 Gestor', 'DNI' => $u['gestor_dni'], 'Tel' => $u['gestor_telefono'], 'Área' => $u['gestor_area'], 'Esp.' => $u['especialidad']];
+    $extra_info = ['Título' => '💼 Gestor', 'DNI' => $u['gestor_dni'], 'Tel' => $u['gestor_telefono'], 'Área' => $u['gestor_area']];
 } elseif ($u['rol_id'] == 3) {
-    $extra_info = ['Título' => '🚛 Recolector', 'DNI' => $u['recolector_dni'], 'Licencia' => $u['recolector_licencia'], 'Turno' => $u['recolector_turno'], 'Sangre' => $u['grupo_sanguineo'], 'Emerg.' => $u['contacto_emergencia']];
+    $extra_info = ['Título' => '🚛 Recolector', 'DNI' => $u['recolector_dni'], 'Turno' => $u['recolector_turno'], 'Emerg.' => $u['contacto_emergencia']];
 }
 
 ob_start();
