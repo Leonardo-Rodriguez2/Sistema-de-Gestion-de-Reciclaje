@@ -1,8 +1,4 @@
 <?php
-// =============================================
-// app/helpers.php — Funciones de Ayuda Globales
-// Disponible en todas las vistas del dashboard.
-// =============================================
 
 function check_dashboard_access($allowed_roles = [1]) {
     global $pdo;

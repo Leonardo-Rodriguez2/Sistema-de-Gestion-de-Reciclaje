@@ -3,11 +3,6 @@
 namespace app\controllers;
 use app\models\mainModel;
 
-// =============================================
-// app/controllers/gestorController.php
-// Acciones POST exclusivas del Gestor de Pagos.
-// =============================================
-
 class gestorController extends mainModel {
 
     public function procesarAcciones() {

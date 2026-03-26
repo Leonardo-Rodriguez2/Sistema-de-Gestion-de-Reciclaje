@@ -186,7 +186,10 @@
 </head>
 <body>
     <div class="cabecera">
-        <div class="titulo">EPSIC</div>
+        <div class="titulo">
+            <img src="/reciclaje/assets/img/icono.png" style="width: 2rem; height: 2rem;">
+            EPSIC
+        </div>
         <div class="menu">
             <a href="/reciclaje/index.php">Inicio</a>
             <a href="/reciclaje/views/public/servicios.php">Servicios</a>

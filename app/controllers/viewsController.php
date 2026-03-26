@@ -4,17 +4,8 @@ namespace app\controllers;
 use app\models\viewsModel;
 use \PDO;
 
-// =============================================
-// app/controllers/viewsController.php
-// Prepara todo para la vista: valida sesión,
-// determina el rol, procesa POST y devuelve
-// los datos necesarios para renderizar.
-// =============================================
-
 class viewsController extends viewsModel {
 
-    // Retorna los datos necesarios para que router.php
-    // pueda renderizar la vista en el scope global
     public function preparar() {
 
         // 1. Obtener datos del usuario

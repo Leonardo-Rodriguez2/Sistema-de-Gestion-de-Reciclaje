@@ -4,14 +4,8 @@ namespace app\controllers;
 use app\models\mainModel;
 use \PDO;
 
-// =============================================
-// app/controllers/loginController.php
-// Maneja el inicio y cierre de sesión.
-// =============================================
-
 class loginController extends mainModel {
 
-    // Intenta iniciar sesión, devuelve mensaje de error o null si exitoso
     public function iniciarSesion() {
         $email    = trim($_POST['email'] ?? '');
         $password = trim($_POST['password'] ?? '');
