@@ -3,16 +3,24 @@
 $user = check_dashboard_access([1]);
 $filter_rol_id = (int)($_GET['rol_id'] ?? 0);
 
-// Mapeo dinámico para ahorrar IFs
-$roles_map = [5 => "Jefes", 2 => "Gestores", 3 => "Recolectores"];
+// Mapeo dinámico para etiquetas y títulos
+$roles_map = [
+    5 => "Encargados de Barrio", 
+    6 => "Encargados de Calle",
+    2 => "Gestores de Pago", 
+    3 => "Personal Obrero"
+];
 $role_name = $roles_map[$filter_rol_id] ?? "Usuarios";
 
 $title = "$role_name - EcoCusco";
 $header_title = "Gestión $role_name";
 
 // Consulta SQL optimizada
-$sql = "SELECT u.id, u.nombre, u.apellido, u.email, u.rol_id, r.nombre as rol_nombre, u.creado_en 
-        FROM usuarios u JOIN roles r ON u.rol_id = r.id WHERE 1=1";
+$sql = "SELECT u.id, u.nombre, u.apellido, u.email, u.rol_id, r.nombre as rol_nombre, u.creado_en, dp.cargo 
+        FROM usuarios u 
+        JOIN roles r ON u.rol_id = r.id 
+        LEFT JOIN detalles_personal_obrero dp ON u.id = dp.usuario_id
+        WHERE 1=1";
 if ($filter_rol_id > 0) $sql .= " AND u.rol_id = :rol_id";
 $sql .= " ORDER BY u.creado_en DESC";
 
@@ -46,17 +54,37 @@ ob_start();
 <?php render_dashboard_stats([
     ['title' => 'Total', 'value' => count($usuarios_lista), 'color' => '#10B981', 'icon' => '👥'],
     ['title' => 'Admins', 'value' => count(array_filter($usuarios_lista, fn($u) => $u['rol_id'] == 1)), 'color' => '#DC2626', 'icon' => '🛡️'],
-    ['title' => 'Staff', 'value' => count(array_filter($usuarios_lista, fn($u) => in_array($u['rol_id'], [2, 3, 5]))), 'color' => '#D97706', 'icon' => '💼']
+    ['title' => 'Personal', 'value' => count(array_filter($usuarios_lista, fn($u) => $u['rol_id'] == 3)), 'color' => '#D97706', 'icon' => '👷']
 ]); ?>
+
+<?php
+// Determinar enlace de creación según el filtro
+$create_links = [
+    5 => 'usuario_nuevo_barrio',
+    6 => 'usuario_nuevo_calle',
+    2 => 'usuario_nuevo_gestor',
+    3 => 'usuario_nuevo_personal'
+];
+$new_link = $create_links[$filter_rol_id] ?? 'usuario_nuevo';
+?>
 
 <div class="actions-bar">
     <div class="search-container">
         <span class="search-icon">🔍</span>
-        <input type="text" id="userSearch" class="search-input" placeholder="Buscar..." onkeyup="filterUsers()">
+        <input type="text" id="userSearch" class="search-input" placeholder="Buscar <?= strtolower($role_name) ?>..." onkeyup="filterUsers()">
     </div>
-    <a href="router.php?page=usuario_nuevo<?= $filter_rol_id ? "&rol_id=$filter_rol_id" : '' ?>" class="btn-new-user">
-        <span>+</span> Nuevo
-    </a>
+    
+    <div style="display: flex; gap: 8px;">
+        <?php if ($filter_rol_id == 0): ?>
+            <!-- Accesos Rápidos si no hay filtro -->
+            <a href="router.php?page=usuario_nuevo_barrio" class="btn-new-user" style="background:#059669;" title="Nuevo Encargado de Barrio">+ Barrio</a>
+            <a href="router.php?page=usuario_nuevo_personal" class="btn-new-user" style="background:#D97706;" title="Nuevo Personal Obrero">+ Personal</a>
+        <?php else: ?>
+            <a href="router.php?page=<?= $new_link ?>" class="btn-new-user">
+                <span>+</span> Registrar <?= rtrim($role_name, 's') ?>
+            </a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <section class="table-container">
@@ -64,7 +92,7 @@ ob_start();
         <thead>
             <tr>
                 <th>Usuario</th>
-                <th>Rol</th>
+                <th>Rol / Cargo</th>
                 <th>Registro</th>
                 <th>Acciones</th>
             </tr>
@@ -83,10 +111,13 @@ ob_start();
                 </td>
                 <td>
                     <?php 
-                        $roles_css = [1=>'admin', 2=>'gestor', 3=>'recolector', 5=>'jefe'];
+                        $roles_css = [1=>'admin', 2=>'gestor', 3=>'recolector', 5=>'jefe', 6=>'calle'];
                         $class = $roles_css[$u['rol_id']] ?? 'usuario';
                     ?>
-                    <span class="badge <?= $class ?>"><?= htmlspecialchars($u['rol_nombre']) ?></span>
+                    <span class="badge <?= $class ?>">
+                        <?= htmlspecialchars($u['rol_nombre']) ?>
+                        <?= ($u['rol_id'] == 3 && $u['cargo']) ? ' - '.htmlspecialchars($u['cargo']) : '' ?>
+                    </span>
                 </td>
                 <td style="color: #6B7280;"><?= date('d/m/y', strtotime($u['creado_en'])) ?></td>
                 <td>

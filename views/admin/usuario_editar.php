@@ -6,12 +6,12 @@ if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 $sql = "SELECT u.*, r.nombre as rol_nombre,
                dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, dj.barrio_id,
                dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
-               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.turno as recolector_turno, dr.contacto_emergencia
+               dp.cargo as personal_cargo, dp.dni as personal_dni, dp.telefono as personal_telefono, dp.turno as personal_turno
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
         LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id
         LEFT JOIN detalles_gestor dg ON u.id = dg.usuario_id
-        LEFT JOIN detalles_recolector dr ON u.id = dr.usuario_id
+        LEFT JOIN detalles_personal_obrero dp ON u.id = dp.usuario_id
         WHERE u.id = ?";
 
 $stmt = $pdo->prepare($sql);
@@ -74,8 +74,8 @@ ob_start();
                 <div class="f-group">
                     <label>Rol</label>
                     <select name="rol_id" id="rol_id" required onchange="toggleRoleFields()">
-                        <option value="5" <?= $u['rol_id'] == 5 ? 'selected' : '' ?>>Jefe de Cuadra</option>
-                        <option value="3" <?= $u['rol_id'] == 3 ? 'selected' : '' ?>>Recolector</option>
+                        <option value="5" <?= $u['rol_id'] == 5 ? 'selected' : '' ?>>Encargado de Barrio</option>
+                        <option value="3" <?= $u['rol_id'] == 3 ? 'selected' : '' ?>>Personal Obrero</option>
                         <option value="2" <?= $u['rol_id'] == 2 ? 'selected' : '' ?>>Gestor</option>
                         <option value="1" <?= $u['rol_id'] == 1 ? 'selected' : '' ?>>Administrador</option>
                     </select>
@@ -85,7 +85,7 @@ ob_start();
 
         <div id="role_fields_container">
             <div id="j_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 5 ? 'block' : 'none' ?>;">
-                <h3>🏠 Jefe de Cuadra</h3>
+                <h3>🏠 Encargado de Barrio</h3>
                 <div class="f-grid">
                     <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['jefe_dni'] ?>"></div>
                     <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['jefe_telefono'] ?>"></div>
@@ -110,18 +110,28 @@ ob_start();
             </div>
 
             <div id="r_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 3 ? 'block' : 'none' ?>;">
-                <h3>🚛 Recolector</h3>
+                <h3>👷 Personal Obrero</h3>
                 <div class="f-grid">
-                    <div class="f-group"><label>DNI</label><input type="text" name="dni_recolector" value="<?= $u['recolector_dni'] ?>"></div>
+                    <div class="f-group">
+                        <label>Cargo / Función</label>
+                        <select name="cargo">
+                            <option value="Recolector" <?= $u['personal_cargo'] == 'Recolector' ? 'selected' : '' ?>>Recolector</option>
+                            <option value="Chofer" <?= $u['personal_cargo'] == 'Chofer' ? 'selected' : '' ?>>Chofer</option>
+                            <option value="Operario de Planta" <?= $u['personal_cargo'] == 'Operario de Planta' ? 'selected' : '' ?>>Operario de Planta</option>
+                            <option value="Mecánico" <?= $u['personal_cargo'] == 'Mecánico' ? 'selected' : '' ?>>Mecánico</option>
+                            <option value="Supervisor de Campo" <?= $u['personal_cargo'] == 'Supervisor de Campo' ? 'selected' : '' ?>>Supervisor de Campo</option>
+                        </select>
+                    </div>
+                    <div class="f-group"><label>DNI</label><input type="text" name="dni_personal" value="<?= $u['personal_dni'] ?>"></div>
+                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono_personal" value="<?= $u['personal_telefono'] ?>"></div>
                     <div class="f-group">
                         <label>Turno</label>
                         <select name="turno">
-                            <option value="Mañana" <?= $u['recolector_turno']=='Mañana'?'selected':'' ?>>Mañana</option>
-                            <option value="Tarde" <?= $u['recolector_turno']=='Tarde'?'selected':'' ?>>Tarde</option>
-                            <option value="Noche" <?= $u['recolector_turno']=='Noche'?'selected':'' ?>>Noche</option>
+                            <option value="Mañana" <?= $u['personal_turno']=='Mañana'?'selected':'' ?>>Mañana</option>
+                            <option value="Tarde" <?= $u['personal_turno']=='Tarde'?'selected':'' ?>>Tarde</option>
+                            <option value="Noche" <?= $u['personal_turno']=='Noche'?'selected':'' ?>>Noche</option>
                         </select>
                     </div>
-                    <div class="f-group"><label>Emergencia</label><input type="text" name="contacto_emergencia" value="<?= $u['contacto_emergencia'] ?>"></div>
                 </div>
             </div>
         </div>

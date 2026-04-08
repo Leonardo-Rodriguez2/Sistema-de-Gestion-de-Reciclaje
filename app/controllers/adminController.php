@@ -32,7 +32,7 @@ class adminController extends mainModel {
                 $pdo = $this->conectar();
                 $pdo->beginTransaction();
 
-                $stmt = $pdo->prepare(
+                $stmt = $pdo->prepare(  
                     "INSERT INTO usuarios (nombre, apellido, email, genero, fecha_nacimiento, password_hash, rol_id)
                      VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
@@ -73,9 +73,10 @@ class adminController extends mainModel {
                 $pdo->prepare($sql)->execute($params);
 
                 // Limpiar y re-insertar detalles
-                $pdo->prepare("DELETE FROM detalles_jefe_cuadra WHERE usuario_id=?")->execute([$u_id]);
+                $pdo->prepare("DELETE FROM detalles_encargado_barrio WHERE usuario_id=?")->execute([$u_id]);
+                $pdo->prepare("DELETE FROM detalles_encargado_calle WHERE usuario_id=?")->execute([$u_id]);
                 $pdo->prepare("DELETE FROM detalles_gestor WHERE usuario_id=?")->execute([$u_id]);
-                $pdo->prepare("DELETE FROM detalles_recolector WHERE usuario_id=?")->execute([$u_id]);
+                $pdo->prepare("DELETE FROM detalles_personal_obrero WHERE usuario_id=?")->execute([$u_id]);
                 $this->insertarDetallesRol($pdo, $u_id, $rol_id);
 
                 $pdo->commit();
@@ -87,14 +88,60 @@ class adminController extends mainModel {
                 exit;
             }
         }
+
+        // 3. Crear nueva calle
+        if ($action === 'nueva_calle') {
+            try {
+                $this->ejecutarConsulta(
+                    "INSERT INTO calles (nombre, barrio_id) VALUES (?, ?)",
+                    [$_POST['nombre'], (int)$_POST['barrio_id']]
+                );
+                $mensaje_exito = "Calle registrada correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al registrar calle.";
+            }
+        }
+
+        // 4. Crear nuevo barrio
+        if ($action === 'nuevo_barrio') {
+            try {
+                $this->ejecutarConsulta(
+                    "INSERT INTO barrios (nombre) VALUES (?)",
+                    [$_POST['nombre']]
+                );
+                $mensaje_exito = "Barrio creado correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al crear barrio.";
+            }
+        }
+
+        // 5. Registrar Vivienda (Directo Admin)
+        if ($action === 'nuevo_vecino_admin') {
+            try {
+                $this->ejecutarConsulta(
+                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa)
+                     VALUES (?, ?, ?, ?, ?)",
+                    [
+                        $_POST['propietario'],
+                        (int)$_POST['barrio_id'],
+                        (int)$_POST['calle_id'],
+                        $_POST['direccion'],
+                        $_POST['numero_casa'] ?? null
+                    ]
+                );
+                $mensaje_exito = "Vivienda registrada correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al registrar vivienda.";
+            }
+        }
     }
 
 
     // Inserta en la tabla de detalles según el rol
     private function insertarDetallesRol($pdo, $user_id, $rol_id) {
-        if ($rol_id == 5) { // Jefe de Cuadra
+        if ($rol_id == 5) { // Encargado de Barrio
             $pdo->prepare(
-                "INSERT INTO detalles_jefe_cuadra (usuario_id, barrio_id, dni, telefono, direccion)
+                "INSERT INTO detalles_encargado_barrio (usuario_id, barrio_id, dni, telefono, direccion)
                  VALUES (?, ?, ?, ?, ?)"
             )->execute([
                 $user_id,
@@ -102,6 +149,16 @@ class adminController extends mainModel {
                 $_POST['dni'] ?? null,
                 $_POST['telefono'] ?? null,
                 $_POST['direccion'] ?? null,
+            ]);
+        } elseif ($rol_id == 6) { // Encargado de Calle
+            $pdo->prepare(
+                "INSERT INTO detalles_encargado_calle (usuario_id, calle_id, dni, telefono)
+                 VALUES (?, ?, ?, ?)"
+            )->execute([
+                $user_id,
+                (int)$_POST['calle_id'],
+                $_POST['dni_calle'] ?? null,
+                $_POST['telefono_calle'] ?? null,
             ]);
         } elseif ($rol_id == 2) { // Gestor
             $pdo->prepare(
@@ -113,17 +170,21 @@ class adminController extends mainModel {
                 $_POST['telefono_gestor'] ?? null,
                 $_POST['area'] ?? null,
             ]);
-        } elseif ($rol_id == 3) { // Recolector
+        } elseif ($rol_id == 3) { // Personal Obrero
             $pdo->prepare(
-                "INSERT INTO detalles_recolector (usuario_id, dni, telefono, turno, contacto_emergencia)
+                "INSERT INTO detalles_personal_obrero (usuario_id, cargo, dni, telefono, turno)
                  VALUES (?, ?, ?, ?, ?)"
             )->execute([
                 $user_id,
-                $_POST['dni_recolector'] ?? null,
-                $_POST['telefono_recolector'] ?? null,
+                $_POST['cargo'] ?? 'Recolector',
+                $_POST['dni_personal'] ?? null,
+                $_POST['telefono_personal'] ?? null,
                 $_POST['turno'] ?? 'Mañana',
-                $_POST['contacto_emergencia'] ?? null,
             ]);
         }
     }
 }
+
+
+
+

@@ -35,7 +35,6 @@ function render_dashboard_alerts($exito, $error) {
 
 /**
  * Genera la cuadrícula de estadísticas.
- * @param array $stats Array de arrays con [title, value, color, icon]
  */
 function render_dashboard_stats($stats = []) {
     include __DIR__ . '/../views/components/dashboard_stats.php';

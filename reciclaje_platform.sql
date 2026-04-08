@@ -238,7 +238,7 @@ INSERT INTO `roles` (`id`, `nombre`, `descripcion`) VALUES
 (1, 'Administrador', 'Control total del sistema, viviendas, barrios y usuarios.'),
 (2, 'Gestor de Pagos', 'Encargado de revisar cobros, validar pagos y generar reportes financieros.'),
 (3, 'Recolector', 'Encargado de ver las rutas, los reportes en proceso e ir a recoger los residuos.'),
-(5, 'Jefe de Cuadra', 'Encargado de recibir el dinero, registrar viviendas y marcar sus pagos.');
+(5, 'Encargado de Barrio', 'Encargado de recibir el dinero, registrar viviendas y marcar sus pagos.');
 
 -- --------------------------------------------------------
 
@@ -278,7 +278,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `email`, `genero`, `fecha_na
 
 CREATE TABLE `viviendas` (
   `id` int(11) NOT NULL,
-  `jefe_cuadra_id` int(11) NOT NULL,
+  `encargado_calle_id` int(11) NOT NULL,
   `barrio_id` int(11) NOT NULL,
   `propietario` varchar(100) NOT NULL,
   `telefono` varchar(20) DEFAULT NULL,
@@ -292,7 +292,7 @@ CREATE TABLE `viviendas` (
 -- Volcado de datos para la tabla `viviendas`
 --
 
-INSERT INTO `viviendas` (`id`, `jefe_cuadra_id`, `barrio_id`, `propietario`, `telefono`, `direccion`, `numero_casa`, `referencia`, `fecha_registro`) VALUES
+INSERT INTO `viviendas` (`id`, `encargado_calle_id`, `barrio_id`, `propietario`, `telefono`, `direccion`, `numero_casa`, `referencia`, `fecha_registro`) VALUES
 (1, 5, 1, 'Familia Quispe', NULL, 'Calle Tandapata', '120', NULL, '2026-03-20 13:23:47'),
 (2, 5, 3, 'Familia Mamani', NULL, 'Av. Garcilaso', '505', NULL, '2026-03-20 13:23:47');
 
@@ -385,7 +385,7 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `viviendas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `jefe_cuadra_id` (`jefe_cuadra_id`),
+  ADD KEY `encargado_calle_id` (`encargado_calle_id`),
   ADD KEY `barrio_id` (`barrio_id`);
 
 --
@@ -525,7 +525,7 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `viviendas`
 --
 ALTER TABLE `viviendas`
-  ADD CONSTRAINT `viviendas_ibfk_1` FOREIGN KEY (`jefe_cuadra_id`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `viviendas_ibfk_1` FOREIGN KEY (`encargado_calle_id`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `viviendas_ibfk_2` FOREIGN KEY (`barrio_id`) REFERENCES `barrios` (`id`);
 COMMIT;
 

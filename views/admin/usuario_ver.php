@@ -6,12 +6,12 @@ if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 $sql = "SELECT u.*, r.nombre as rol_nombre,
                dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, b.nombre as barrio_nombre,
                dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
-               dr.dni as recolector_dni, dr.telefono as recolector_telefono, dr.turno as recolector_turno, dr.contacto_emergencia
+               dp.cargo as personal_cargo, dp.dni as personal_dni, dp.telefono as personal_telefono, dp.turno as personal_turno
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
         LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id LEFT JOIN barrios b ON dj.barrio_id = b.id
         LEFT JOIN detalles_gestor dg ON u.id = dg.usuario_id
-        LEFT JOIN detalles_recolector dr ON u.id = dr.usuario_id
+        LEFT JOIN detalles_personal_obrero dp ON u.id = dp.usuario_id
         WHERE u.id = ?";
 
 $stmt = $pdo->prepare($sql);
@@ -25,11 +25,11 @@ $header_title = "Perfil: " . $u['nombre'];
 // Mapeo de campos por rol para reducir bloques IF pesados
 $extra_info = [];
 if ($u['rol_id'] == 5) {
-    $extra_info = ['Título' => '🏠 Jefe de Cuadra', 'DNI' => $u['jefe_dni'], 'Tel' => $u['jefe_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['jefe_direccion']];
+    $extra_info = ['Título' => '🏠 Encargado de Barrio', 'DNI' => $u['jefe_dni'], 'Tel' => $u['jefe_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['jefe_direccion']];
 } elseif ($u['rol_id'] == 2) {
     $extra_info = ['Título' => '💼 Gestor', 'DNI' => $u['gestor_dni'], 'Tel' => $u['gestor_telefono'], 'Área' => $u['gestor_area']];
 } elseif ($u['rol_id'] == 3) {
-    $extra_info = ['Título' => '🚛 Recolector', 'DNI' => $u['recolector_dni'], 'Turno' => $u['recolector_turno'], 'Emerg.' => $u['contacto_emergencia']];
+    $extra_info = ['Título' => '👷 Personal Obrero', 'Cargo' => $u['personal_cargo'], 'DNI' => $u['personal_dni'], 'Tel' => $u['personal_telefono'], 'Turno' => $u['personal_turno']];
 }
 
 ob_start();

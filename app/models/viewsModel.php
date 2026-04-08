@@ -16,25 +16,43 @@ class viewsModel extends mainModel {
         'admin' => [
             'dashboard',
             'usuarios',
-            'usuario_nuevo',
+            'usuario_nuevo', // Keep for general use
+            'usuario_nuevo_barrio',
+            'usuario_nuevo_calle',
+            'usuario_nuevo_gestor',
+            'usuario_nuevo_personal',
             'usuario_editar',
             'usuario_ver',
             'barrios',
+            'barrio_nuevo',
+            'calles',
             'viviendas',
             'registrar_vivienda',
+            'solicitudes',
         ],
         'gestor' => [
             'dashboard',
+            'viviendas',
+            'registrar_vivienda',
+            'usuario_nuevo_personal',
             'historial',
             'recibos',
         ],
-        'recolector' => [
+        'personal' => [
             'dashboard',
         ],
-        'jefe' => [
+        'barrio' => [
+            'dashboard',
+            'viviendas',
+            'calles',
+            'solicitudes',
+            'reportar_pago',
+        ],
+        'calle' => [
             'dashboard',
             'viviendas',
             'registrar_vivienda',
+            'solicitar_baja',
             'reportar_pago',
         ],
     ];
@@ -59,8 +77,9 @@ class viewsModel extends mainModel {
         $mapa = [
             1 => 'admin',
             2 => 'gestor',
-            3 => 'recolector',
-            5 => 'jefe',
+            3 => 'personal',
+            5 => 'barrio',
+            6 => 'calle',
         ];
         return $mapa[$rol_id] ?? null;
     }

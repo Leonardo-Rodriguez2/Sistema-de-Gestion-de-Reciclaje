@@ -25,7 +25,7 @@ ob_start();
         <div class="card" style="grid-column: span 2;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0;">🗺️ Zonas del Sistema</h3>
-                <button class="btn-primary" onclick="alert('Funcionalidad de añadir barrio próximamente')">+ Añadir Barrio</button>
+                <a href="router.php?page=barrio_nuevo" class="btn-primary" style="text-decoration: none;">+ Añadir Barrio</a>
             </div>
             
             <div style="overflow-x: auto;">

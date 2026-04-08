@@ -49,7 +49,7 @@
 </head>
 <body>
 
-  <?php include __DIR__ . '/../../components/sidebar.php'; ?>
+  <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
   <main class="main">
     <header class="header">

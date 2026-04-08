@@ -58,7 +58,8 @@ ob_start();
                     <?php $locked_rol_id = (int)($_GET['rol_id'] ?? 0); ?>
                     <select id="rol_id" name="rol_id" required onchange="toggleRoleFields()" <?= $locked_rol_id > 0 ? 'disabled' : '' ?>>
                         <option value="">Seleccione un rol...</option>
-                        <option value="5">Jefe de Cuadra</option>
+                        <option value="5">Encargado de Barrio</option>
+                        <option value="6">Encargado de Calle</option>
                         <option value="3">Recolector</option>
                         <option value="2">Gestor de Pagos</option>
                         <option value="1">Administrador</option>
@@ -73,9 +74,9 @@ ob_start();
 
         <!-- Role Specific Sections -->
         <div id="role_fields_container">
-            <!-- Jefe de Cuadra Section -->
+            <!-- Encargado de Barrio Section -->
             <div id="jefe_fields" class="form-section role-section" style="display: none;">
-                <h3><span class="icon">🏠</span> Detalles: Jefe de Cuadra</h3>
+                <h3><span class="icon">🏠</span> Detalles: Encargado de Barrio</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>DNI / Identificación</label>
@@ -96,6 +97,31 @@ ob_start();
                     <div class="form-group">
                         <label>Dirección</label>
                         <input type="text" name="direccion" placeholder="Ej. Calle Saphy 123">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Encargado de Calle Section -->
+            <div id="calle_fields" class="form-section role-section" style="display: none;">
+                <h3><span class="icon">📍</span> Detalles: Encargado de Calle</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" name="dni_calle" placeholder="Ej. 70654321">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono_calle" placeholder="Ej. 987654321">
+                    </div>
+                    <div class="form-group">
+                        <label>Calle Asignada</label>
+                        <select name="calle_id">
+                            <?php 
+                            $stmt = $pdo->query("SELECT c.id, c.nombre, b.nombre as barrio FROM calles c JOIN barrios b ON c.barrio_id = b.id ORDER BY b.nombre, c.nombre");
+                            while($c = $stmt->fetch()): ?>
+                                <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['barrio'] . " - " . $c['nombre']) ?></option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -182,6 +208,7 @@ function toggleRoleFields() {
     sections.forEach(s => s.style.display = 'none');
 
     if (rolId == 5) document.getElementById('jefe_fields').style.display = 'block';
+    else if (rolId == 6) document.getElementById('calle_fields').style.display = 'block';
     else if (rolId == 2) document.getElementById('gestor_fields').style.display = 'block';
     else if (rolId == 3) document.getElementById('recolector_fields').style.display = 'block';
 }

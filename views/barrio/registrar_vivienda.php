@@ -5,7 +5,7 @@ $user = check_dashboard_access([5]);
 // Barrios para el form
 $barrios = $pdo->query("SELECT id, nombre FROM barrios ORDER BY nombre")->fetchAll(PDO::FETCH_ASSOC);
 
-$title = "Registrar Vivienda - Jefe de Cuadra";
+$title = "Registrar Vivienda - Encargado de Barrio";
 $header_title = "Nueva Vivienda";
 $header_subtitle = "Registra una nueva vivienda en tu cuadra.";
 

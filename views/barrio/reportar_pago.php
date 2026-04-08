@@ -6,7 +6,7 @@ $user = check_dashboard_access([5]);
 $pendientesStmt = $pdo->prepare("SELECT c.*, v.propietario, v.direccion, v.numero_casa 
                                  FROM cobros c 
                                  JOIN viviendas v ON c.vivienda_id = v.id 
-                                 WHERE v.jefe_cuadra_id = ? AND c.estado != 'Pagado'
+                                 WHERE v.encargado_calle_id = ? AND c.estado != 'Pagado'
                                  ORDER BY c.fecha_vencimiento ASC");
 $pendientesStmt->execute([$user['id']]);
 $cobros_pendientes = $pendientesStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -15,12 +15,12 @@ $cobros_pendientes = $pendientesStmt->fetchAll(PDO::FETCH_ASSOC);
 $por_enviarStmt = $pdo->prepare("SELECT c.*, v.propietario 
                                  FROM cobros c 
                                  JOIN viviendas v ON c.vivienda_id = v.id 
-                                 WHERE v.jefe_cuadra_id = ? AND c.estado = 'Pagado' AND c.recaudacion_id IS NULL");
+                                 WHERE v.encargado_calle_id = ? AND c.estado = 'Pagado' AND c.recaudacion_id IS NULL");
 $por_enviarStmt->execute([$user['id']]);
 $cobros_por_enviar = $por_enviarStmt->fetchAll(PDO::FETCH_ASSOC);
 $total_acumulado = array_sum(array_column($cobros_por_enviar, 'monto'));
 
-$title = "Reportar Pagos - Jefe de Cuadra";
+$title = "Reportar Pagos - Encargado de Barrio";
 $header_title = "Gestión de Recaudación";
 $header_subtitle = "Cobra a los vecinos y reporta el total al Gestor.";
 

@@ -10,7 +10,7 @@ class gestorController extends mainModel {
 
         $action = $_POST['action'] ?? $_POST['form_type'] ?? null;
 
-        // 1. Verificar recaudación enviada por un Jefe de Cuadra
+        // 1. Verificar recaudación enviada por un Encargado de Barrio
         if ($action === 'verificar_recaudacion') {
             $recaudacion_id = (int)$_POST['recaudacion_id'];
             try {
