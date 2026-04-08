@@ -46,6 +46,7 @@ class viewsModel extends mainModel {
             'viviendas',
             'calles',
             'solicitudes',
+            'registrar_vivienda',
             'reportar_pago',
         ],
         'calle' => [

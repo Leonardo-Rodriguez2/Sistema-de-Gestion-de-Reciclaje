@@ -68,7 +68,37 @@ class barrioController extends mainModel {
             }
         }
 
-        // 2. Enviar recaudaciones de la calle al Gestor
+        // 2. Registrar Nueva Vivienda (Manual o desde Solicitud)
+        if ($action === 'nuevo_vecino') {
+            try {
+                $this->ejecutarConsulta(
+                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, encargado_calle_id)
+                     VALUES (?, ?, ?, ?, ?, ?)",
+                    [
+                        $_POST['propietario'],
+                        (int)$_POST['barrio_id'],
+                        (int)$_POST['calle_id'],
+                        $_POST['direccion'],
+                        $_POST['numero'] ?? null,
+                        $_POST['encargado_calle_id'] ?? $user['id']
+                    ]
+                );
+
+                // Si venía de una solicitud, marcarla como aprobada
+                if (!empty($_POST['solicitud_id'])) {
+                    $this->ejecutarConsulta(
+                        "UPDATE solicitudes_vivienda SET estado = 'Aprobado', revisado_por = ?, fecha_revision = CURRENT_TIMESTAMP WHERE id = ?",
+                        [$user['id'], (int)$_POST['solicitud_id']]
+                    );
+                }
+
+                $mensaje_exito = "Vivienda registrada correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al registrar vivienda: " . $e->getMessage();
+            }
+        }
+
+        // 3. Enviar recaudaciones de la calle al Gestor
         if ($action === 'enviar_recaudacion_gestor') {
             try {
                 $pdo = $this->conectar();

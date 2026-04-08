@@ -99,12 +99,13 @@ $page = $page ?? 'dashboard';
 
             <!-- MÓDULO BARRIO (Encargado de Barrio) -->
             <?php if ($rol_id == 5): ?>
-                <li class="has-submenu <?= in_array($page, ['calles', 'solicitudes', 'viviendas']) ? 'open' : '' ?>">
+                <li class="has-submenu <?= in_array($page, ['calles', 'solicitudes', 'viviendas', 'registrar_vivienda']) ? 'open' : '' ?>">
                     <a href="javascript:void(0)" class="submenu-toggle" onclick="toggleSubmenu(this)">
                         <span class="icon">🏘️</span> Mi Barrio <span class="arrow">▼</span>
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=calles" class="<?= ($page == 'calles') ? 'active' : '' ?>">Lista de Calles</a></li>
+                        <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
                         <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Vivienda</a></li>
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Ver Todas Viviendas</a></li>
                     </ul>

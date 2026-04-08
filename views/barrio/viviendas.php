@@ -78,35 +78,52 @@ ob_start();
         </form>
     </div>
 
-    <div class="card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="margin: 0;">📋 Viviendas (<?= count($viviendas) ?>)</h3>
-            <a href="router.php?page=registrar_vivienda" class="btn-primary" style="text-decoration: none;">+ Registrar Vivienda</a>
+    <div class="card" style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">🏡</span> 
+                Listado de Viviendas (<?= count($viviendas) ?>)
+            </h3>
+            <a href="router.php?page=registrar_vivienda" class="btn-primary" style="text-decoration: none; padding: 10px 20px; background: #111827; border-radius: 8px; font-weight: 600; font-size: 13px;">+ Nueva Vivienda</a>
         </div>
         
         <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 14px;">
                 <thead>
-                    <tr style="border-bottom: 2px solid #F3F4F6; text-align: left;">
-                        <th style="padding: 12px; color: #6B7280;">Calle</th>
-                        <th style="padding: 12px; color: #6B7280;">Propietario / Familia</th>
-                        <th style="padding: 12px; color: #6B7280;">Casa / Dirección</th>
-                        <th style="padding: 12px; text-align: center; color: #6B7280;">Estado / Reg.</th>
+                    <tr style="text-align: left;">
+                        <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Ubicación / Calle</th>
+                        <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Propietario</th>
+                        <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Dirección / Referencia</th>
+                        <th style="padding: 12px; text-align: center; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Registro</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($viviendas)): ?>
                         <tr>
-                            <td colspan="4" style="padding: 40px; text-align: center; color: #9CA3AF;">No se encontraron viviendas registradas.</td>
+                            <td colspan="4" style="padding: 50px; text-align: center; color: #9CA3AF; background: #F9FAFB; border-radius: 12px;">
+                                <div style="font-size: 40px; margin-bottom: 10px;">🏠</div>
+                                No se encontraron viviendas registradas en esta zona.
+                            </td>
                         </tr>
                     <?php endif; ?>
                     <?php foreach($viviendas as $v): ?>
-                        <tr style="border-bottom: 1px solid #F3F4F6;">
-                            <td style="padding: 12px;"><span style="background: #E5E7EB; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;"><?= htmlspecialchars($v['calle_nombre'] ?? 'Sin Calle') ?></span></td>
-                            <td style="padding: 12px; font-weight: 700;"><?= htmlspecialchars($v['propietario']) ?></td>
-                            <td style="padding: 12px;"><strong>#<?= htmlspecialchars($v['numero_casa']) ?></strong> - <?= htmlspecialchars($v['direccion']) ?></td>
-                            <td style="padding: 12px; text-align: center; color: #4B5563;">
-                                <div style="font-size: 11px;"><?= date('d/m/Y', strtotime($v['fecha_registro'])) ?></div>
+                        <tr style="background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: 0.3s;">
+                            <td style="padding: 15px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; border: 1px solid #F3F4F6; border-right: none;">
+                                <span style="background: #F3F4F6; color: #374151; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">
+                                    <?= htmlspecialchars($v['calle_nombre'] ?? 'S/N') ?>
+                                </span>
+                            </td>
+                            <td style="padding: 15px; border: 1px solid #F3F4F6; border-left: none; border-right: none;">
+                                <div style="font-weight: 800; color: #111827;"><?= htmlspecialchars($v['propietario']) ?></div>
+                                <div style="font-size: 11px; color: #6B7280;">ID: #<?= $v['id'] ?></div>
+                            </td>
+                            <td style="padding: 15px; border: 1px solid #F3F4F6; border-left: none; border-right: none;">
+                                <div style="font-weight: 700; color: #4B5563;">Casa <?= htmlspecialchars($v['numero_casa'] ?: '-') ?></div>
+                                <div style="font-size: 12px; color: #9CA3AF; font-style: italic;"><?= htmlspecialchars($v['direccion']) ?></div>
+                            </td>
+                            <td style="padding: 15px; text-align: center; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border: 1px solid #F3F4F6; border-left: none;">
+                                <div style="font-size: 12px; font-weight: 600; color: #6B7280;"><?= date('d/m/Y', strtotime($v['fecha_registro'])) ?></div>
+                                <div style="font-size: 10px; color: #9CA3AF;">Fecha Sistema</div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

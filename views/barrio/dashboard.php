@@ -11,10 +11,21 @@ if (!$barrio_info) {
     die("No tienes un barrio asignado. Contacta al administrador.");
 }
 
-// Obtener calles de su barrio
-$callesStmt = $pdo->prepare("SELECT c.*, (SELECT COUNT(*) FROM viviendas WHERE calle_id = c.id) as total_viviendas 
+// Obtener calles de su barrio con estadísticas de pago (mes actual)
+$mes_actual = date('n');
+$anio_actual = date('Y');
+
+$callesStmt = $pdo->prepare("SELECT c.*, 
+                            (SELECT COUNT(*) FROM viviendas WHERE calle_id = c.id) as total_viviendas,
+                            (SELECT COUNT(DISTINCT v.id) 
+                             FROM viviendas v 
+                             JOIN cobros co ON v.id = co.vivienda_id 
+                             WHERE v.calle_id = c.id 
+                               AND co.mes = ? 
+                               AND co.anio = ? 
+                               AND co.estado = 'Pagado') as pagados
                             FROM calles c WHERE c.barrio_id = ?");
-$callesStmt->execute([$barrio_info['id']]);
+$callesStmt->execute([$mes_actual, $anio_actual, $barrio_info['id']]);
 $calles = $callesStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Obtener solicitudes pendientes de sus calles
@@ -51,49 +62,55 @@ ob_start();
         ['title' => 'Recaudaciones', 'value' => count($recaudaciones_pendientes), 'color' => '#10B981', 'icon' => '💰']
     ]); ?>
 
+    <!-- Quick Actions -->
+    <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <a href="router.php?page=registrar_vivienda" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: #111827; color: white; text-decoration: none; border-radius: 12px; font-weight: 700; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <span style="font-size: 20px;">🏠</span> Registrar Vivienda
+        </a>
+        <a href="router.php?page=solicitudes" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: white; color: #111827; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #111827; transition: 0.3s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='white'">
+            <span style="font-size: 20px;">📩</span> Ver Solicitudes
+        </a>
+        <a href="router.php?page=calles" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: white; color: #111827; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #E5E7EB; transition: 0.3s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='white'">
+            <span style="font-size: 20px;">🛣️</span> Lista de Calles
+        </a>
+    </div>
+
     <style>
         .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
         .card-title { font-weight: 700; font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: var(--secondary); border-bottom: 1px solid #F3F4F6; padding-bottom: 10px; }
         .table-mini { width: 100%; border-collapse: collapse; font-size: 13px; }
         .table-mini th { text-align: left; padding: 10px 8px; border-bottom: 1px solid #E5E7EB; color: #6B7280; font-size: 11px; text-transform: uppercase; }
         .table-mini td { padding: 10px 8px; border-bottom: 1px solid #F9FAFB; }
-        .btn-action { padding: 5px 8px; border-radius: 4px; font-size: 11px; border: none; cursor: pointer; }
+        .btn-action { padding: 5px 8px; border-radius: 4px; font-size: 11px; border: none; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-approve { background: #D1FAE5; color: #065F46; }
         .btn-reject { background: #FEE2E2; color: #991B1B; }
+        .progress-bar { width: 100%; height: 6px; background: #F3F4F6; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        .progress-fill { height: 100%; background: #10B981; border-radius: 10px; }
         @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
     </style>
 
     <div class="dashboard-grid">
         <!-- Solicitudes de Vivienda -->
         <div class="card">
-            <div class="card-title"><span>📩 Solicitudes de Alta/Baja</span></div>
+            <div class="card-title"><span>📩 Solicitudes de Registro</span></div>
             <div style="max-height: 400px; overflow-y: auto;">
                 <table class="table-mini">
                     <thead>
-                        <tr><th>Tipo</th><th>Calle</th><th>Detalles</th><th>Acción</th></tr>
+                        <tr><th>Información</th><th>Calle</th><th>Acción</th></tr>
                     </thead>
                     <tbody>
                         <?php if (empty($solicitudes)): ?>
-                            <tr><td colspan="4" style="text-align:center; padding:20px; color:#9CA3AF;">No hay solicitudes pendientes.</td></tr>
+                            <tr><td colspan="3" style="text-align:center; padding:20px; color:#9CA3AF;">No hay solicitudes pendientes.</td></tr>
                         <?php endif; ?>
                         <?php foreach($solicitudes as $s): ?>
                             <tr>
-                                <td><span class="badge" style="background:<?= $s['tipo']=='Alta'?'#D1FAE5':'#FEE2E2' ?>; color:<?= $s['tipo']=='Alta'?'#065F46':'#991B1B' ?>;"><?= $s['tipo'] ?></span></td>
-                                <td><?= htmlspecialchars($s['calle_nombre']) ?></td>
                                 <td style="font-size:11px;">
-                                    <?php if($s['tipo'] == 'Alta'): ?>
-                                        <strong><?= htmlspecialchars($s['propietario']) ?></strong> (Casa <?= $s['numero_casa'] ?>)
-                                    <?php else: ?>
-                                        Vivienda ID: <?= $s['vivienda_id'] ?>
-                                    <?php endif; ?>
+                                    <strong><?= htmlspecialchars($s['propietario']) ?></strong><br>
+                                    <span style="color:#6B7280;">N° <?= $s['numero_casa'] ?></span>
                                 </td>
+                                <td><?= htmlspecialchars($s['calle_nombre']) ?></td>
                                 <td>
-                                    <form method="POST" style="display:inline;">
-                                        <input type="hidden" name="form_type" value="procesar_solicitud">
-                                        <input type="hidden" name="solicitud_id" value="<?= $s['id'] ?>">
-                                        <input type="hidden" name="estado" value="Aprobado">
-                                        <button type="submit" class="btn-action btn-approve" title="Aprobar">✔️</button>
-                                    </form>
+                                    <a href="router.php?page=registrar_vivienda&solicitud_id=<?= $s['id'] ?>" class="btn-action btn-approve" title="Verificar y Registrar">Registrar</a>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="form_type" value="procesar_solicitud">
                                         <input type="hidden" name="solicitud_id" value="<?= $s['id'] ?>">
@@ -110,7 +127,7 @@ ob_start();
 
         <!-- Recaudaciones de Calles -->
         <div class="card">
-            <div class="card-title"><span>💰 Recaudaciones de Calles</span></div>
+            <div class="card-title"><span>💰 Recaudaciones Pendientes</span></div>
             <div style="max-height: 300px; overflow-y: auto;">
                 <table class="table-mini">
                     <thead>
@@ -141,18 +158,28 @@ ob_start();
         </div>
     </div>
 
-    <!-- Gestión de Calles -->
+    <!-- Gestión de Calles con Estadísticas -->
     <div class="card" style="margin-top:20px;">
-        <div class="card-title">🛣️ Calles en mi Barrio</div>
+        <div class="card-title">🛣️ Estadísticas de Pago por Calle (<?= date('F Y') ?>)</div>
         <table class="table-mini">
             <thead>
-                <tr><th>Nombre de Calle</th><th>Total Viviendas</th><th>Acciones</th></tr>
+                <tr><th>Calle</th><th>Progreso de Pago</th><th>Viviendas</th><th>Acciones</th></tr>
             </thead>
             <tbody>
-                <?php foreach($calles as $c): ?>
+                <?php foreach($calles as $c): 
+                    $porcentaje = ($c['total_viviendas'] > 0) ? ($c['pagados'] / $c['total_viviendas']) * 100 : 0;
+                ?>
                     <tr>
-                        <td><strong><?= htmlspecialchars($c['nombre']) ?></strong></td>
-                        <td><?= $c['total_viviendas'] ?> viviendas</td>
+                        <td style="width: 200px;"><strong><?= htmlspecialchars($c['nombre']) ?></strong></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="progress-bar" style="flex-grow: 1;">
+                                    <div class="progress-fill" style="width: <?= $porcentaje ?>%;"></div>
+                                </div>
+                                <span style="font-weight: 700; color: #374151; min-width: 40px;"><?= round($porcentaje) ?>%</span>
+                            </div>
+                        </td>
+                        <td><?= $c['pagados'] ?> / <?= $c['total_viviendas'] ?> pagado</td>
                         <td>
                             <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" class="badge" style="background:#E0F2FE; color:#0369A1; text-decoration:none;">Ver Viviendas</a>
                         </td>
