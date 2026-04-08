@@ -26,9 +26,20 @@ class loginController extends mainModel {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password_hash'])) {
-                session_regenerate_id(true);
-                $_SESSION['user_id'] = $user['id'];
-                header("Location: /reciclaje/router.php");
+                // No regenerar ID para no matar otras identidades de la misma sesión
+                // session_regenerate_id(true); 
+                
+                $sid = $_GET['sid'] ?? $_POST['sid'] ?? 'main';
+                $_SESSION['identities'][$sid] = [
+                    'user_id' => $user['id'],
+                    'rol_id'  => $user['rol_id'],
+                    'inicio'  => date('Y-m-d H:i:s')
+                ];
+                
+                // Mantener compatibilidad con partes viejas si las hay
+                $_SESSION['user_id'] = $user['id']; 
+
+                header("Location: /reciclaje/router.php?sid=" . urlencode($sid));
                 exit;
             }
 
@@ -39,10 +50,20 @@ class loginController extends mainModel {
         }
     }
 
-    // Cierra la sesión y redirige al inicio público
+    // Cierra la sesión de la identidad actual y redirige
     public function cerrarSesion() {
-        session_destroy();
-        header("Location: /reciclaje/index.php");
+        $sid = $_GET['sid'] ?? $_POST['sid'] ?? 'main';
+        
+        if (isset($_SESSION['identities'][$sid])) {
+            unset($_SESSION['identities'][$sid]);
+        }
+        
+        // Si no quedan identidades, destruir sesión física
+        if (empty($_SESSION['identities'])) {
+            session_destroy();
+        }
+        
+        header("Location: /reciclaje/views/public/login.php");
         exit;
     }
 }

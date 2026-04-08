@@ -25,6 +25,34 @@
     <?php include __DIR__ . '/../components/footer_public.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Bridge Multi-Sesión (Público)
+    (function() {
+        if (!sessionStorage.getItem('eco_sid')) {
+            sessionStorage.setItem('eco_sid', 'ts' + Date.now() + Math.floor(Math.random() * 1000));
+        }
+        const sid = sessionStorage.getItem('eco_sid');
+
+        // Inyectar en todos los formularios al enviar
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (!form.querySelector('input[name="sid"]')) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'sid';
+                input.value = sid;
+                form.appendChild(input);
+            }
+        });
+
+        // Forzar SID en la URL si falta (para que el controlador lo reciba vía GET si es necesario)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('sid')) {
+            urlParams.set('sid', sid);
+            window.location.search = urlParams.toString();
+        }
+    })();
+    </script>
     <?php echo $extra_js ?? ''; ?>
 </body>
 </html>

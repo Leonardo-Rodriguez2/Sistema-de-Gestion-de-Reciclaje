@@ -7,7 +7,11 @@ function check_dashboard_access($allowed_roles = [1]) {
         session_start();
     }
 
-    if (!isset($_SESSION['user_id'])) {
+    // Manejo de identidad activa
+    $sid = $_SESSION['active_sid'] ?? 'main';
+    $user_id = $_SESSION['identities'][$sid]['user_id'] ?? $_SESSION['user_id'] ?? null;
+
+    if (!$user_id) {
         header("Location: /reciclaje/views/public/login.php");
         exit;
     }
@@ -15,7 +19,7 @@ function check_dashboard_access($allowed_roles = [1]) {
     $stmt = $pdo->prepare("SELECT u.id, u.nombre, u.apellido, u.email, u.rol_id, r.nombre as rol_nombre 
                            FROM usuarios u JOIN roles r ON u.rol_id = r.id 
                            WHERE u.id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
+    $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user || !in_array((int)$user['rol_id'], $allowed_roles)) {

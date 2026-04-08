@@ -8,8 +8,11 @@ class viewsController extends viewsModel {
 
     public function preparar() {
 
-        // 1. Obtener datos del usuario
-        $user = $this->obtenerUsuario($_SESSION['user_id']);
+        // 1. Obtener datos del usuario desde la identidad activa
+        $sid = $_SESSION['active_sid'] ?? 'main';
+        $user_id = $_SESSION['identities'][$sid]['user_id'] ?? $_SESSION['user_id'] ?? null;
+        
+        $user = $this->obtenerUsuario($user_id);
 
         if (!$user) {
             session_destroy();

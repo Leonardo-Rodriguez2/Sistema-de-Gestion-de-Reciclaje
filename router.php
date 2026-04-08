@@ -21,17 +21,36 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// 2. El controlador valida, procesa POST, y devuelve los datos
+// 2. Manejo de Multi-Sesión (Identidad por Pestaña)
+$sid = $_GET['sid'] ?? $_POST['sid'] ?? 'main';
+$_SESSION['active_sid'] = $sid;
+
+// Sincronizar user_id global para compatibilidad con controladores y modelos existentes
+if (isset($_SESSION['identities'][$sid]['user_id'])) {
+    $_SESSION['user_id'] = $_SESSION['identities'][$sid]['user_id'];
+} else {
+    // Si la identidad no existe en la sesión física, limpiar user_id para forzar login
+    unset($_SESSION['user_id']);
+}
+
+// 3. El controlador valida, procesa POST, y devuelve los datos
 $ctrl = new viewsController();
 $datos = $ctrl->preparar();
 
-// 3. Inyectar variables en scope global para que la vista
-//    (y el sidebar incluido dentro de ella) las pueda usar
+// 4. Inyectar variables en scope global
 $pdo            = $datos['pdo'];
-$user           = $datos['user'];
 $page           = $datos['page'];
-$mensaje_exito  = $mensaje_exito ?? null;  // Definidas por el controller de rol (si hubo POST)
+$mensaje_exito  = $mensaje_exito ?? null;
 $mensaje_error  = $mensaje_error ?? null;
+
+// Obtener el usuario de la identidad específica
+$user = $_SESSION['identities'][$sid] ?? null;
+
+// Si por alguna razón la identidad no tiene usuario → login
+if (!$user) {
+    header("Location: /reciclaje/views/public/login.php");
+    exit;
+}
 
 // 4. Renderizar la vista (se ejecuta en scope global → sidebar OK)
 require_once $datos['vista'];

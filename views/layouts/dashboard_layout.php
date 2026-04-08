@@ -65,5 +65,73 @@
     <?php echo $content; ?>
   </main>
 
+  <script>
+    // Bridge Multi-Sesión (Aislamiento por Pestaña)
+    (function() {
+        // 1. Obtener o generar SID único para esta pestaña
+        if (!sessionStorage.getItem('eco_sid')) {
+            sessionStorage.setItem('eco_sid', 'ts' + Date.now() + Math.floor(Math.random() * 1000));
+        }
+        const sid = sessionStorage.getItem('eco_sid');
+
+        // 2. Función para inyectar SID en URLs internas
+        function injectSid(url) {
+            if (!url || url.startsWith('javascript:') || url.startsWith('#')) return url;
+            try {
+                const u = new URL(url, window.location.href);
+                if (u.origin === window.location.origin) {
+                    u.searchParams.set('sid', sid);
+                    return u.pathname + u.search + u.hash;
+                }
+            } catch(e) {}
+            return url;
+        }
+
+        // 3. Interceptar clics en enlaces
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (link && link.href) {
+                link.href = injectSid(link.href);
+            }
+        }, true);
+
+        // 4. Inyectar en formularios al enviar
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const action = form.getAttribute('action') || window.location.href;
+            if (new URL(action, window.location.href).origin === window.location.origin) {
+                if (!form.querySelector('input[name="sid"]')) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'sid';
+                    input.value = sid;
+                    form.appendChild(input);
+                }
+            }
+        }, true);
+
+        // 5. Forzar SID en la URL si falta (Asegura que el servidor conozca la identidad)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('sid')) {
+            urlParams.set('sid', sid);
+            // No hacer replaceState, hacer una recarga real si es la primera vez que entra sin SID
+            // Esto evita que vea el dashboard de otra cuenta por error
+            window.location.search = urlParams.toString();
+        }
+
+        // 6. Polleo de enlaces dinámicos (opcional por si se añaden enlaces vía JS)
+        setInterval(() => {
+            document.querySelectorAll('a').forEach(link => {
+                if (link.href && !link.href.includes('sid=') && !link.href.startsWith('javascript:') && !link.href.startsWith('#')) {
+                    const u = new URL(link.href, window.location.href);
+                    if (u.origin === window.location.origin) {
+                        u.searchParams.set('sid', sid);
+                        link.href = u.pathname + u.search + u.hash;
+                    }
+                }
+            });
+        }, 1000);
+    })();
+  </script>
 </body>
 </html>
