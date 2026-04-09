@@ -4,12 +4,14 @@ $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 
 $sql = "SELECT u.*, r.nombre as rol_nombre,
-               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, b.nombre as barrio_nombre,
+               db.dni as barrio_dni, db.telefono as barrio_telefono, db.direccion as barrio_direccion, b.nombre as barrio_nombre,
+               dc.dni as calle_dni, dc.telefono as calle_telefono, c.nombre as calle_nombre,
                dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
                dp.cargo as personal_cargo, dp.dni as personal_dni, dp.telefono as personal_telefono, dp.turno as personal_turno
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
-        LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id LEFT JOIN barrios b ON dj.barrio_id = b.id
+        LEFT JOIN detalles_encargado_barrio db ON u.id = db.usuario_id LEFT JOIN barrios b ON db.barrio_id = b.id
+        LEFT JOIN detalles_encargado_calle dc ON u.id = dc.usuario_id LEFT JOIN calles c ON dc.calle_id = c.id
         LEFT JOIN detalles_gestor dg ON u.id = dg.usuario_id
         LEFT JOIN detalles_personal_obrero dp ON u.id = dp.usuario_id
         WHERE u.id = ?";
@@ -22,10 +24,12 @@ if (!$u) die("Usuario no encontrado.");
 $title = "Perfil - EcoCusco";
 $header_title = "Perfil: " . $u['nombre'];
 
-// Mapeo de campos por rol para reducir bloques IF pesados
+// Mapeo de campos por rol
 $extra_info = [];
 if ($u['rol_id'] == 5) {
-    $extra_info = ['Título' => '🏠 Encargado de Barrio', 'DNI' => $u['jefe_dni'], 'Tel' => $u['jefe_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['jefe_direccion']];
+    $extra_info = ['Título' => '🏠 Encargado de Barrio', 'DNI' => $u['barrio_dni'], 'Tel' => $u['barrio_telefono'], 'Barrio' => $u['barrio_nombre'], 'Dirección' => $u['barrio_direccion']];
+} elseif ($u['rol_id'] == 6) {
+    $extra_info = ['Título' => '📍 Encargado de Calle', 'DNI' => $u['calle_dni'], 'Tel' => $u['calle_telefono'], 'Calle' => $u['calle_nombre']];
 } elseif ($u['rol_id'] == 2) {
     $extra_info = ['Título' => '💼 Gestor', 'DNI' => $u['gestor_dni'], 'Tel' => $u['gestor_telefono'], 'Área' => $u['gestor_area']];
 } elseif ($u['rol_id'] == 3) {

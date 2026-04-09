@@ -36,7 +36,17 @@ class viewsController extends viewsModel {
         // 4. Página solicitada
         $page = $_GET['page'] ?? 'dashboard';
 
-        // 5. Procesar formularios POST del rol
+        // 5. Manejo de AJAX unificado
+        if ($page === 'ajax_get_calles') {
+            $barrio_id = (int)($_GET['barrio_id'] ?? 0);
+            $stmt = $pdo->prepare("SELECT id, nombre FROM calles WHERE barrio_id = ? ORDER BY nombre ASC");
+            $stmt->execute([$barrio_id]);
+            header('Content-Type: application/json');
+            echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            exit;
+        }
+
+        // 6. Procesar formularios POST del rol
         $this->procesarPost($folder);
 
         // 6. Obtener ruta de vista validada (lista blanca)

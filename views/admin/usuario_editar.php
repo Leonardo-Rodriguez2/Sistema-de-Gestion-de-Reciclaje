@@ -4,12 +4,14 @@ $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 
 $sql = "SELECT u.*, r.nombre as rol_nombre,
-               dj.dni as jefe_dni, dj.telefono as jefe_telefono, dj.direccion as jefe_direccion, dj.barrio_id,
+               db.dni as barrio_dni, db.telefono as barrio_telefono, db.direccion as barrio_direccion, db.barrio_id,
+               dc.dni as calle_dni, dc.telefono as calle_telefono, dc.calle_id,
                dg.dni as gestor_dni, dg.telefono as gestor_telefono, dg.area as gestor_area,
                dp.cargo as personal_cargo, dp.dni as personal_dni, dp.telefono as personal_telefono, dp.turno as personal_turno
         FROM usuarios u 
         JOIN roles r ON u.rol_id = r.id 
-        LEFT JOIN detalles_jefe_cuadra dj ON u.id = dj.usuario_id
+        LEFT JOIN detalles_encargado_barrio db ON u.id = db.usuario_id
+        LEFT JOIN detalles_encargado_calle dc ON u.id = dc.usuario_id
         LEFT JOIN detalles_gestor dg ON u.id = dg.usuario_id
         LEFT JOIN detalles_personal_obrero dp ON u.id = dp.usuario_id
         WHERE u.id = ?";
@@ -75,6 +77,7 @@ ob_start();
                     <label>Rol</label>
                     <select name="rol_id" id="rol_id" required onchange="toggleRoleFields()">
                         <option value="5" <?= $u['rol_id'] == 5 ? 'selected' : '' ?>>Encargado de Barrio</option>
+                        <option value="6" <?= $u['rol_id'] == 6 ? 'selected' : '' ?>>Encargado de Calle</option>
                         <option value="3" <?= $u['rol_id'] == 3 ? 'selected' : '' ?>>Personal Obrero</option>
                         <option value="2" <?= $u['rol_id'] == 2 ? 'selected' : '' ?>>Gestor</option>
                         <option value="1" <?= $u['rol_id'] == 1 ? 'selected' : '' ?>>Administrador</option>
@@ -87,8 +90,8 @@ ob_start();
             <div id="j_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 5 ? 'block' : 'none' ?>;">
                 <h3>🏠 Encargado de Barrio</h3>
                 <div class="f-grid">
-                    <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['jefe_dni'] ?>"></div>
-                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['jefe_telefono'] ?>"></div>
+                    <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['barrio_dni'] ?>"></div>
+                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['barrio_telefono'] ?>"></div>
                     <div class="f-group">
                         <label>Barrio</label>
                         <select name="barrio_id">
@@ -100,11 +103,29 @@ ob_start();
                 </div>
             </div>
 
+            <div id="c_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 6 ? 'block' : 'none' ?>;">
+                <h3>📍 Encargado de Calle</h3>
+                <div class="f-grid">
+                    <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['calle_dni'] ?>"></div>
+                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['calle_telefono'] ?>"></div>
+                    <div class="f-group">
+                        <label>Calle</label>
+                        <select name="calle_id">
+                            <?php 
+                            $stmt = $pdo->query("SELECT c.id, c.nombre, b.nombre as barrio FROM calles c JOIN barrios b ON c.barrio_id = b.id ORDER BY b.nombre, c.nombre");
+                            while($c = $stmt->fetch()): ?>
+                                <option value="<?= $c['id'] ?>" <?= $u['calle_id'] == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['barrio'] . " - " . $c['nombre']) ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div id="g_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 2 ? 'block' : 'none' ?>;">
                 <h3>💼 Gestor</h3>
                 <div class="f-grid">
-                    <div class="f-group"><label>DNI</label><input type="text" name="dni_gestor" value="<?= $u['gestor_dni'] ?>"></div>
-                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono_gestor" value="<?= $u['gestor_telefono'] ?>"></div>
+                    <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['gestor_dni'] ?>"></div>
+                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['gestor_telefono'] ?>"></div>
                     <div class="f-group"><label>Área</label><input type="text" name="area" value="<?= $u['gestor_area'] ?>"></div>
                 </div>
             </div>
@@ -122,8 +143,8 @@ ob_start();
                             <option value="Supervisor de Campo" <?= $u['personal_cargo'] == 'Supervisor de Campo' ? 'selected' : '' ?>>Supervisor de Campo</option>
                         </select>
                     </div>
-                    <div class="f-group"><label>DNI</label><input type="text" name="dni_personal" value="<?= $u['personal_dni'] ?>"></div>
-                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono_personal" value="<?= $u['personal_telefono'] ?>"></div>
+                    <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['personal_dni'] ?>"></div>
+                    <div class="f-group"><label>Teléfono</label><input type="text" name="telefono" value="<?= $u['personal_telefono'] ?>"></div>
                     <div class="f-group">
                         <label>Turno</label>
                         <select name="turno">
@@ -147,6 +168,7 @@ ob_start();
 function toggleRoleFields() {
     const r = document.getElementById('rol_id').value;
     document.getElementById('j_f').style.display = (r == 5) ? 'block' : 'none';
+    document.getElementById('c_f').style.display = (r == 6) ? 'block' : 'none';
     document.getElementById('g_f').style.display = (r == 2) ? 'block' : 'none';
     document.getElementById('r_f').style.display = (r == 3) ? 'block' : 'none';
 }

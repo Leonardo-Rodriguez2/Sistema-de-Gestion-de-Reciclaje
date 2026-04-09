@@ -48,7 +48,7 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=usuarios&rol_id=2" class="<?= ($page == 'usuarios' && ($_GET['rol_id']??0) == 2) ? 'active' : '' ?>">Listar Gestores</a></li>
-                        <li><a href="router.php?page=usuario_nuevo_gestor" class="<?= ($page == 'usuario_nuevo_gestor') ? 'active' : '' ?>">Nuevo Gestor</a></li>
+                        <li><a href="router.php?page=usuario_nuevo&rol_id=2" class="<?= ($page == 'usuario_nuevo' && ($_GET['rol_id']??0) == 2) ? 'active' : '' ?>">Nuevo Gestor</a></li>
                     </ul>
                 </li>
 
@@ -59,7 +59,7 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=usuarios&rol_id=3" class="<?= ($page == 'usuarios' && ($_GET['rol_id']??0) == 3) ? 'active' : '' ?>">Listar Personal</a></li>
-                        <li><a href="router.php?page=usuario_nuevo_personal" class="<?= ($page == 'usuario_nuevo_personal') ? 'active' : '' ?>">Nuevo Personal</a></li>
+                        <li><a href="router.php?page=usuario_nuevo&rol_id=3" class="<?= ($page == 'usuario_nuevo' && ($_GET['rol_id']??0) == 3) ? 'active' : '' ?>">Nuevo Personal</a></li>
                     </ul>
                 </li>
 
@@ -70,7 +70,7 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=usuarios&rol_id=5" class="<?= ($page == 'usuarios' && ($_GET['rol_id']??0) == 5) ? 'active' : '' ?>">Listar Encargados</a></li>
-                        <li><a href="router.php?page=usuario_nuevo_barrio" class="<?= ($page == 'usuario_nuevo_barrio') ? 'active' : '' ?>">Nuevo Encargado</a></li>
+                        <li><a href="router.php?page=usuario_nuevo&rol_id=5" class="<?= ($page == 'usuario_nuevo' && ($_GET['rol_id']??0) == 5) ? 'active' : '' ?>">Nuevo Encargado</a></li>
                     </ul>
                 </li>
 
@@ -81,7 +81,7 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=usuarios&rol_id=6" class="<?= ($page == 'usuarios' && ($_GET['rol_id']??0) == 6) ? 'active' : '' ?>">Listar Encargados</a></li>
-                        <li><a href="router.php?page=usuario_nuevo_calle" class="<?= ($page == 'usuario_nuevo_calle') ? 'active' : '' ?>">Nuevo Encargado</a></li>
+                        <li><a href="router.php?page=usuario_nuevo&rol_id=6" class="<?= ($page == 'usuario_nuevo' && ($_GET['rol_id']??0) == 6) ? 'active' : '' ?>">Nuevo Encargado</a></li>
                     </ul>
                 </li>
 

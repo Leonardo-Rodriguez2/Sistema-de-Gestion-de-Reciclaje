@@ -107,11 +107,11 @@ ob_start();
                 <div class="form-grid">
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" name="dni_calle" placeholder="Ej. 70654321">
+                        <input type="text" name="dni" placeholder="Ej. 70654321">
                     </div>
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text" name="telefono_calle" placeholder="Ej. 987654321">
+                        <input type="text" name="telefono" placeholder="Ej. 987654321">
                     </div>
                     <div class="form-group">
                         <label>Calle Asignada</label>
@@ -132,11 +132,11 @@ ob_start();
                 <div class="form-grid">
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" name="dni_gestor" placeholder="Ej. 70654321">
+                        <input type="text" name="dni" placeholder="Ej. 70654321">
                     </div>
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text" name="telefono_gestor" placeholder="Ej. 987654321">
+                        <input type="text" name="telefono" placeholder="Ej. 987654321">
                     </div>
                     <div class="form-group">
                         <label>Área Responsable</label>
@@ -151,11 +151,11 @@ ob_start();
                 <div class="form-grid">
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" name="dni_recolector" placeholder="Ej. 70654321">
+                        <input type="text" name="dni" placeholder="Ej. 70654321">
                     </div>
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text" name="telefono_recolector" placeholder="Ej. 987654321">
+                        <input type="text" name="telefono" placeholder="Ej. 987654321">
                     </div>
                     <div class="form-group">
                         <label>Turno</label>

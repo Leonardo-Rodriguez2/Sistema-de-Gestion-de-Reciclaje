@@ -148,6 +148,9 @@ class adminController extends mainModel {
 
     // Inserta en la tabla de detalles según el rol
     private function insertarDetallesRol($pdo, $user_id, $rol_id) {
+        $common_dni = $_POST['dni'] ?? null;
+        $common_tel = $_POST['telefono'] ?? null;
+
         if ($rol_id == 5) { // Encargado de Barrio
             $pdo->prepare(
                 "INSERT INTO detalles_encargado_barrio (usuario_id, barrio_id, dni, telefono, direccion)
@@ -155,8 +158,8 @@ class adminController extends mainModel {
             )->execute([
                 $user_id,
                 (int)$_POST['barrio_id'],
-                $_POST['dni'] ?? null,
-                $_POST['telefono'] ?? null,
+                $common_dni,
+                $common_tel,
                 $_POST['direccion'] ?? null,
             ]);
         } elseif ($rol_id == 6) { // Encargado de Calle
@@ -166,8 +169,8 @@ class adminController extends mainModel {
             )->execute([
                 $user_id,
                 (int)$_POST['calle_id'],
-                $_POST['dni_calle'] ?? null,
-                $_POST['telefono_calle'] ?? null,
+                $common_dni,
+                $common_tel,
             ]);
         } elseif ($rol_id == 2) { // Gestor
             $pdo->prepare(
@@ -175,8 +178,8 @@ class adminController extends mainModel {
                  VALUES (?, ?, ?, ?)"
             )->execute([
                 $user_id,
-                $_POST['dni_gestor'] ?? null,
-                $_POST['telefono_gestor'] ?? null,
+                $common_dni,
+                $common_tel,
                 $_POST['area'] ?? null,
             ]);
         } elseif ($rol_id == 3) { // Personal Obrero
@@ -186,8 +189,8 @@ class adminController extends mainModel {
             )->execute([
                 $user_id,
                 $_POST['cargo'] ?? 'Recolector',
-                $_POST['dni_personal'] ?? null,
-                $_POST['telefono_personal'] ?? null,
+                $common_dni,
+                $common_tel,
                 $_POST['turno'] ?? 'Mañana',
             ]);
         }

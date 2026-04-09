@@ -17,10 +17,6 @@ class viewsModel extends mainModel {
             'dashboard',
             'usuarios',
             'usuario_nuevo', // Keep for general use
-            'usuario_nuevo_barrio',
-            'usuario_nuevo_calle',
-            'usuario_nuevo_gestor',
-            'usuario_nuevo_personal',
             'usuario_editar',
             'usuario_ver',
             'barrios',

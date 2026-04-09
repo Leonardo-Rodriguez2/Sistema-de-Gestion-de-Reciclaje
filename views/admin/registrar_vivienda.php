@@ -70,7 +70,7 @@ async function updateStreets(barrioId) {
     if (!barrioId) return;
 
     try {
-        const response = await fetch('app/ajax/get_calles.php?barrio_id=' + barrioId);
+        const response = await fetch('router.php?page=ajax_get_calles&barrio_id=' + barrioId);
         const calles = await response.json();
         
         calleSelect.innerHTML = '<option value="">Seleccione calle...</option>';
