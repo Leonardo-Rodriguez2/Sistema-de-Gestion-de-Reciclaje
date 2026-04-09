@@ -31,12 +31,13 @@ $page = $page ?? 'dashboard';
                 </li>
 
                 <!-- CALLES -->
-                <li class="has-submenu <?= in_array($page, ['calles']) ? 'open' : '' ?>">
+                <li class="has-submenu <?= in_array($page, ['calles', 'calle_nueva']) ? 'open' : '' ?>">
                     <a href="javascript:void(0)" class="submenu-toggle" onclick="toggleSubmenu(this)">
                         <span class="icon">🛣️</span> Calles <span class="arrow">▼</span>
                     </a>
                     <ul class="submenu">
-                        <li><a href="router.php?page=calles" class="<?= ($page == 'calles') ? 'active' : '' ?>">Gestionar Calles</a></li>
+                        <li><a href="router.php?page=calles" class="<?= ($page == 'calles') ? 'active' : '' ?>">Listar Calles</a></li>
+                        <li><a href="router.php?page=calle_nueva" class="<?= ($page == 'calle_nueva') ? 'active' : '' ?>">Nueva Calle</a></li>
                     </ul>
                 </li>
 

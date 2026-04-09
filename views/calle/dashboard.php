@@ -87,6 +87,9 @@ ob_start();
                         <tr><th>Vivienda</th><th>Monto</th><th>Acción</th></tr>
                     </thead>
                     <tbody>
+                        <?php if (empty($cobros_pendientes)): ?>
+                            <tr><td colspan="3" style="text-align:center; padding:20px; color:#9CA3AF;">No hay pagos pendientes.</td></tr>
+                        <?php endif; ?>
                         <?php foreach($cobros_pendientes as $c): ?>
                             <tr>
                                 <td>

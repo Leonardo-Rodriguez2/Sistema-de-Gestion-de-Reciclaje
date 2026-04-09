@@ -118,20 +118,29 @@ class adminController extends mainModel {
         // 5. Registrar Vivienda (Directo Admin)
         if ($action === 'nuevo_vecino_admin') {
             try {
+                // Buscar si hay un encargado asignado a esa calle
+                $stmt = $this->ejecutarConsulta(
+                    "SELECT usuario_id FROM detalles_encargado_calle WHERE calle_id = ? LIMIT 1",
+                    [(int)$_POST['calle_id']]
+                );
+                $manager = $stmt->fetch(\PDO::FETCH_ASSOC);
+                $manager_id = $manager ? $manager['usuario_id'] : null;
+
                 $this->ejecutarConsulta(
-                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa)
-                     VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, encargado_calle_id)
+                     VALUES (?, ?, ?, ?, ?, ?)",
                     [
                         $_POST['propietario'],
                         (int)$_POST['barrio_id'],
                         (int)$_POST['calle_id'],
                         $_POST['direccion'],
-                        $_POST['numero_casa'] ?? null
+                        $_POST['numero_casa'] ?? null,
+                        $manager_id
                     ]
                 );
                 $mensaje_exito = "Vivienda registrada correctamente.";
             } catch (\PDOException $e) {
-                $mensaje_error = "Error al registrar vivienda.";
+                $mensaje_error = "Error al registrar vivienda: " . $e->getMessage();
             }
         }
     }

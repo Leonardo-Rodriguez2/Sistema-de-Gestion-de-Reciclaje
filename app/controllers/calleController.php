@@ -18,11 +18,22 @@ class calleController extends mainModel {
         // 1. Solicitar Alta de Vivienda
         if ($action === 'solicitar_alta') {
             try {
+                // Verificar que el encargado tenga una calle asignada
+                $stmt = $this->ejecutarConsulta(
+                    "SELECT calle_id FROM detalles_encargado_calle WHERE usuario_id = ?",
+                    [$user['id']]
+                );
+                $calle = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if (!$calle) {
+                    throw new \Exception("Usted no posee una calle asignada. Contacta al administrador.");
+                }
+
                 $this->ejecutarConsulta(
                     "INSERT INTO solicitudes_vivienda (tipo, calle_id, propietario, numero_casa, referencia, creado_por, estado)
-                     VALUES ('Alta', (SELECT calle_id FROM detalles_encargado_calle WHERE usuario_id=?), ?, ?, ?, ?, 'Pendiente')",
+                     VALUES ('Alta', ?, ?, ?, ?, ?, 'Pendiente')",
                     [
-                        $user['id'],
+                        $calle['calle_id'],
                         $_POST['propietario'],
                         $_POST['numero_casa'],
                         $_POST['referencia'] ?? null,
@@ -30,7 +41,7 @@ class calleController extends mainModel {
                     ]
                 );
                 $mensaje_exito = "Solicitud de registro enviada al encargado de barrio.";
-            } catch (\PDOException $e) {
+            } catch (\Exception $e) {
                 $mensaje_error = "Error al enviar solicitud: " . $e->getMessage();
             }
         }
@@ -38,18 +49,29 @@ class calleController extends mainModel {
         // 2. Solicitar Baja de Vivienda
         if ($action === 'solicitar_baja') {
             try {
+                // Verificar que el encargado tenga una calle asignada
+                $stmt = $this->ejecutarConsulta(
+                    "SELECT calle_id FROM detalles_encargado_calle WHERE usuario_id = ?",
+                    [$user['id']]
+                );
+                $calle = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if (!$calle) {
+                    throw new \Exception("Usted no posee una calle asignada. Contacta al administrador.");
+                }
+
                 $this->ejecutarConsulta(
                     "INSERT INTO solicitudes_vivienda (tipo, calle_id, vivienda_id, creado_por, estado)
-                     VALUES ('Baja', (SELECT calle_id FROM detalles_encargado_calle WHERE usuario_id=?), ?, ?, 'Pendiente')",
+                     VALUES ('Baja', ?, ?, ?, 'Pendiente')",
                     [
-                        $user['id'],
+                        $calle['calle_id'],
                         (int)$_POST['vivienda_id'],
                         $user['id']
                     ]
                 );
                 $mensaje_exito = "Solicitud de retiro enviada al encargado de barrio.";
-            } catch (\PDOException $e) {
-                $mensaje_error = "Error al enviar solicitud.";
+            } catch (\Exception $e) {
+                $mensaje_error = "Error al enviar solicitud: " . $e->getMessage();
             }
         }
 

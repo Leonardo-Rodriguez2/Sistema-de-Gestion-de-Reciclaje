@@ -26,67 +26,48 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
-    <div style="display: flex; gap: 20px; align-items: flex-start;">
-        <!-- Formulario Nueva Calle -->
-        <div class="card" style="flex: 1; max-width: 350px;">
-            <div class="card-title">➕ Nueva Calle</div>
-            <form method="POST">
-                <input type="hidden" name="form_type" value="nueva_calle">
-                <div class="form-group" style="margin-bottom: 12px;">
-                    <label style="display:block; font-size:11px; font-weight:600; color:#6B7280; margin-bottom:4px;">NOMBRE DE LA CALLE</label>
-                    <input type="text" name="nombre" class="form-control" style="width:100%; padding:8px; border:1px solid #E5E7EB; border-radius:6px;" placeholder="Ej: Calle Los Tulipanes" required>
-                </div>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label style="display:block; font-size:11px; font-weight:600; color:#6B7280; margin-bottom:4px;">BARRIO</label>
-                    <select name="barrio_id" class="form-control" style="width:100%; padding:8px; border:1px solid #E5E7EB; border-radius:6px;" required>
-                        <option value="">Selecciona un barrio...</option>
-                        <?php foreach($barrios as $b): ?>
-                            <option value="<?= $b['id'] ?>"><?= $b['nombre'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%;">Registrar Calle</button>
-            </form>
-        </div>
-
-        <!-- Tabla de Calles -->
-        <div class="card" style="flex: 2;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <div class="card-title" style="margin-bottom: 0; border: none;">🏠 Listado de Calles</div>
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="card-title" style="margin-bottom: 0; border: none;">🏠 Listado de Calles</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
                 <form method="GET">
                     <input type="hidden" name="page" value="calles">
-                    <select name="barrio_id" onchange="this.form.submit()" style="padding: 5px; border-radius: 4px; font-size: 12px;">
+                    <select name="barrio_id" onchange="this.form.submit()" style="padding: 6px; border-radius: 6px; font-size: 13px; border: 1px solid #E5E7EB;">
                         <option value="">Todos los barrios</option>
                         <?php foreach($barrios as $b): ?>
                             <option value="<?= $b['id'] ?>" <?= $barrio_filtro == $b['id'] ? 'selected' : '' ?>><?= $b['nombre'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </form>
+                <a href="router.php?page=calle_nueva" class="btn-primary" style="text-decoration: none;">+ Nueva Calle</a>
             </div>
-            
-            <table class="table-mini" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="border-bottom: 2px solid #F3F4F6;">
-                        <th style="padding: 10px; text-align: left;">Calle</th>
-                        <th style="padding: 10px; text-align: left;">Barrio</th>
-                        <th style="padding: 10px; text-align: center;">Viviendas</th>
-                        <th style="padding: 10px; text-align: center;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($calles as $c): ?>
-                        <tr style="border-bottom: 1px solid #F9FAFB;">
-                            <td style="padding: 10px;"><strong><?= htmlspecialchars($c['nombre']) ?></strong></td>
-                            <td style="padding: 10px;"><span class="badge" style="background:#E5E7EB;"><?= htmlspecialchars($c['barrio_nombre']) ?></span></td>
-                            <td style="padding: 10px; text-align: center;"><?= $c['total_viviendas'] ?></td>
-                            <td style="padding: 10px; text-align: center;">
-                                <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" style="color:#3B82F6; text-decoration:none; font-size:11px;">Ver Casas</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
         </div>
+        
+        <table class="table-mini" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #F3F4F6;">
+                    <th style="padding: 12px; text-align: left;">Calle</th>
+                    <th style="padding: 12px; text-align: left;">Barrio</th>
+                    <th style="padding: 12px; text-align: center;">Viviendas</th>
+                    <th style="padding: 12px; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($calles)): ?>
+                    <tr><td colspan="4" style="text-align:center; padding:20px; color:#9CA3AF;">No se encontraron calles.</td></tr>
+                <?php endif; ?>
+                <?php foreach($calles as $c): ?>
+                    <tr style="border-bottom: 1px solid #F9FAFB;">
+                        <td style="padding: 12px;"><strong><?= htmlspecialchars($c['nombre']) ?></strong></td>
+                        <td style="padding: 12px;"><span class="badge" style="background:#E5E7EB; border:none;"><?= htmlspecialchars($c['barrio_nombre']) ?></span></td>
+                        <td style="padding: 12px; text-align: center;"><?= $c['total_viviendas'] ?></td>
+                        <td style="padding: 12px; text-align: center;">
+                            <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" style="color:#3B82F6; text-decoration:none; font-size:11px; font-weight:600;">Ver Viviendas</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
 <?php

@@ -12,6 +12,7 @@ class viewsController extends viewsModel {
         $sid = $_SESSION['active_sid'] ?? 'main';
         $user_id = $_SESSION['identities'][$sid]['user_id'] ?? $_SESSION['user_id'] ?? null;
         
+        global $user, $mensaje_exito, $mensaje_error;
         $user = $this->obtenerUsuario($user_id);
 
         if (!$user) {

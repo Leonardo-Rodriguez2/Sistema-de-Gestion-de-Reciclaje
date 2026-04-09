@@ -26,6 +26,7 @@ class viewsModel extends mainModel {
             'barrios',
             'barrio_nuevo',
             'calles',
+            'calle_nueva',
             'viviendas',
             'registrar_vivienda',
             'solicitudes',
