@@ -134,5 +134,85 @@ class barrioController extends mainModel {
                 $mensaje_error = "Error al enviar al gestor.";
             }
         }
+
+        // 4. Marcar pago como Realizado (Barrio Manager)
+        if ($action === 'jefe_marcar_pagado') {
+            try {
+                $cobro_id = (int)$_POST['cobro_id'];
+                $this->ejecutarConsulta("UPDATE cobros SET estado = 'Pagado' WHERE id = ?", [$cobro_id]);
+                
+                // Re-activar servicio si ya no hay deudas
+                $vStmt = $this->ejecutarConsulta("SELECT vivienda_id FROM cobros WHERE id = ?", [$cobro_id]);
+                $vId = $vStmt->fetchColumn();
+                
+                $pend = $this->ejecutarConsulta("SELECT COUNT(*) FROM cobros WHERE vivienda_id = ? AND estado != 'Pagado'", [$vId]);
+                if ($pend->fetchColumn() == 0) {
+                    $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Activo' WHERE id = ?", [$vId]);
+                }
+                $mensaje_exito = "Pago registrado. Servicio actualizado si corresponde.";
+            } catch (\Exception $e) {
+                $mensaje_error = "Error al registrar pago.";
+            }
+        }
+
+        // 5. Configurar Monto Mensual y Multa
+        if ($action === 'configurar_tarifas') {
+            try {
+                $monto = (float)$_POST['monto_mensual'];
+                $this->ejecutarConsulta(
+                    "UPDATE barrios b JOIN detalles_encargado_barrio d ON b.id = d.barrio_id 
+                     SET b.monto_mensual = ? WHERE d.usuario_id = ?",
+                    [$monto, $user['id']]
+                );
+                $mensaje_exito = "Tarifas de barrio actualizadas.";
+            } catch (\Exception $e) {
+                $mensaje_error = "Error al actualizar tarifas.";
+            }
+        }
+    }
+
+    /**
+     * Lógica para verificar deudas y aplicar multas/suspensiones
+     * Se llama al cargar la vista de reportar pagos.
+     */
+    public function verificarDeudasBarrio($usuario_id) {
+        $pdo = $this->conectar();
+        
+        // 1. Obtener viviendas del barrio
+        $stmt = $pdo->prepare("SELECT v.id, b.monto_mensual 
+                               FROM viviendas v 
+                               JOIN barrios b ON v.barrio_id = b.id
+                               JOIN detalles_encargado_barrio deb ON b.id = deb.barrio_id
+                               WHERE deb.usuario_id = ?");
+        $stmt->execute([$usuario_id]);
+        $viviendas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($viviendas as $v) {
+            $vid = $v['id'];
+            $monto = $v['monto_mensual'];
+            
+            // 2. Contar meses pendientes
+            $pendStmt = $pdo->prepare("SELECT COUNT(*) FROM cobros WHERE vivienda_id = ? AND estado != 'Pagado' AND tipo_cobro = 'Servicio'");
+            $pendStmt->execute([$vid]);
+            $meses_deuda = $pendStmt->fetchColumn();
+
+            // 3. Si tiene >= 1 mes de deuda, suspender servicio
+            if ($meses_deuda >= 1) {
+                $pdo->prepare("UPDATE viviendas SET estado_servicio = 'Suspendido' WHERE id = ?")->execute([$vid]);
+            }
+
+            // 4. Si tiene >= 2 meses de deuda, aplicar multa si no la tiene ya este mes
+            if ($meses_deuda >= 2) {
+                $mes = date('n'); $anio = date('Y');
+                $checkMulta = $pdo->prepare("SELECT id FROM cobros WHERE vivienda_id = ? AND mes = ? AND anio = ? AND tipo_cobro = 'Multa'");
+                $checkMulta->execute([$vid, $mes, $anio]);
+                
+                if (!$checkMulta->fetch()) {
+                    $ins = $pdo->prepare("INSERT INTO cobros (vivienda_id, mes, anio, monto, fecha_emision, fecha_vencimiento, estado, tipo_cobro) 
+                                          VALUES (?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 7 DAY), 'Pendiente', 'Multa')");
+                    $ins->execute([$vid, $mes, $anio, $monto]);
+                }
+            }
+        }
     }
 }

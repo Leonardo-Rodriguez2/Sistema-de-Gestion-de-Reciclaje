@@ -1,6 +1,15 @@
 <?php
 // views/admin/usuario_nuevo.php
-$user = check_dashboard_access([1]);
+$user = check_dashboard_access([1, 2]);
+
+// Si es Gestor (2), forzar que solo registre Personal Obrero (3)
+if ($user['rol_id'] == 2) {
+    if (!isset($_GET['rol_id']) || $_GET['rol_id'] != 3) {
+        $sid = $_GET['sid'] ?? '';
+        header("Location: router.php?page=usuario_nuevo_personal" . ($sid ? "&sid=$sid" : ""));
+        exit;
+    }
+}
 
 // Fetch neighborhoods for the dropdown
 $barriosStmt = $pdo->query("SELECT id, nombre FROM barrios ORDER BY nombre ASC");
@@ -55,14 +64,13 @@ ob_start();
                 </div>
                 <div class="form-group">
                     <label for="rol_id">Rol en el Sistema</label>
-                    <?php $locked_rol_id = (int)($_GET['rol_id'] ?? 0); ?>
                     <select id="rol_id" name="rol_id" required onchange="toggleRoleFields()" <?= $locked_rol_id > 0 ? 'disabled' : '' ?>>
                         <option value="">Seleccione un rol...</option>
-                        <option value="5">Encargado de Barrio</option>
-                        <option value="6">Encargado de Calle</option>
+                        <option value="5" <?= ($user['rol_id'] == 2) ? 'disabled' : '' ?>>Encargado de Barrio</option>
+                        <option value="6" <?= ($user['rol_id'] == 2) ? 'disabled' : '' ?>>Encargado de Calle</option>
                         <option value="3">Recolector</option>
-                        <option value="2">Gestor de Pagos</option>
-                        <option value="1">Administrador</option>
+                        <option value="2" <?= ($user['rol_id'] == 2) ? 'disabled' : '' ?>>Gestor de Pagos</option>
+                        <option value="1" <?= ($user['rol_id'] == 2) ? 'disabled' : '' ?>>Administrador</option>
                     </select>
                     <?php if ($locked_rol_id > 0): ?>
                         <input type="hidden" name="rol_id" value="<?= $locked_rol_id ?>">

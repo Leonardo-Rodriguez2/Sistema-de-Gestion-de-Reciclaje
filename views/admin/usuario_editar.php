@@ -1,7 +1,18 @@
 <?php
 // views/admin/usuario_editar.php - Versión Compacta
+$user = check_dashboard_access([1, 2]);
+
 $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
+
+// Si es Gestor (2), verificar que solo edite Personal Obrero (3)
+$checkRole = $pdo->prepare("SELECT rol_id FROM usuarios WHERE id = ?");
+$checkRole->execute([$user_id]);
+$target_rol_id = $checkRole->fetchColumn();
+
+if ($user['rol_id'] == 2 && $target_rol_id != 3) {
+    die("Acceso denegado. Los gestores solo pueden editar al Personal Obrero.");
+}
 
 $sql = "SELECT u.*, r.nombre as rol_nombre,
                db.dni as barrio_dni, db.telefono as barrio_telefono, db.direccion as barrio_direccion, db.barrio_id,
@@ -75,13 +86,16 @@ ob_start();
                 <div class="f-group"><label>Nacimiento</label><input type="date" name="fecha_nacimiento" value="<?= $u['fecha_nacimiento'] ?>"></div>
                 <div class="f-group">
                     <label>Rol</label>
-                    <select name="rol_id" id="rol_id" required onchange="toggleRoleFields()">
-                        <option value="5" <?= $u['rol_id'] == 5 ? 'selected' : '' ?>>Encargado de Barrio</option>
-                        <option value="6" <?= $u['rol_id'] == 6 ? 'selected' : '' ?>>Encargado de Calle</option>
+                    <select name="rol_id" id="rol_id" required onchange="toggleRoleFields()" <?= ($user['rol_id'] == 2) ? 'disabled' : '' ?>>
+                        <option value="5" <?= ($u['rol_id'] == 5 || $user['rol_id'] == 2) ? 'disabled' : '' ?> <?= $u['rol_id'] == 5 ? 'selected' : '' ?>>Encargado de Barrio</option>
+                        <option value="6" <?= ($u['rol_id'] == 6 || $user['rol_id'] == 2) ? 'disabled' : '' ?> <?= $u['rol_id'] == 6 ? 'selected' : '' ?>>Encargado de Calle</option>
                         <option value="3" <?= $u['rol_id'] == 3 ? 'selected' : '' ?>>Personal Obrero</option>
-                        <option value="2" <?= $u['rol_id'] == 2 ? 'selected' : '' ?>>Gestor</option>
-                        <option value="1" <?= $u['rol_id'] == 1 ? 'selected' : '' ?>>Administrador</option>
+                        <option value="2" <?= ($u['rol_id'] == 2 || $user['rol_id'] == 2) ? 'disabled' : '' ?> <?= $u['rol_id'] == 2 ? 'selected' : '' ?>>Gestor</option>
+                        <option value="1" <?= ($u['rol_id'] == 1 || $user['rol_id'] == 2) ? 'disabled' : '' ?> <?= $u['rol_id'] == 1 ? 'selected' : '' ?>>Administrador</option>
                     </select>
+                    <?php if ($user['rol_id'] == 2): ?>
+                        <input type="hidden" name="rol_id" value="3">
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

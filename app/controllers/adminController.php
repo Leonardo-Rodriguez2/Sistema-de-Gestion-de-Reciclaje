@@ -27,6 +27,7 @@ class adminController extends mainModel {
                 ? password_hash($_POST['password'], PASSWORD_DEFAULT)
                 : password_hash('123456', PASSWORD_DEFAULT);
             $rol_id    = (int)$_POST['rol_id'];
+            
 
             try {
                 $pdo = $this->conectar();
@@ -42,12 +43,11 @@ class adminController extends mainModel {
                 $this->insertarDetallesRol($pdo, $new_id, $rol_id);
                 $pdo->commit();
 
-                header("Location: router.php?page=usuarios&success=Usuario creado correctamente");
+                header("Location: router.php?page=usuarios&success=Usuario+creado+correctamente");
                 exit;
             } catch (\PDOException $e) {
                 $pdo->rollBack();
-                header("Location: router.php?page=usuarios&error=" . urlencode($e->getMessage()));
-                exit;
+                $mensaje_error = "Error al crear usuario: " . $e->getMessage();
             }
         }
 
@@ -80,12 +80,11 @@ class adminController extends mainModel {
                 $this->insertarDetallesRol($pdo, $u_id, $rol_id);
 
                 $pdo->commit();
-                header("Location: router.php?page=usuarios&success=Usuario modificado correctamente");
+                header("Location: router.php?page=usuarios&success=Usuario+modificado+correctamente");
                 exit;
             } catch (\PDOException $e) {
                 $pdo->rollBack();
-                header("Location: router.php?page=usuarios&error=" . urlencode($e->getMessage()));
-                exit;
+                $mensaje_error = "Error al editar usuario: " . $e->getMessage();
             }
         }
 

@@ -1,5 +1,6 @@
 <?php
 // views/admin/usuario_ver.php - Versión Compacta
+$user = check_dashboard_access([1, 2]);
 $user_id = (int)($_GET['id'] ?? 0);
 if (!$user_id) { header("Location: router.php?page=usuarios"); exit; }
 

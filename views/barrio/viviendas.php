@@ -10,6 +10,7 @@ $barrio_id = $barrioStmt->fetchColumn();
 // 2. Obtener filtros
 $f_calle = (int)($_GET['calle_id'] ?? 0);
 $f_search = trim($_GET['search'] ?? '');
+$f_estado = $_GET['estado'] ?? '';
 
 // 3. Preparar consulta con filtros
 $sql = "SELECT v.*, b.nombre as barrio_nombre, c.nombre as calle_nombre 
@@ -26,6 +27,18 @@ if ($f_calle > 0) {
 if ($f_search !== '') {
     $sql .= " AND (v.propietario LIKE :search OR v.direccion LIKE :search OR v.numero_casa LIKE :search)";
     $params[':search'] = "%$f_search%";
+}
+
+// Filtro de estado de pago (complejo porque depende de la tabla cobros)
+if ($f_estado !== '') {
+    $mes = date('n'); $anio = date('Y');
+    if ($f_estado === 'Pagado') {
+        $sql .= " AND v.id IN (SELECT vivienda_id FROM cobros WHERE mes = $mes AND anio = $anio AND estado = 'Pagado')";
+    } elseif ($f_estado === 'Pendiente') {
+        $sql .= " AND v.id IN (SELECT vivienda_id FROM cobros WHERE mes = $mes AND anio = $anio AND estado != 'Pagado')";
+    } elseif ($f_estado === 'Sin Cobro') {
+        $sql .= " AND v.id NOT IN (SELECT vivienda_id FROM cobros WHERE mes = $mes AND anio = $anio)";
+    }
 }
 
 $sql .= " ORDER BY c.nombre, v.numero_casa";
@@ -61,13 +74,13 @@ ob_start();
                        style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
             </div>
 
-            <div class="form-group" style="width: 200px;">
-                <label style="font-size: 11px; font-weight: 700; color: #6B7280; margin-bottom: 4px; display: block;">FILTRAR POR CALLE</label>
-                <select name="calle_id" onchange="this.form.submit()" style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
-                    <option value="">Todas las calles</option>
-                    <?php foreach($calles as $c): ?>
-                        <option value="<?= $c['id'] ?>" <?= $f_calle == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['nombre']) ?></option>
-                    <?php endforeach; ?>
+            <div class="form-group" style="width: 150px;">
+                <label style="font-size: 11px; font-weight: 700; color: #6B7280; margin-bottom: 4px; display: block;">ESTADO PAGO</label>
+                <select name="estado" onchange="this.form.submit()" style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
+                    <option value="">Todos</option>
+                    <option value="Pagado" <?= $f_estado == 'Pagado' ? 'selected' : '' ?>>Pagado</option>
+                    <option value="Pendiente" <?= $f_estado == 'Pendiente' ? 'selected' : '' ?>>Pendiente</option>
+                    <option value="Sin Cobro" <?= $f_estado == 'Sin Cobro' ? 'selected' : '' ?>>Sin Cobro</option>
                 </select>
             </div>
 
@@ -94,6 +107,7 @@ ob_start();
                         <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Ubicación / Calle</th>
                         <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Propietario</th>
                         <th style="padding: 12px; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Dirección / Referencia</th>
+                        <th style="padding: 12px; text-align: center; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Estado Pago</th>
                         <th style="padding: 12px; text-align: center; color: #6B7280; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Registro</th>
                     </tr>
                 </thead>
@@ -114,12 +128,32 @@ ob_start();
                                 </span>
                             </td>
                             <td style="padding: 15px; border: 1px solid #F3F4F6; border-left: none; border-right: none;">
-                                <div style="font-weight: 800; color: #111827;"><?= htmlspecialchars($v['propietario']) ?></div>
+                                <div style="font-weight: 800; color: #111827; display: flex; align-items: center; gap: 8px;">
+                                    <?= htmlspecialchars($v['propietario']) ?>
+                                    <?php if ($v['estado_servicio'] == 'Suspendido'): ?>
+                                        <span style="font-size: 9px; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px; font-weight: 700;">SERVICIO SUSPENDIDO</span>
+                                    <?php endif; ?>
+                                </div>
                                 <div style="font-size: 11px; color: #6B7280;">ID: #<?= $v['id'] ?></div>
                             </td>
                             <td style="padding: 15px; border: 1px solid #F3F4F6; border-left: none; border-right: none;">
                                 <div style="font-weight: 700; color: #4B5563;">Casa <?= htmlspecialchars($v['numero_casa'] ?: '-') ?></div>
                                 <div style="font-size: 12px; color: #9CA3AF; font-style: italic;"><?= htmlspecialchars($v['direccion']) ?></div>
+                            </td>
+                            <td style="padding: 15px; text-align: center; border: 1px solid #F3F4F6; border-left: none; border-right: none;">
+                                <?php
+                                // Obtener último cobro del mes actual
+                                $mes = date('n');
+                                $anio = date('Y');
+                                $cobroStmt = $pdo->prepare("SELECT estado FROM cobros WHERE vivienda_id = ? AND mes = ? AND anio = ? LIMIT 1");
+                                $cobroStmt->execute([$v['id'], $mes, $anio]);
+                                $estado = $cobroStmt->fetchColumn() ?: 'Sin Cobro';
+                                
+                                $bg = '#F3F4F6'; $color = '#6B7280';
+                                if ($estado == 'Pagado') { $bg = '#DEF7EC'; $color = '#03543F'; }
+                                elseif ($estado == 'Pendiente' || $estado == 'Vencido') { $bg = '#FDE8E8'; $color = '#9B1C1C'; }
+                                ?>
+                                <span class="badge" style="background: <?= $bg ?>; color: <?= $color ?>; border:none; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;"><?= $estado ?></span>
                             </td>
                             <td style="padding: 15px; text-align: center; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border: 1px solid #F3F4F6; border-left: none;">
                                 <div style="font-size: 12px; font-weight: 600; color: #6B7280;"><?= date('d/m/Y', strtotime($v['fecha_registro'])) ?></div>

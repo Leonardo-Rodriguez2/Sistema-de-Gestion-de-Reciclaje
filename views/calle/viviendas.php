@@ -79,10 +79,12 @@ ob_start();
                             </td>
                             <td style="padding: 12px; text-align: center;">
                                 <?php
-                                // Obtener último cobro
-                                $cobroStmt = $pdo->prepare("SELECT estado FROM cobros WHERE vivienda_id = ? ORDER BY id DESC LIMIT 1");
-                                $cobroStmt->execute([$v['id']]);
-                                $estado = $cobroStmt->fetchColumn() ?: 'Pendiente';
+                                // Obtener cobro del mes actual
+                                $mes = date('n'); $anio = date('Y');
+                                $cobroStmt = $pdo->prepare("SELECT estado FROM cobros WHERE vivienda_id = ? AND mes = ? AND anio = ? LIMIT 1");
+                                $cobroStmt->execute([$v['id'], $mes, $anio]);
+                                $estado = $cobroStmt->fetchColumn() ?: 'Sin Cobro';
+                                
                                 $bg = ($estado == 'Pagado') ? '#DEF7EC' : '#FDE8E8';
                                 $color = ($estado == 'Pagado') ? '#03543F' : '#9B1C1C';
                                 ?>

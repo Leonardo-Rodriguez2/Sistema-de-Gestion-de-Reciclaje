@@ -1,6 +1,6 @@
 <?php
 // admin_dashboard_view.php - Versión Compacta
-$user = check_dashboard_access([1]);
+$user = check_dashboard_access([1, 2]);
 $filter_rol_id = (int)($_GET['rol_id'] ?? 0);
 
 // Mapeo dinámico para etiquetas y títulos

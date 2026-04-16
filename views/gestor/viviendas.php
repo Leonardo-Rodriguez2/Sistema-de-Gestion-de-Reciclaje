@@ -1,6 +1,8 @@
 <?php
 // views/gestor/viviendas.php
 $user = check_dashboard_access([1, 2]); // Admin o Gestor
+$page = 'viviendas';
+$sid = $_GET['sid'] ?? '';
 
 // Filtros
 $f_barrio = (int)($_GET['barrio_id'] ?? 0);
@@ -42,6 +44,7 @@ ob_start();
     <div class="card" style="margin-bottom: 20px; padding: 15px;">
         <form method="GET" action="router.php" style="display: flex; gap: 15px; align-items: flex-end;">
             <input type="hidden" name="page" value="viviendas">
+            <input type="hidden" name="sid" value="<?= htmlspecialchars($sid) ?>">
             <div style="flex: 1;">
                 <label style="font-size: 11px; font-weight: 700; color: #6B7280;">BUSCAR PROPIETARIO</label>
                 <input type="text" name="search" value="<?= htmlspecialchars($f_search) ?>" placeholder="Nombre..." style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px;">

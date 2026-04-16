@@ -49,6 +49,12 @@ class viewsController extends viewsModel {
         // 6. Procesar formularios POST del rol
         $this->procesarPost($folder);
 
+        // 6.5 Especial: Verificar deudas si el encargado entra a Reportar Pagos
+        if ($page === 'reportar_pago' && $user['rol_id'] == 5) {
+            $bCtrl = new \app\controllers\barrioController();
+            $bCtrl->verificarDeudasBarrio($user['id']);
+        }
+
         // 6. Obtener ruta de vista validada (lista blanca)
         $vista = $this->obtenerVista($page, $folder);
 

@@ -2,9 +2,6 @@
 
 // =============================================
 // router.php — Área Privada (Usuarios Logueados)
-// Punto de entrada única para el área protegida.
-// Carga el controlador, obtiene los datos y
-// renderiza la vista en el scope global.
 // =============================================
 
 session_start();
@@ -25,12 +22,15 @@ if (!isset($_SESSION['user_id'])) {
 $sid = $_GET['sid'] ?? $_POST['sid'] ?? 'main';
 $_SESSION['active_sid'] = $sid;
 
-// Sincronizar user_id global para compatibilidad con controladores y modelos existentes
+// Sincronizar user_id global
 if (isset($_SESSION['identities'][$sid]['user_id'])) {
     $_SESSION['user_id'] = $_SESSION['identities'][$sid]['user_id'];
-} else {
-    // Si la identidad no existe en la sesión física, limpiar user_id para forzar login
-    unset($_SESSION['user_id']);
+} elseif (isset($_SESSION['user_id'])) {
+    // POST sin sid: reconstruir identidad desde user_id existente
+    $_SESSION['identities'][$sid] = [
+        'user_id' => $_SESSION['user_id'],
+        'inicio'  => date('Y-m-d H:i:s')
+    ];
 }
 
 // 3. El controlador valida, procesa POST, y devuelve los datos
@@ -52,5 +52,5 @@ if (!$user) {
     exit;
 }
 
-// 4. Renderizar la vista (se ejecuta en scope global → sidebar OK)
+// 5. Renderizar la vista
 require_once $datos['vista'];

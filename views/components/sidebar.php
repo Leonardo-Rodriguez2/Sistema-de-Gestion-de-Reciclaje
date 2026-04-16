@@ -92,6 +92,7 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Lista General</a></li>
+                        <li><a href="router.php?page=monitor_pagos" class="<?= ($page == 'monitor_pagos') ? 'active' : '' ?>">Monitor de Pagos</a></li>
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
                         <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Pendientes</a></li>
                     </ul>
@@ -109,6 +110,7 @@ $page = $page ?? 'dashboard';
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
                         <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Vivienda</a></li>
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Ver Todas Viviendas</a></li>
+                        <li><a href="router.php?page=reportar_pago" class="<?= ($page == 'reportar_pago') ? 'active' : '' ?>">Marcar Pagos</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
@@ -136,6 +138,7 @@ $page = $page ?? 'dashboard';
                     <ul class="submenu">
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Estado de Viviendas</a></li>
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
+                        <li><a href="router.php?page=usuarios" class="<?= ($page == 'usuarios') ? 'active' : '' ?>">Listar Personal</a></li>
                         <li><a href="router.php?page=usuario_nuevo_personal" class="<?= ($page == 'usuario_nuevo_personal') ? 'active' : '' ?>">Nuevo Personal</a></li>
                         <li><a href="router.php?page=historial" class="<?= ($page == 'historial') ? 'active' : '' ?>">Historial General</a></li>
                         <li><a href="router.php?page=recibos" class="<?= ($page == 'recibos') ? 'active' : '' ?>">Recibos / Reportes</a></li>

@@ -83,6 +83,16 @@ class calleController extends mainModel {
                     "UPDATE cobros SET estado = 'Pagado' WHERE id = ?",
                     [$cobro_id]
                 );
+
+                // Re-activar servicio si ya no hay deudas
+                $vStmt = $this->ejecutarConsulta("SELECT vivienda_id FROM cobros WHERE id = ?", [$cobro_id]);
+                $vId = $vStmt->fetchColumn();
+                
+                $pend = $this->ejecutarConsulta("SELECT COUNT(*) FROM cobros WHERE vivienda_id = ? AND estado != 'Pagado'", [$vId]);
+                if ($pend->fetchColumn() == 0) {
+                    $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Activo' WHERE id = ?", [$vId]);
+                }
+
                 $mensaje_exito = "Pago registrado correctamente.";
             } catch (\PDOException $e) {
                 $mensaje_error = "Error al registrar pago.";
