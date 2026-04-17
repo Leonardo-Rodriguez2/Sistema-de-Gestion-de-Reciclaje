@@ -9,11 +9,11 @@ $barrio_info = $barrioStmt->fetch(PDO::FETCH_ASSOC);
 $barrio_id = $barrio_info['id'] ?? 0;
 
 // 2. Cobros pendientes del barrio completo
-$pendientesStmt = $pdo->prepare("SELECT c.*, v.propietario, v.direccion, v.numero_casa 
+$pendientesStmt = $pdo->prepare("SELECT c.*, v.propietario, v.direccion, v.numero_casa, v.estado_servicio
                                  FROM cobros c 
                                  JOIN viviendas v ON c.vivienda_id = v.id 
                                  WHERE v.barrio_id = ? AND c.estado != 'Pagado'
-                                 ORDER BY c.fecha_vencimiento ASC");
+                                 ORDER BY v.propietario ASC, c.fecha_vencimiento ASC");
 $pendientesStmt->execute([$barrio_id]);
 $cobros_pendientes = $pendientesStmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -61,13 +61,15 @@ ob_start();
                             <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
                                 <th style="padding: 12px;">Vivienda</th>
                                 <th style="padding: 12px;">Tipo / Fecha</th>
-                                <th style="padding: 12px;">Monto</th>
+                                <th style="padding: 12px;">Costo Serv.</th>
+                                <th style="padding: 12px;">Monto Deuda</th>
+                                <th style="padding: 12px;">Servicio</th>
                                 <th style="padding: 12px; text-align: center;">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if(empty($cobros_pendientes)): ?>
-                                <tr><td colspan="4" style="text-align: center; color: #9CA3AF; padding: 40px;">No hay deudas pendientes en el barrio.</td></tr>
+                                <tr><td colspan="6" style="text-align: center; color: #9CA3AF; padding: 40px;">No hay deudas pendientes en el barrio.</td></tr>
                             <?php endif; ?>
                             <?php foreach($cobros_pendientes as $c): ?>
                                 <tr style="border-bottom: 1px solid #F3F4F6;">
@@ -82,7 +84,17 @@ ob_start();
                                         </span>
                                         <div style="font-size: 11px; color: #9CA3AF; margin-top:4px;"><?= $c['mes'] ?>/<?= $c['anio'] ?></div>
                                     </td>
+                                    <td style="padding: 12px; font-weight: 600; color: #374151;">S/ <?= number_format($barrio_info['monto_mensual'], 2) ?></td>
                                     <td style="padding: 12px; font-weight: 800; color: #111827;">S/ <?= number_format($c['monto'], 2) ?></td>
+                                    <td style="padding: 12px;">
+                                        <?php
+                                        $s_bg = ($c['estado_servicio'] == 'Activo') ? '#D1FAE5' : ($c['estado_servicio'] == 'Suspendido' ? '#FEF3C7' : '#F3F4F6');
+                                        $s_color = ($c['estado_servicio'] == 'Activo') ? '#065F46' : ($c['estado_servicio'] == 'Suspendido' ? '#92400E' : '#4B5563');
+                                        ?>
+                                        <span class="badge" style="background: <?= $s_bg ?>; color: <?= $s_color ?>; font-size: 10px;">
+                                            <?= $c['estado_servicio'] ?>
+                                        </span>
+                                    </td>
                                     <td style="padding: 12px; text-align: center;">
                                         <form method="POST">
                                             <input type="hidden" name="form_type" value="jefe_marcar_pagado">
@@ -132,4 +144,3 @@ ob_start();
 $content = ob_get_clean();
 include __DIR__ . '/../layouts/dashboard_layout.php';
 ?>
-

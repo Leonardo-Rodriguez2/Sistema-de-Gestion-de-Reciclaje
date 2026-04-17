@@ -17,7 +17,8 @@ $sql = "SELECT v.*, b.nombre as barrio_nombre, c.nombre as calle_nombre
         FROM viviendas v 
         JOIN barrios b ON v.barrio_id = b.id 
         LEFT JOIN calles c ON v.calle_id = c.id
-        WHERE v.barrio_id = :barrio";
+        WHERE v.barrio_id = :barrio
+        AND v.id NOT IN (SELECT sv.vivienda_id FROM solicitudes_vivienda sv WHERE sv.tipo = 'Baja' AND sv.estado = 'Pendiente' AND sv.vivienda_id IS NOT NULL)";
 
 $params = [':barrio' => $barrio_id];
 if ($f_calle > 0) {
@@ -97,7 +98,6 @@ ob_start();
                 <span style="font-size: 24px;">🏡</span> 
                 Listado de Viviendas (<?= count($viviendas) ?>)
             </h3>
-            <a href="router.php?page=registrar_vivienda" class="btn-primary" style="text-decoration: none; padding: 10px 20px; background: #111827; border-radius: 8px; font-weight: 600; font-size: 13px;">+ Nueva Vivienda</a>
         </div>
         
         <div style="overflow-x: auto;">

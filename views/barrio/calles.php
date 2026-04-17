@@ -79,7 +79,6 @@ ob_start();
 
                 <div style="display: flex; gap: 10px;">
                     <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" style="flex: 1; text-align: center; padding: 8px; background: #E0F2FE; color: #0369A1; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">Ver Viviendas</a>
-                    <a href="router.php?page=registrar_vivienda&calle_id=<?= $c['id'] ?>" style="padding: 8px; background: #F3F4F6; color: #4B5563; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;" title="Registrar Vivienda en esta calle">+</a>
                 </div>
             </div>
         <?php endforeach; ?>

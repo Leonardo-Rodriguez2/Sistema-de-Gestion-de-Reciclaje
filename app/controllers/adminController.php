@@ -117,14 +117,7 @@ class adminController extends mainModel {
         // 5. Registrar Vivienda (Directo Admin)
         if ($action === 'nuevo_vecino_admin') {
             try {
-                // Buscar si hay un encargado asignado a esa calle
-                $stmt = $this->ejecutarConsulta(
-                    "SELECT usuario_id FROM detalles_encargado_calle WHERE calle_id = ? LIMIT 1",
-                    [(int)$_POST['calle_id']]
-                );
-                $manager = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $manager_id = $manager ? $manager['usuario_id'] : null;
-
+                // ... (existing code)
                 $this->ejecutarConsulta(
                     "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, encargado_calle_id)
                      VALUES (?, ?, ?, ?, ?, ?)",
@@ -140,6 +133,50 @@ class adminController extends mainModel {
                 $mensaje_exito = "Vivienda registrada correctamente.";
             } catch (\PDOException $e) {
                 $mensaje_error = "Error al registrar vivienda: " . $e->getMessage();
+            }
+        }
+
+        // 6. Ordenar Baja Directa (Administrador)
+        if ($action === 'ordenar_baja') {
+            try {
+                $vivienda_id = (int)$_POST['vivienda_id'];
+                
+                // 1. Obtener datos básicos
+                $vStmt = $this->ejecutarConsulta("SELECT v.calle_id, v.barrio_id FROM viviendas v WHERE v.id = ?", [$vivienda_id]);
+                $vData = $vStmt->fetch(\PDO::FETCH_ASSOC);
+
+                if (!$vData) throw new \Exception("Vivienda no encontrada.");
+
+                // 2. Calcular deuda actual
+                $deudaStmt = $this->ejecutarConsulta(
+                    "SELECT SUM(monto) as total, COUNT(*) as cantidad, 
+                            GROUP_CONCAT(CONCAT(tipo_cobro, ' ', mes, '/', anio) SEPARATOR ', ') as resumen
+                     FROM cobros 
+                     WHERE vivienda_id = ? AND estado != 'Pagado'",
+                    [$vivienda_id]
+                );
+                $deuda_info = $deudaStmt->fetch(\PDO::FETCH_ASSOC);
+                $monto_deuda = $deuda_info['total'] ?? 0;
+                $detalles_deuda = $deuda_info['resumen'] ?? 'Sin deudas pendientes';
+
+                $pdo = $this->conectar();
+                $pdo->beginTransaction();
+
+                // 3. Crear solicitud ya aprobada (Baja Directa por Admin)
+                $this->ejecutarConsulta(
+                    "INSERT INTO solicitudes_vivienda (tipo, calle_id, vivienda_id, creado_por, revisado_por, estado, fecha_revision, monto_deuda, detalles_deuda)
+                     VALUES ('Baja', ?, ?, ?, ?, 'Aprobado', CURRENT_TIMESTAMP, ?, ?)",
+                    [$vData['calle_id'], $vivienda_id, $_SESSION['usuario_id'], $_SESSION['usuario_id'], $monto_deuda, $detalles_deuda]
+                );
+
+                // 4. Anular servicio
+                $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Anulado' WHERE id = ?", [$vivienda_id]);
+
+                $pdo->commit();
+                $mensaje_exito = "Servicio anulado directamente por Administración. Deuda registrada: S/ " . number_format($monto_deuda, 2);
+            } catch (\Exception $e) {
+                if(isset($pdo)) $pdo->rollBack();
+                $mensaje_error = "Error al ejecutar baja: " . $e->getMessage();
             }
         }
     }

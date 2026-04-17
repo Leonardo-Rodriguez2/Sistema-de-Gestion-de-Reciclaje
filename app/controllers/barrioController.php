@@ -33,8 +33,8 @@ class barrioController extends mainModel {
                         if ($solicitud['tipo'] === 'Alta') {
                             // Registrar vivienda
                             $this->ejecutarConsulta(
-                                "INSERT INTO viviendas (propietario, barrio_id, calle_id, numero_casa, referencia, encargado_calle_id)
-                                 VALUES (?, (SELECT barrio_id FROM calles WHERE id=?), ?, ?, ?, ?)",
+                                "INSERT INTO viviendas (propietario, barrio_id, calle_id, numero_casa, referencia, encargado_calle_id, estado_servicio)
+                                 VALUES (?, (SELECT barrio_id FROM calles WHERE id=?), ?, ?, ?, ?, 'Activo')",
                                 [
                                     $solicitud['propietario'],
                                     $solicitud['calle_id'],
@@ -44,16 +44,21 @@ class barrioController extends mainModel {
                                     $solicitud['creado_por']
                                 ]
                             );
-                        } else {
+                        } elseif ($solicitud['tipo'] === 'Baja') {
                             // Eliminar vivienda (Baja)
-                            $this->ejecutarConsulta("DELETE FROM viviendas WHERE id = ?", [$solicitud['vivienda_id']]);
+                            $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Anulado' WHERE id = ?", [$solicitud['vivienda_id']]);
+                        } elseif ($solicitud['tipo'] === 'Renovacion') {
+                            // Reactivar servicio (Renovación)
+                            $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Activo' WHERE id = ?", [$solicitud['vivienda_id']]);
                         }
                     }
 
-                    // Actualizar estado de solicitud
+                    // Actualizar esta y TODAS las solicitudes pendientes idénticas para esta vivienda
                     $this->ejecutarConsulta(
-                        "UPDATE solicitudes_vivienda SET estado = ?, revisado_por = ?, fecha_revision = CURRENT_TIMESTAMP WHERE id = ?",
-                        [$estado, $user['id'], $solicitud_id]
+                        "UPDATE solicitudes_vivienda 
+                         SET estado = ?, revisado_por = ?, fecha_revision = CURRENT_TIMESTAMP 
+                         WHERE vivienda_id = ? AND tipo = ? AND estado = 'Pendiente'",
+                        [$estado, $user['id'], $solicitud['vivienda_id'], $solicitud['tipo']]
                     );
 
                     $pdo->commit();
@@ -167,6 +172,80 @@ class barrioController extends mainModel {
                 $mensaje_exito = "Tarifas de barrio actualizadas.";
             } catch (\Exception $e) {
                 $mensaje_error = "Error al actualizar tarifas.";
+            }
+        }
+
+        // 6. Ordenar Baja de Servicio (Barrio Manager -> Calle Manager)
+        if ($action === 'ordenar_baja') {
+            try {
+                $vivienda_id = (int)$_POST['vivienda_id'];
+                
+                // 1. Obtener calle_id
+                $vStmt = $this->ejecutarConsulta("SELECT calle_id FROM viviendas WHERE id = ?", [$vivienda_id]);
+                $calle_id = $vStmt->fetchColumn();
+
+                if (!$calle_id) throw new \Exception("Vivienda no válida.");
+
+                // 2. Calcular deuda actual
+                $deudaStmt = $this->ejecutarConsulta(
+                    "SELECT SUM(monto) as total, COUNT(*) as cantidad, 
+                            GROUP_CONCAT(CONCAT(tipo_cobro, ' ', mes, '/', anio) SEPARATOR ', ') as resumen
+                     FROM cobros 
+                     WHERE vivienda_id = ? AND estado != 'Pagado'",
+                    [$vivienda_id]
+                );
+                $deuda_info = $deudaStmt->fetch(\PDO::FETCH_ASSOC);
+                $monto_deuda = $deuda_info['total'] ?? 0;
+                $detalles_deuda = $deuda_info['resumen'] ?? 'Sin deudas pendientes';
+
+                $pdo = $this->conectar();
+                $pdo->beginTransaction();
+
+                // 3. Crear solicitud ya aprobada (Baja Directa)
+                $this->ejecutarConsulta(
+                    "INSERT INTO solicitudes_vivienda (tipo, calle_id, vivienda_id, creado_por, revisado_por, estado, fecha_revision, monto_deuda, detalles_deuda)
+                     VALUES ('Baja', ?, ?, ?, ?, 'Aprobado', CURRENT_TIMESTAMP, ?, ?)",
+                    [$calle_id, $vivienda_id, $user['id'], $user['id'], $monto_deuda, $detalles_deuda]
+                );
+
+                // 4. Anular servicio
+                $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Anulado' WHERE id = ?", [$vivienda_id]);
+
+                $pdo->commit();
+                $mensaje_exito = "Servicio anulado directamente. Deuda registrada: S/ " . number_format($monto_deuda, 2);
+            } catch (\Exception $e) {
+                if(isset($pdo)) $pdo->rollBack();
+                $mensaje_error = "Error al ejecutar baja: " . $e->getMessage();
+            }
+        }
+
+        // 7. Renovar Servicio Directo (Barrio Manager)
+        if ($action === 'renovar_servicio_directo') {
+            try {
+                $vivienda_id = (int)$_POST['vivienda_id'];
+                
+                // 1. Obtener calle_id
+                $vStmt = $this->ejecutarConsulta("SELECT calle_id FROM viviendas WHERE id = ?", [$vivienda_id]);
+                $calle_id = $vStmt->fetchColumn();
+
+                $pdo = $this->conectar();
+                $pdo->beginTransaction();
+
+                // 2. Crear solicitud ya aprobada (Renovación Directa)
+                $this->ejecutarConsulta(
+                    "INSERT INTO solicitudes_vivienda (tipo, calle_id, vivienda_id, creado_por, revisado_por, estado, fecha_revision)
+                     VALUES ('Renovacion', ?, ?, ?, ?, 'Aprobado', CURRENT_TIMESTAMP)",
+                    [$calle_id, $vivienda_id, $user['id'], $user['id']]
+                );
+
+                // 3. Reactivar servicio
+                $this->ejecutarConsulta("UPDATE viviendas SET estado_servicio = 'Activo' WHERE id = ?", [$vivienda_id]);
+
+                $pdo->commit();
+                $mensaje_exito = "Servicio renovado directamente por el Encargado de Barrio.";
+            } catch (\Exception $e) {
+                if(isset($pdo)) $pdo->rollBack();
+                $mensaje_error = "Error al renovar servicio: " . $e->getMessage();
             }
         }
     }

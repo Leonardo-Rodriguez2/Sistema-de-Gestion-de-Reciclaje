@@ -92,8 +92,9 @@ $page = $page ?? 'dashboard';
                     </a>
                     <ul class="submenu">
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Lista General</a></li>
-                        <li><a href="router.php?page=monitor_pagos" class="<?= ($page == 'monitor_pagos') ? 'active' : '' ?>">Monitor de Pagos</a></li>
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
+                        <li><a href="router.php?page=quitar_servicio" class="<?= ($page == 'quitar_servicio') ? 'active' : '' ?>">Quitar Servicio</a></li>
+                        <li><a href="router.php?page=reporte_bajas" class="<?= ($page == 'reporte_bajas') ? 'active' : '' ?>">Reporte de Bajas</a></li>
                         <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Pendientes</a></li>
                     </ul>
                 </li>
@@ -108,9 +109,14 @@ $page = $page ?? 'dashboard';
                     <ul class="submenu">
                         <li><a href="router.php?page=calles" class="<?= ($page == 'calles') ? 'active' : '' ?>">Lista de Calles</a></li>
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Registrar Casa</a></li>
-                        <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Vivienda</a></li>
+                        <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Registro</a></li>
+                        <li><a href="router.php?page=ordenes_baja" class="<?= ($page == 'ordenes_baja') ? 'active' : '' ?>">Órdenes de Baja</a></li>
+                        <li><a href="router.php?page=solicitudes_renovacion" class="<?= ($page == 'solicitudes_renovacion') ? 'active' : '' ?>">Órdenes Renovación</a></li>
+                        <li><a href="router.php?page=historial_solicitudes" class="<?= ($page == 'historial_solicitudes') ? 'active' : '' ?>">Historial Trámites</a></li>
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Ver Todas Viviendas</a></li>
                         <li><a href="router.php?page=reportar_pago" class="<?= ($page == 'reportar_pago') ? 'active' : '' ?>">Marcar Pagos</a></li>
+                        <li><a href="router.php?page=quitar_servicio" class="<?= ($page == 'quitar_servicio') ? 'active' : '' ?>">Quitar Servicio</a></li>
+                        <li><a href="router.php?page=reporte_bajas" class="<?= ($page == 'reporte_bajas') ? 'active' : '' ?>">Reporte de Bajas</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
@@ -124,7 +130,10 @@ $page = $page ?? 'dashboard';
                     <ul class="submenu">
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Mis Viviendas</a></li>
                         <li><a href="router.php?page=registrar_vivienda" class="<?= ($page == 'registrar_vivienda') ? 'active' : '' ?>">Solicitar Registro</a></li>
-                        <li><a href="router.php?page=reportar_pago" class="<?= ($page == 'reportar_pago') ? 'active' : '' ?>">Marcar Pagos</a></li>
+                        <li><a href="router.php?page=quitar_servicio" class="<?= ($page == 'quitar_servicio') ? 'active' : '' ?>">Quitar Servicio</a></li>
+                        <li><a href="router.php?page=solicitudes" class="<?= ($page == 'solicitudes') ? 'active' : '' ?>">Solicitudes Pendientes</a></li>
+                        <li><a href="router.php?page=historial_solicitudes" class="<?= ($page == 'historial_solicitudes') ? 'active' : '' ?>">Historial Trámites</a></li>
+                        <li><a href="router.php?page=reporte_bajas" class="<?= ($page == 'reporte_bajas') ? 'active' : '' ?>">Reporte de Bajas</a></li>
                     </ul>
                 </li>
             <?php endif; ?>

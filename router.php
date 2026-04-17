@@ -40,13 +40,11 @@ $datos = $ctrl->preparar();
 // 4. Inyectar variables en scope global
 $pdo            = $datos['pdo'];
 $page           = $datos['page'];
-$mensaje_exito  = $mensaje_exito ?? null;
-$mensaje_error  = $mensaje_error ?? null;
+$user           = $datos['user'];
+$mensaje_exito  = $_GET['exito'] ?? $mensaje_exito ?? null;
+$mensaje_error  = $_GET['error'] ?? $mensaje_error ?? null;
 
-// Obtener el usuario de la identidad específica
-$user = $_SESSION['identities'][$sid] ?? null;
-
-// Si por alguna razón la identidad no tiene usuario → login
+// Si por alguna razón no hay usuario → login
 if (!$user) {
     header("Location: /reciclaje/views/public/login.php");
     exit;

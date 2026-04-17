@@ -218,7 +218,7 @@ include __DIR__ . '/../layouts/public_layout.php';
                     const selected = document.querySelectorAll('.tipo-residuo:checked');
                     if (selected.length > 3) {
                         this.checked = false;
-                        alert('Por favor selecciona máximo 3 tipos principales para clasificar la alerta.');
+                        // Notificar silenciosamente si fuera necesario, o simplemente impedir la acción
                     }
                 });
             });

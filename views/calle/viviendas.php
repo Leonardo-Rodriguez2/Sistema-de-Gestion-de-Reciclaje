@@ -7,6 +7,11 @@ $calleStmt = $pdo->prepare("SELECT calle_id FROM detalles_encargado_calle WHERE 
 $calleStmt->execute([$user['id']]);
 $calle_id = $calleStmt->fetchColumn();
 
+// 1b. Validar calle_id
+if (!$calle_id) {
+    die("<div class='alert alert-error'>No tienes una calle asignada. Contacta al administrador.</div>");
+}
+
 // 2. Obtener filtros
 $f_search = trim($_GET['search'] ?? '');
 
@@ -15,8 +20,9 @@ $sql = "SELECT v.*, b.nombre as barrio_nombre, c.nombre as calle_nombre
         FROM viviendas v 
         JOIN barrios b ON v.barrio_id = b.id 
         JOIN calles c ON v.calle_id = c.id
-        WHERE v.calle_id = :calle";
-
+        WHERE v.calle_id = :calle
+        AND v.id NOT IN (SELECT sv.vivienda_id FROM solicitudes_vivienda sv WHERE sv.tipo = 'Baja' AND sv.estado = 'Pendiente' AND sv.vivienda_id IS NOT NULL)";
+        
 $params = [':calle' => $calle_id];
 if ($f_search !== '') {
     $sql .= " AND (v.propietario LIKE :search OR v.direccion LIKE :search OR v.numero_casa LIKE :search)";
@@ -25,9 +31,13 @@ if ($f_search !== '') {
 
 $sql .= " ORDER BY v.numero_casa ASC";
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$viviendas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $viviendas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error en la consulta: " . $e->getMessage() . " | SQL: " . $sql);
+}
 
 $title = "Mis Viviendas - EcoCusco";
 $header_title = "Viviendas en mi Calle";
@@ -53,7 +63,6 @@ ob_start();
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin: 0;">🏠 Listado de la Calle</h3>
-            <a href="router.php?page=registrar_vivienda" class="btn-primary" style="text-decoration: none;">+ Solicitar Alta</a>
         </div>
         
         <div style="overflow-x: auto;">
@@ -63,6 +72,7 @@ ob_start();
                         <th style="padding: 12px; text-align: left;">Propietario</th>
                         <th style="padding: 12px; text-align: left;">Casa / Dirección</th>
                         <th style="padding: 12px; text-align: center;">Estado Pago</th>
+                        <th style="padding: 12px; text-align: center;">Servicio</th>
                         <th style="padding: 12px; text-align: center;">Acciones</th>
                     </tr>
                 </thead>
@@ -91,7 +101,24 @@ ob_start();
                                 <span class="badge" style="background: <?= $bg ?>; color: <?= $color ?>; border:none;"><?= $estado ?></span>
                             </td>
                             <td style="padding: 12px; text-align: center;">
-                                <a href="router.php?page=reportar_pago&vivienda_id=<?= $v['id'] ?>" style="color:#10B981; text-decoration:none; font-size:11px; font-weight:600;">Reportar Pago</a>
+                                <?php
+                                $serv_bg = ($v['estado_servicio'] == 'Activo') ? '#D1FAE5' : ($v['estado_servicio'] == 'Suspendido' ? '#FEF3C7' : '#F3F4F6');
+                                $serv_color = ($v['estado_servicio'] == 'Activo') ? '#065F46' : ($v['estado_servicio'] == 'Suspendido' ? '#92400E' : '#4B5563');
+                                ?>
+                                <span class="badge" style="background: <?= $serv_bg ?>; color: <?= $serv_color ?>; font-size: 10px;"><?= $v['estado_servicio'] ?></span>
+                            </td>
+                            <td style="padding: 12px; text-align: center;">
+                                <div style="display: flex; gap: 8px; justify-content: center;">
+                                    <a href="router.php?page=reportar_pago&vivienda_id=<?= $v['id'] ?>" style="color:#10B981; text-decoration:none; font-size:11px; font-weight:600;">Reportar Pago</a>
+                                    <?php if ($v['estado_servicio'] != 'Activo'): ?>
+                                        <form method="POST" action="router.php?page=viviendas" style="display:inline;">
+                                            <input type="hidden" name="sid" value="<?= htmlspecialchars($sid) ?>">
+                                            <input type="hidden" name="form_type" value="solicitar_renovacion">
+                                            <input type="hidden" name="vivienda_id" value="<?= $v['id'] ?>">
+                                            <button type="submit" style="background:none; border:none; color:#3B82F6; font-size:11px; font-weight:600; cursor:pointer; padding:0;">Solicitar Renovación</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

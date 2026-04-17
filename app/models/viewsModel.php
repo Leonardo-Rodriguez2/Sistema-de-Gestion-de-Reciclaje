@@ -27,6 +27,8 @@ class viewsModel extends mainModel {
             'monitor_pagos',
             'registrar_vivienda',
             'solicitudes',
+            'quitar_servicio',
+            'reporte_bajas',
         ],
         'gestor' => [
             'dashboard',
@@ -49,6 +51,11 @@ class viewsModel extends mainModel {
             'solicitudes',
             'registrar_vivienda',
             'reportar_pago',
+            'quitar_servicio',
+            'ordenes_baja',
+            'solicitudes_renovacion',
+            'reporte_bajas',
+            'historial_solicitudes',
         ],
         'calle' => [
             'dashboard',
@@ -56,6 +63,10 @@ class viewsModel extends mainModel {
             'registrar_vivienda',
             'solicitar_baja',
             'reportar_pago',
+            'quitar_servicio',
+            'reporte_bajas',
+            'solicitudes',
+            'historial_solicitudes',
         ],
     ];
 
