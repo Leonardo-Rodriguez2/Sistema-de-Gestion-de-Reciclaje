@@ -1,99 +1,124 @@
-# Informe general del proyecto EcoCusco
+# Proyecto EPSIC: Sistema Integral de Gestión de Reciclaje y Recaudación
 
-## Resumen general
-Este proyecto es un **Sistema de Gestión de Reciclaje** llamado "EPSIC", orientado a la administración de la recolección de residuos en barrios y zonas residenciales/comerciales. Permite gestionar usuarios, barrios, calles, viviendas, recaudaciones y roles, con acceso diferenciado según el tipo de usuario (admin, gestor, personal, barrio, calle, recolector).
-
----
-
-## Archivos principales y su función
-
-- **README.md**  
-  Breve descripción: "Sistema-de-Gestion-de-Reciclaje".
-
-- **autoload.php**  
-  Carga automática de clases PHP usando namespaces. Convierte rutas tipo `app\controllers\jefeController` en rutas de archivo reales y las incluye automáticamente.
-
-- **router.php**  
-  Es el router principal para el área privada (usuarios logueados).  
-  - Inicia sesión, verifica si el usuario está autenticado, maneja multi-sesión por pestaña, sincroniza la identidad activa y llama al controlador de vistas (`viewsController`) para preparar los datos y determinar qué página mostrar.
-  - Si no hay usuario, redirige al login.
-
-- **index.php**  
-  Redirige siempre a la página pública de inicio (`/reciclaje/views/public/inicio.php`).
-
-- **app/config.php**  
-  Configuración de la base de datos (host, nombre, usuario, contraseña) y URL base de la app.
-
-- **app/helpers.php**  
-  Funciones auxiliares:
-  - `check_dashboard_access`: Verifica si el usuario tiene acceso a un panel según su rol.
-  - `render_dashboard_alerts`: Renderiza mensajes de éxito/error.
-  - `render_dashboard_stats`: Renderiza estadísticas en el dashboard.
+## 1. Introducción y Propósito
+El proyecto **EPSIC** (Sistema de Gestión de Reciclaje EcoCusco) nace como una solución tecnológica para digitalizar y transparentar el proceso de recolección de residuos sólidos y el cobro de arbitrios municipales o comunitarios. El sistema aborda la problemática de la morosidad, la falta de comunicación entre niveles de gestión y la ineficiencia en el reporte de focos de contaminación.
 
 ---
 
-## Modelos
+## 2. Modelo de Gobernanza (Estructura de Roles)
+El sistema implementa un modelo jerárquico de permisos para asegurar que cada usuario actúe solo dentro de su competencia:
 
-- **app/models/mainModel.php**  
-  Modelo base del sistema.  
-  - Provee la conexión PDO a la base de datos y métodos CRUD genéricos.
-  - Todas las clases modelo heredan de aquí.
-  - Métodos para ejecutar consultas y obtener usuarios.
+### 2.1. Administrador (Nivel 1)
+- **Alcance Global:** Tiene visibilidad sobre todos los barrios y calles.
+- **Gestión de Personal:** Crea y edita cuentas para todos los roles, asignándoles sus respectivos barrios o calles.
+- **Integridad del Sistema:** Define la estructura geográfica base del proyecto.
 
-- **app/models/viewsModel.php**  
-  Controla qué páginas puede ver cada rol.  
-  - Define una "lista blanca" de páginas permitidas por rol.
-  - Si se quiere agregar una nueva página, se añade aquí y se crea el archivo correspondiente en `views/{rol}/`.
+### 2.2. Gestor de Pagos (Nivel 2)
+- **Control Financiero:** Su dashboard se enfoca en la validación final del dinero.
+- **Cierre de Ciclo:** Recibe las recaudaciones consolidadas de los barrios y las marca como "Verificadas", cerrando el flujo contable.
 
----
+### 2.3. Encargado de Barrio (Nivel 3)
+- **Supervisión Zonal:** Actúa como un puente entre la calle y la administración central.
+- **Auditor de Cambios:** Aprueba o rechaza las solicitudes de alta/baja de viviendas.
+- **Configurador de Tarifas:** Define cuánto se cobra en su barrio por mes y cuánto es la multa por reconexión/renovación.
 
-## Controladores
+### 2.4. Encargado de Calle (Nivel 4)
+- **Operador de Proximidad:** Es quien tiene contacto directo con los vecinos.
+- **Cobrador:** Registra los pagos recibidos en efectivo o transferencia casa por casa.
+- **Informante:** Reporta solicitudes de nuevos vecinos o retiros del servicio.
 
-- **app/controllers/viewsController.php**  
-  Controlador principal de vistas privadas.
-  - Obtiene datos del usuario activo.
-  - Determina la carpeta de vistas según el rol.
-  - Maneja peticiones AJAX (por ejemplo, obtener calles de un barrio).
-  - Procesa formularios POST según el rol.
-
-- **app/controllers/gestorController.php**  
-  Controlador para acciones del rol "gestor".
-  - Ejemplo: Verificar recaudaciones enviadas por encargados de barrio.
+### 2.5. Personal Obrero / Recolector
+- **Operativo de Campo:** Visualiza los reportes ciudadanos de basura acumulada.
+- **Rutas de Atención:** Cambia el estado de los reportes a "En Proceso" o "Completado".
 
 ---
 
-## Otros archivos y carpetas relevantes
+## 3. Arquitectura Técnica y Patrones de Diseño
 
-- **update_db_v2.sql / reciclaje_platform.sql**  
-  Scripts SQL para crear o actualizar la base de datos.
+### 3.1. Patrón MVC (Modelo-Vista-Controlador)
+El sistema está construido sobre una arquitectura limpia sin dependencias externas pesadas, lo que garantiza velocidad y facilidad de mantenimiento.
+- **Modelos:** Encapsulan la lógica de conexión a la base de datos y la seguridad de las vistas.
+- **Vistas:** Utilizan PHP nativo mezclado con HTML5 para un renderizado rápido del lado del servidor.
+- **Controladores:** Procesan las peticiones del usuario y deciden qué acciones tomar sobre los datos.
 
-- **/views/**  
-  Contiene todas las vistas del sistema, organizadas por rol y propósito (admin, gestor, barrio, calle, personal, público, componentes, layouts).
-
-- **/assets/**  
-  Recursos estáticos como CSS e imágenes.
-
-- **/uploads/**  
-  Carpeta para archivos subidos (por ejemplo, imágenes).
+### 3.2. Sistema de Multi-Sesión por SID
+Una innovación clave de EPSIC es su capacidad para manejar múltiples identidades en una misma sesión de navegador. Mediante el uso de un parámetro `sid` en la URL, el sistema diferencia contextos, permitiendo que un usuario pueda gestionar diferentes roles en pestañas paralelas sin conflictos de sesión.
 
 ---
 
-## ¿Cómo se estructura el sistema?
+## 4. El Ciclo de Vida del Dinero (Flujo Financiero)
 
-- **MVC básico**:  
-  - Modelos en `/app/models/`
-  - Controladores en `/app/controllers/`
-  - Vistas en `/views/`
-- **Roles**:  
-  - Cada rol tiene su propio conjunto de vistas y permisos.
-- **Componentes reutilizables**:  
-  - Ejemplo: `dashboard_alerts.php`, `dashboard_stats.php`, `footer_public.php`, etc.
+1.  **Generación de Deuda:** El sistema crea registros en la tabla `cobros` automáticamente para cada vivienda.
+2.  **Cobro en Calle:** El Encargado de Calle cobra al vecino y marca el registro como "Pagado".
+3.  **Liquidación de Calle:** El encargado envía el total de su recaudación al Barrio. Los registros de pago se vinculan a un `recaudacion_id` tipo 'Calle'.
+4.  **Consolidación de Barrio:** El Encargado de Barrio verifica los montos, los suma y envía una "Recaudación de Barrio" al Gestor.
+5.  **Validación Final:** El Gestor de Pagos revisa la recaudación del barrio y la marca como "Verificado".
 
 ---
 
-## ¿Cómo se procesa una petición privada?
+## 5. Gestión de Viviendas y Solicitudes
+El padrón de contribuyentes no es estático. Para evitar fraudes o errores:
+- Cualquier alta o baja de vivienda iniciada por un Encargado de Calle queda en estado **Pendiente**.
+- El Encargado de Barrio debe revisar los detalles (monto de deuda en caso de baja, o ubicación en caso de alta) antes de aprobar la transacción.
+- Una vez aprobada, el sistema actualiza automáticamente el estado de la vivienda (`Activo`, `Suspendido`, `Anulado`).
 
-1. El usuario accede a una URL privada → entra por `router.php`.
-2. Se verifica la sesión y el rol.
-3. Se determina la página a mostrar según el rol y la petición.
-4. El controlador de vistas prepara los datos y carga la vista correspondiente.
+---
+
+## 9. Stack Tecnológico y Herramientas
+
+### 9.1. Backend: PHP 8.x
+Se ha elegido PHP nativo por su excelente rendimiento en servidores compartidos y su facilidad de despliegue. El código utiliza:
+- **Namespaces:** Para evitar colisiones de nombres de clases y mantener un estándar PSR-4 simulado.
+- **PDO (PHP Data Objects):** Para una abstracción segura de la capa de datos.
+- **BCrypt:** Para el cifrado unidireccional de contraseñas.
+
+### 9.2. Frontend: Vanilla Stack
+- **HTML5 Semántico:** Para mejorar la accesibilidad y el SEO del área pública.
+- **CSS3 (Custom Properties):** Uso de variables CSS para mantener un sistema de diseño consistente (colores, espaciados).
+- **JavaScript (ES6+):** Manipulación del DOM nativa para validaciones y peticiones AJAX mediante `fetch`.
+
+### 9.3. Librerías de Terceros (CDN)
+- **SweetAlert2:** Utilizada para mostrar mensajes de éxito, error y confirmaciones de borrado con una estética premium.
+- **Google Fonts (Outfit / Inter):** Para una tipografía moderna y legible.
+- **FontAwesome / Lucide Icons:** Para la iconografía del dashboard.
+
+---
+
+## 10. Escalabilidad y Mejoras Futuras
+
+### 10.1. Módulo de Pagos Digitales
+El sistema está preparado para integrar APIs de pago como **Culqi**, **MercadoPago** o pasarelas locales mediante el registro de `transaction_id` en la tabla de pagos.
+
+### 10.2. App Móvil para Recolectores
+Mediante la creación de un endpoint API en `viewsController`, se podría desarrollar una app híbrida (Ionic/Flutter) que permita a los recolectores ver su ruta en un mapa en tiempo real.
+
+### 10.3. Notificaciones Automáticas
+Implementación de un cronjob que envíe correos electrónicos o mensajes de WhatsApp automáticos a los vecinos cuando su cobro mensual sea emitido o esté próximo a vencer.
+
+---
+
+## 11. Conclusión Técnica
+EPSIC no es solo un software de cobro, es un ecosistema de gestión basado en la confianza y la auditoría. Su diseño modular permite que crezca según las necesidades del municipio o asociación de vecinos, manteniendo siempre la integridad de los datos financieros y operativos.
+
+---
+
+## 6. Módulo Ciudadano y Reportes
+Cualquier ciudadano, sin necesidad de loguearse, puede acceder a la sección de reportes públicos.
+- **Captura de Datos:** Se solicita la ubicación, el tipo de residuo y opcionalmente fotos.
+- **Monitoreo:** El Personal Obrero recibe estos reportes en su dashboard en tiempo real para su pronta atención.
+
+---
+
+## 7. Base de Datos y Relaciones
+El sistema descansa sobre una base de datos MySQL normalizada para evitar redundancia:
+- **Relaciones 1:N**: Barrio -> Calles, Calle -> Viviendas.
+- **Relaciones N:M (simuladas)**: Usuarios y Roles mediante tablas de detalles específicos.
+- **Integridad Referencial**: Uso de `ON DELETE CASCADE` y `SET NULL` para mantener la base de datos limpia si se eliminan usuarios o zonas.
+
+---
+
+## 8. Seguridad y Mejores Prácticas
+- **Contraseñas Seguras:** Uso de `password_hash()` con el algoritmo DEFAULT (BCrypt).
+- **Prevención SQL Injection:** Uso mandatorio de sentencias preparadas PDO.
+- **Protección XSS:** Limpieza de todas las variables de entrada mediante `htmlspecialchars()`.
+- **Navegación Restringida:** Listas blancas de archivos por rol en `viewsModel.php`.

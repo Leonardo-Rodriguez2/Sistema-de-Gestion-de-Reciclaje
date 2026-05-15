@@ -64,8 +64,8 @@ ob_start();
                 <label style='font-size: 11px; font-weight: 700; color: #6B7280; display: block; margin-bottom: 5px;'>HASTA</label>
                 <input type='date' name='f_fin' value='<?php echo htmlspecialchars($f_fin); ?>' style='width:100%; padding: 7px; border: 1px solid #E5E7EB; border-radius: 6px;'>
             </div>
-            <div style='display: flex; gap: 8px;'>
-                <button type='submit' class='btn-primary'>Filtrar</button>
+            <div style='display: flex; gap: 8px; '>
+                <button type='submit' class='btn-primary'>Filtrar</button> 
                 <a href='router.php?page=historial&sid=<?php echo $sid; ?>' class='badge' style='background:#F3F4F6; color:#4B5563; text-decoration:none; display:flex; align-items:center; padding: 10px;'>Limpiar</a>
             </div>
         </form>

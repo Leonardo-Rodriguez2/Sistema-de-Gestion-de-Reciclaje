@@ -31,12 +31,13 @@ class barrioController extends mainModel {
                 if ($solicitud) {
                     if ($estado === 'Aprobado') {
                         if ($solicitud['tipo'] === 'Alta') {
-                            // Registrar vivienda
+                            // Registrar vivienda (Usamos el nombre de la calle como dirección por defecto)
                             $this->ejecutarConsulta(
-                                "INSERT INTO viviendas (propietario, barrio_id, calle_id, numero_casa, referencia, encargado_calle_id, estado_servicio)
-                                 VALUES (?, (SELECT barrio_id FROM calles WHERE id=?), ?, ?, ?, ?, 'Activo')",
+                                "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, referencia, encargado_calle_id, estado_servicio)
+                                 VALUES (?, (SELECT barrio_id FROM calles WHERE id=?), ?, (SELECT nombre FROM calles WHERE id=?), ?, ?, ?, 'Activo')",
                                 [
                                     $solicitud['propietario'],
+                                    $solicitud['calle_id'],
                                     $solicitud['calle_id'],
                                     $solicitud['calle_id'],
                                     $solicitud['numero_casa'],
@@ -53,13 +54,23 @@ class barrioController extends mainModel {
                         }
                     }
 
-                    // Actualizar esta y TODAS las solicitudes pendientes idénticas para esta vivienda
+                    // 1. Actualizar esta solicitud específica (Asegura que desaparezca de la bandeja)
                     $this->ejecutarConsulta(
                         "UPDATE solicitudes_vivienda 
                          SET estado = ?, revisado_por = ?, fecha_revision = CURRENT_TIMESTAMP 
-                         WHERE vivienda_id = ? AND tipo = ? AND estado = 'Pendiente'",
-                        [$estado, $user['id'], $solicitud['vivienda_id'], $solicitud['tipo']]
+                         WHERE id = ?",
+                        [$estado, $user['id'], $solicitud_id]
                     );
+
+                    // 2. Si tiene vivienda_id (Baja/Renovación), cerrar otras pendientes idénticas
+                    if (!empty($solicitud['vivienda_id'])) {
+                        $this->ejecutarConsulta(
+                            "UPDATE solicitudes_vivienda 
+                             SET estado = ?, revisado_por = ?, fecha_revision = CURRENT_TIMESTAMP 
+                             WHERE vivienda_id = ? AND tipo = ? AND estado = 'Pendiente' AND id != ?",
+                            [$estado, $user['id'], $solicitud['vivienda_id'], $solicitud['tipo'], $solicitud_id]
+                        );
+                    }
 
                     $pdo->commit();
                     $mensaje_exito = "Solicitud procesada: $estado.";
@@ -248,6 +259,30 @@ class barrioController extends mainModel {
                 $mensaje_error = "Error al renovar servicio: " . $e->getMessage();
             }
         }
+
+        // 8. Actualizar Configuración Financiera del Barrio
+        if ($action === 'actualizar_configuracion_barrio') {
+            try {
+                $cuota = (float)$_POST['cuota_mensual'];
+                $multa = (float)$_POST['multa_renovacion'];
+                
+                // Obtener barrio_id del usuario actual
+                $bStmt = $this->ejecutarConsulta("SELECT barrio_id FROM detalles_encargado_barrio WHERE usuario_id = ?", [$user['id']]);
+                $barrio_id = $bStmt->fetchColumn();
+
+                if ($barrio_id) {
+                    $this->ejecutarConsulta(
+                        "INSERT INTO configuraciones_barrio (barrio_id, cuota_mensual, multa_renovacion, actualizado_por)
+                         VALUES (?, ?, ?, ?)
+                         ON DUPLICATE KEY UPDATE cuota_mensual = VALUES(cuota_mensual), multa_renovacion = VALUES(multa_renovacion), actualizado_por = VALUES(actualizado_por)",
+                        [$barrio_id, $cuota, $multa, $user['id']]
+                    );
+                    $mensaje_exito = "Configuración del barrio actualizada correctamente.";
+                }
+            } catch (\Exception $e) {
+                $mensaje_error = "Error al actualizar configuración: " . $e->getMessage();
+            }
+        }
     }
 
     /**
@@ -257,18 +292,18 @@ class barrioController extends mainModel {
     public function verificarDeudasBarrio($usuario_id) {
         $pdo = $this->conectar();
         
-        // 1. Obtener viviendas del barrio
-        $stmt = $pdo->prepare("SELECT v.id, b.monto_mensual 
+        // 1. Obtener viviendas del barrio y su cuota mensual configurada
+        $stmt = $pdo->prepare("SELECT v.id, cb.cuota_mensual 
                                FROM viviendas v 
-                               JOIN barrios b ON v.barrio_id = b.id
-                               JOIN detalles_encargado_barrio deb ON b.id = deb.barrio_id
+                               JOIN configuraciones_barrio cb ON v.barrio_id = cb.barrio_id
+                               JOIN detalles_encargado_barrio deb ON cb.barrio_id = deb.barrio_id
                                WHERE deb.usuario_id = ?");
         $stmt->execute([$usuario_id]);
         $viviendas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         foreach ($viviendas as $v) {
             $vid = $v['id'];
-            $monto = $v['monto_mensual'];
+            $monto = $v['cuota_mensual'];
             
             // 2. Contar meses pendientes
             $pendStmt = $pdo->prepare("SELECT COUNT(*) FROM cobros WHERE vivienda_id = ? AND estado != 'Pagado' AND tipo_cobro = 'Servicio'");

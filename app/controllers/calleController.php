@@ -80,8 +80,20 @@ class calleController extends mainModel {
                     [$vivienda_id]
                 );
                 $deuda_info = $deudaStmt->fetch(\PDO::FETCH_ASSOC);
-                $monto_deuda = $deuda_info['total'] ?? 0;
-                $detalles_deuda = $deuda_info['resumen'] ?? 'Sin deudas pendientes';
+                $monto_deuda_base = $deuda_info['total'] ?? 0;
+                $detalles_deuda_base = $deuda_info['resumen'] ?? 'Sin deudas previas';
+
+                // 1b. Obtener multa de renovación configurada para el barrio
+                $confStmt = $this->ejecutarConsulta(
+                    "SELECT cb.multa_renovacion FROM configuraciones_barrio cb
+                     JOIN viviendas v ON v.barrio_id = cb.barrio_id
+                     WHERE v.id = ?", 
+                    [$vivienda_id]
+                );
+                $multa = $confStmt->fetchColumn() ?: 0;
+
+                $monto_deuda = $monto_deuda_base + $multa;
+                $detalles_deuda = $detalles_deuda_base . ($multa > 0 ? " + Multa Renovación: S/ $multa" : "");
 
                 // 3. Crear solicitud con deuda
                 $this->ejecutarConsulta(
@@ -185,8 +197,20 @@ class calleController extends mainModel {
                     [$vivienda_id]
                 );
                 $deuda_info = $deudaStmt->fetch(\PDO::FETCH_ASSOC);
-                $monto_deuda = $deuda_info['total'] ?? 0;
-                $detalles_deuda = $deuda_info['resumen'] ?? 'Sin deudas pendientes';
+                $monto_deuda_base = $deuda_info['total'] ?? 0;
+                $detalles_deuda_base = $deuda_info['resumen'] ?? 'Sin deudas previas';
+
+                // 1b. Obtener multa de renovación configurada para el barrio
+                $confStmt = $this->ejecutarConsulta(
+                    "SELECT cb.multa_renovacion FROM configuraciones_barrio cb
+                     JOIN viviendas v ON v.barrio_id = cb.barrio_id
+                     WHERE v.id = ?", 
+                    [$vivienda_id]
+                );
+                $multa = $confStmt->fetchColumn() ?: 0;
+
+                $monto_deuda = $monto_deuda_base + $multa;
+                $detalles_deuda = $detalles_deuda_base . ($multa > 0 ? " + Multa Renovación: S/ $multa" : "");
 
                 // 2. Verificar si ya existe una solicitud pendiente
                 $checkStmt = $this->ejecutarConsulta(

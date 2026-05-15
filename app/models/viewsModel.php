@@ -56,6 +56,7 @@ class viewsModel extends mainModel {
             'solicitudes_renovacion',
             'reporte_bajas',
             'historial_solicitudes',
+            'configuracion',
         ],
         'calle' => [
             'dashboard',

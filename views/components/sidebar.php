@@ -113,6 +113,7 @@ $page = $page ?? 'dashboard';
                         <li><a href="router.php?page=ordenes_baja" class="<?= ($page == 'ordenes_baja') ? 'active' : '' ?>">Órdenes de Baja</a></li>
                         <li><a href="router.php?page=solicitudes_renovacion" class="<?= ($page == 'solicitudes_renovacion') ? 'active' : '' ?>">Órdenes Renovación</a></li>
                         <li><a href="router.php?page=historial_solicitudes" class="<?= ($page == 'historial_solicitudes') ? 'active' : '' ?>">Historial Trámites</a></li>
+                        <li><a href="router.php?page=configuracion" class="<?= ($page == "configuracion") ? "active" : "" ?>">Configuración Tasas</a></li>
                         <li><a href="router.php?page=viviendas" class="<?= ($page == 'viviendas') ? 'active' : '' ?>">Ver Todas Viviendas</a></li>
                         <li><a href="router.php?page=reportar_pago" class="<?= ($page == 'reportar_pago') ? 'active' : '' ?>">Marcar Pagos</a></li>
                         <li><a href="router.php?page=quitar_servicio" class="<?= ($page == 'quitar_servicio') ? 'active' : '' ?>">Quitar Servicio</a></li>
