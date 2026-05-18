@@ -8,7 +8,7 @@ $header_subtitle = "Define una nueva zona geográfica para el servicio de recicl
 
 ob_start();
 ?>
-<div class="form-container" style="max-width: 500px; margin: 0 auto;">
+<div class="form-container" style=" margin: 0 auto;">
     <form action="router.php" method="POST" class="premium-form">
         <input type="hidden" name="action" value="nuevo_barrio">
         

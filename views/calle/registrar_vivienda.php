@@ -10,7 +10,7 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
-    <div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div class="card" style="margin: 0 auto;">
         <form method="POST">
             <input type="hidden" name="form_type" value="solicitar_alta">
             

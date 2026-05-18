@@ -11,7 +11,7 @@ $header_subtitle = "Registro administrativo directo de predios en el sistema.";
 
 ob_start();
 ?>
-<div class="form-container" style="max-width: 650px; margin: 0 auto;">
+<div class="form-container" style="margin: 0 auto;">
     <form method="POST" class="premium-form">
         <input type="hidden" name="action" value="nuevo_vecino_admin">
         

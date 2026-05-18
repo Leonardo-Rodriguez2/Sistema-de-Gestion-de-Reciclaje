@@ -47,7 +47,7 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
-    <div class="form-container" style="max-width: 650px; margin: 0 auto; padding-bottom: 30px;">
+    <div class="form-container" style="margin: 0 auto; padding-bottom: 30px;">
         <form method="POST" action="router.php?page=viviendas" class="premium-form">
             <input type="hidden" name="form_type" value="nuevo_vecino">
             <input type="hidden" name="barrio_id" value="<?= $current_barrio ?>">

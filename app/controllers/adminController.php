@@ -35,7 +35,7 @@ class adminController extends mainModel {
 
                 $stmt = $pdo->prepare(  
                     "INSERT INTO usuarios (nombre, apellido, email, genero, fecha_nacimiento, password_hash, rol_id)
-                     VALUES (?, ?, ?, ?, ?, ?, ?)"
+                VALUES (?, ?, ?, ?, ?, ?, ?)"
                 );
                 $stmt->execute([$nombre, $apellido, $email, $genero, $fecha_nac, $password, $rol_id]);
                 $new_id = $pdo->lastInsertId();
