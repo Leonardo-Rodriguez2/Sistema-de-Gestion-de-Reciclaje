@@ -135,6 +135,7 @@ ob_start();
     .btn-submit:hover { background: #1F2937; transform: translateY(-1px); }
     .btn-cancel { background: #F3F4F6; color: #4B5563; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.3s; }
     .btn-cancel:hover { background: #E5E7EB; }
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr!important}}
     </style>
 <?php
 $content = ob_get_clean();

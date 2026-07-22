@@ -11,6 +11,8 @@ if ($user['rol_id'] == 2) {
     }
 }
 
+$locked_rol_id = (int)($_GET['rol_id'] ?? 0);
+
 // Fetch neighborhoods for the dropdown
 $barriosStmt = $pdo->query("SELECT id, nombre FROM barrios ORDER BY nombre ASC");
 $barrios_lista = $barriosStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -83,7 +85,7 @@ ob_start();
         <!-- Role Specific Sections -->
         <div id="role_fields_container">
             <!-- Encargado de Barrio Section -->
-            <div id="jefe_fields" class="form-section role-section" style="display: none;">
+            <div id="jefe_fields" class="form-section role-section" style="display: none;" disabled>
                 <h3><span class="icon">🏠</span> Detalles: Encargado de Barrio</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -110,7 +112,7 @@ ob_start();
             </div>
             
             <!-- Encargado de Calle Section -->
-            <div id="calle_fields" class="form-section role-section" style="display: none;">
+            <div id="calle_fields" class="form-section role-section" style="display: none;" disabled>
                 <h3><span class="icon">📍</span> Detalles: Encargado de Calle</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -135,7 +137,7 @@ ob_start();
             </div>
 
             <!-- Gestor Section -->
-            <div id="gestor_fields" class="form-section role-section" style="display: none;">
+            <div id="gestor_fields" class="form-section role-section" style="display: none;" disabled>
                 <h3><span class="icon">💼</span> Detalles: Gestor de Pagos</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -154,7 +156,7 @@ ob_start();
             </div>
 
             <!-- Recolector Section -->
-            <div id="recolector_fields" class="form-section role-section" style="display: none;">
+            <div id="recolector_fields" class="form-section role-section" style="display: none;" disabled>
                 <h3><span class="icon">🚛</span> Detalles: Recolector</h3>
                 <div class="form-grid">
                     <div class="form-group">
@@ -172,10 +174,6 @@ ob_start();
                             <option value="Tarde">Tarde</option>
                             <option value="Noche">Noche</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Contacto de Emergencia</label>
-                        <input type="text" name="contacto_emergencia" placeholder="Nombre y Teléfono">
                     </div>
                 </div>
             </div>
@@ -213,12 +211,15 @@ ob_start();
 function toggleRoleFields() {
     const rolId = document.getElementById('rol_id').value;
     const sections = document.querySelectorAll('.role-section');
-    sections.forEach(s => s.style.display = 'none');
+    sections.forEach(s => { s.style.display = 'none'; s.setAttribute('disabled', 'disabled'); });
 
-    if (rolId == 5) document.getElementById('jefe_fields').style.display = 'block';
-    else if (rolId == 6) document.getElementById('calle_fields').style.display = 'block';
-    else if (rolId == 2) document.getElementById('gestor_fields').style.display = 'block';
-    else if (rolId == 3) document.getElementById('recolector_fields').style.display = 'block';
+    let active = null;
+    if (rolId == 5) active = document.getElementById('jefe_fields');
+    else if (rolId == 6) active = document.getElementById('calle_fields');
+    else if (rolId == 2) active = document.getElementById('gestor_fields');
+    else if (rolId == 3) active = document.getElementById('recolector_fields');
+    
+    if (active) { active.style.display = 'block'; active.removeAttribute('disabled'); }
 }
 
 // Si se pasa un rol por URL, activarlo al cargar

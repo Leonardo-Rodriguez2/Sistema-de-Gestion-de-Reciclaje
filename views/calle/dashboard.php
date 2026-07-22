@@ -25,13 +25,22 @@ $pCountStmt = $pdo->prepare("SELECT COUNT(*) FROM cobros c JOIN viviendas v ON c
 $pCountStmt->execute([$calle_info['id'], $mes, $anio]);
 $pendientes = $pCountStmt->fetchColumn();
 
+$pagadasStmt = $pdo->prepare("SELECT COUNT(*) FROM cobros c JOIN viviendas v ON c.vivienda_id = v.id WHERE v.calle_id = ? AND c.mes = ? AND c.anio = ? AND c.estado = 'Pagado'");
+$pagadasStmt->execute([$calle_info['id'], $mes, $anio]);
+$pagadas = $pagadasStmt->fetchColumn();
+
 $bCountStmt = $pdo->prepare("SELECT COUNT(*) FROM solicitudes_vivienda WHERE calle_id = ? AND tipo = 'Baja' AND estado = 'Pendiente'");
 $bCountStmt->execute([$calle_info['id']]);
 $ordenes_baja = $bCountStmt->fetchColumn();
 
+// Lote status del periodo
+$loteCalleStmt = $pdo->prepare("SELECT estado FROM lotes_calle WHERE calle_id=? AND mes=? AND anio=? ORDER BY id DESC LIMIT 1");
+$loteCalleStmt->execute([$calle_info['id'], $mes, $anio]);
+$lote_estado = $loteCalleStmt->fetchColumn() ?: 'Sin lote';
+
 $title = "Dashboard - EcoCusco";
 $header_title = "Panel de Calle: " . htmlspecialchars($calle_info['nombre']);
-$header_subtitle = "Bienvenido al sistema de gestión de reciclaje.";
+$header_subtitle = "Barrio " . htmlspecialchars($calle_info['barrio_nombre']) . " — Periodo actual: " . date('F Y');
 
 ob_start();
 ?>
@@ -40,7 +49,9 @@ ob_start();
     <!-- Stats -->
     <?php render_dashboard_stats([
         ['title' => 'Viviendas', 'value' => $total_viviendas, 'color' => '#111827', 'icon' => '🏠'],
+        ['title' => 'Pagadas', 'value' => $pagadas, 'color' => '#10B981', 'icon' => '✅'],
         ['title' => 'Pendientes', 'value' => $pendientes, 'color' => '#EF4444', 'icon' => '⏳'],
+        ['title' => 'Lote Estado', 'value' => $lote_estado, 'color' => '#8B5CF6', 'icon' => '📦'],
         ['title' => 'Órdenes Baja', 'value' => $ordenes_baja, 'color' => '#F59E0B', 'icon' => '📄']
     ]); ?>
 
@@ -48,29 +59,45 @@ ob_start();
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
         
         <a href="router.php?page=viviendas" class="card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 30px; transition: 0.3s; border: 2px solid transparent;" onmouseover="this.style.borderColor='#111827'" onmouseout="this.style.borderColor='transparent'">
+            <div style="font-size: 11px; color: #9CA3AF; margin-bottom: 5px;">PASO 1</div>
             <div style="font-size: 40px; margin-bottom: 15px;">🏘️</div>
-            <div style="font-weight: 700; color: #111827;">Mis Viviendas</div>
-            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Ver listado y estados de servicio</div>
+            <div style="font-weight: 700; color: #111827;">Ver Viviendas</div>
+            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Revisa el listado de casas asignadas</div>
         </a>
 
         <a href="router.php?page=reportar_pago" class="card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 30px; transition: 0.3s; border: 2px solid transparent;" onmouseover="this.style.borderColor='#10B981'" onmouseout="this.style.borderColor='transparent'">
+            <div style="font-size: 11px; color: #9CA3AF; margin-bottom: 5px;">PASO 2</div>
             <div style="font-size: 40px; margin-bottom: 15px;">💰</div>
             <div style="font-weight: 700; color: #111827;">Marcar Pagos</div>
-            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Registrar recaudación mensual</div>
+            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Registra quiénes pagaron este mes</div>
         </a>
 
         <a href="router.php?page=registrar_vivienda" class="card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 30px; transition: 0.3s; border: 2px solid transparent;" onmouseover="this.style.borderColor='#3B82F6'" onmouseout="this.style.borderColor='transparent'">
+            <div style="font-size: 11px; color: #9CA3AF; margin-bottom: 5px;">OPCIONAL</div>
             <div style="font-size: 40px; margin-bottom: 15px;">➕</div>
             <div style="font-weight: 700; color: #111827;">Solicitar Alta</div>
             <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Registrar nueva vivienda</div>
         </a>
 
-        <a href="router.php?page=ordenes_baja" class="card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 30px; transition: 0.3s; border: 2px solid transparent;" onmouseover="this.style.borderColor='#EF4444'" onmouseout="this.style.borderColor='transparent'">
+        <a href="router.php?page=solicitar_baja" class="card" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 30px; transition: 0.3s; border: 2px solid transparent;" onmouseover="this.style.borderColor='#EF4444'" onmouseout="this.style.borderColor='transparent'">
+            <div style="font-size: 11px; color: #9CA3AF; margin-bottom: 5px;">OPCIONAL</div>
             <div style="font-size: 40px; margin-bottom: 15px;">📄</div>
-            <div style="font-weight: 700; color: #111827;">Órdenes de Baja</div>
-            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Confirmar retiros de servicio</div>
+            <div style="font-weight: 700; color: #111827;">Solicitar Baja</div>
+            <div style="font-size: 12px; color: #6B7280; text-align: center; margin-top: 5px;">Dar de baja una vivienda</div>
         </a>
 
+    </div>
+
+    <!-- Flujo de trabajo -->
+    <div style="margin-top: 30px; padding: 20px; background: #F9FAFB; border-radius: 3px; border: 1px solid #E5E7EB;">
+        <h4 style="margin: 0 0 12px; color: #374151;">📋 Flujo de Trabajo Mensual</h4>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: #6B7280;">
+            <span style="background: #EFF6FF; padding: 6px 12px; border-radius: 3px; color: #1E40AF; font-weight: 600;">1. Verificar viviendas</span>
+            <span>→</span>
+            <span style="background: #ECFDF5; padding: 6px 12px; border-radius: 3px; color: #065F46; font-weight: 600;">2. Marcar pagos</span>
+            <span>→</span>
+            <span style="background: #FEF3C7; padding: 6px 12px; border-radius: 3px; color: #92400E; font-weight: 600;">3. Enviar lote</span>
+        </div>
     </div>
 
 <?php

@@ -33,8 +33,9 @@ ob_start();
 ?>
 <style>
     /* Estilos Reducidos */
-    .actions-bar { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+    .actions-bar { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
     .search-container { position: relative; flex-grow: 1; max-width: 280px; }
+    @media (max-width: 768px) { .search-container { max-width: 100%; } }
     .search-input { width: 100%; padding: 5px 10px 5px 30px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 12px; }
     .search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: #9CA3AF; }
     .btn-new-user { background: var(--primary); color: white; padding: 5px 12px; border-radius: 6px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; }
@@ -59,13 +60,7 @@ ob_start();
 
 <?php
 // Determinar enlace de creación según el filtro
-$create_links = [
-    5 => 'usuario_nuevo_barrio',
-    6 => 'usuario_nuevo_calle',
-    2 => 'usuario_nuevo_gestor',
-    3 => 'usuario_nuevo_personal'
-];
-$new_link = $create_links[$filter_rol_id] ?? 'usuario_nuevo';
+$new_link = $filter_rol_id > 0 ? "usuario_nuevo&rol_id=$filter_rol_id" : 'usuario_nuevo';
 ?>
 
 <div class="actions-bar">
@@ -77,8 +72,8 @@ $new_link = $create_links[$filter_rol_id] ?? 'usuario_nuevo';
     <div style="display: flex; gap: 8px;">
         <?php if ($filter_rol_id == 0): ?>
             <!-- Accesos Rápidos si no hay filtro -->
-            <a href="router.php?page=usuario_nuevo_barrio" class="btn-new-user" style="background:#059669;" title="Nuevo Encargado de Barrio">+ Barrio</a>
-            <a href="router.php?page=usuario_nuevo_personal" class="btn-new-user" style="background:#D97706;" title="Nuevo Personal Obrero">+ Personal</a>
+            <a href="router.php?page=usuario_nuevo&rol_id=5" class="btn-new-user" style="background:#059669;" title="Nuevo Encargado de Barrio">+ Barrio</a>
+            <a href="router.php?page=usuario_nuevo&rol_id=3" class="btn-new-user" style="background:#D97706;" title="Nuevo Personal Obrero">+ Personal</a>
         <?php else: ?>
             <a href="router.php?page=<?= $new_link ?>" class="btn-new-user">
                 <span>+</span> Registrar <?= rtrim($role_name, 's') ?>

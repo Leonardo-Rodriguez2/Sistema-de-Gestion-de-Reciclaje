@@ -62,7 +62,8 @@ ob_start();
                         <td style="padding: 12px;"><span class="badge" style="background:#E5E7EB; border:none;"><?= htmlspecialchars($c['barrio_nombre']) ?></span></td>
                         <td style="padding: 12px; text-align: center;"><?= $c['total_viviendas'] ?></td>
                         <td style="padding: 12px; text-align: center;">
-                            <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" style="color:#3B82F6; text-decoration:none; font-size:11px; font-weight:600;">Ver Viviendas</a>
+                            <a href="router.php?page=calle_editar&id=<?= $c['id'] ?>" class="btn-edit">✏️ Editar</a>
+                            <a href="router.php?page=viviendas&calle_id=<?= $c['id'] ?>" style="color:#3B82F6; text-decoration:none; font-size:11px; font-weight:600; margin-left:8px;">Ver Viviendas</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

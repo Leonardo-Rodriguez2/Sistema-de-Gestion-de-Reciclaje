@@ -23,7 +23,7 @@ ob_start();
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
     <div class="card">
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

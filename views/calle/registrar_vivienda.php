@@ -10,16 +10,17 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
+    <style>@media(max-width:600px){.f-grid{grid-template-columns:1fr!important}}</style>
     <div class="card" style="margin: 0 auto;">
         <form method="POST">
             <input type="hidden" name="form_type" value="solicitar_alta">
             
-            <div class="form-group" style="margin-bottom: 15px;">
+            <div class="form-group" style="margin-bottom: 15px;">   
                 <label style="display:block; font-size:11px; font-weight:600; color:#6B7280; margin-bottom:4px;">NOMBRE DEL PROPIETARIO</label>
                 <input type="text" name="propietario" class="form-control" style="width:100%; padding:10px; border:1px solid #E5E7EB; border-radius:8px;" placeholder="Ej: Juan Pérez" required>
             </div>
 
-            <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+            <div class="form-grid f-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
                 <div class="form-group">
                     <label style="display:block; font-size:11px; font-weight:600; color:#6B7280; margin-bottom:4px;">NÚMERO DE CASA</label>
                     <input type="text" name="numero_casa" class="form-control" style="width:100%; padding:10px; border:1px solid #E5E7EB; border-radius:8px;" placeholder="Ej: B-12" required>

@@ -31,14 +31,15 @@ $header_subtitle = "Emisión de recibos y reportes para los ciudadanos.";
 
 ob_start();
 ?>
-    <div style="display: grid; grid-template-columns: 350px 1fr; gap: 25px; align-items: start;">
+    <div class="recibos-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 25px; align-items: start;">
+    <style>@media(max-width:768px){.recibos-grid{grid-template-columns:1fr!important}}</style>
         
         <!-- LATERAL: REPORTES MENSAL -->
         <div class="card" style="border-top: 4px solid #10B981;">
             <div style="text-align: center; padding: 10px;">
                 <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
                 <h3 style="margin-bottom: 10px;">Reportes de Recaudación</h3>
-                <p style="color: #6B7280; font-size: 13px; margin-bottom: 20px;">Genera un consolidado de todos los barrios del mes actual para control interno.</p>
+                <p style="color: #6B7280; font-size: 13px; margin-bottom: 14px;">Genera un consolidado de todos los barrios del mes actual para control interno.</p>
                 <a href="router.php?page=monitor_pagos" class="btn-primary" style="display: block; text-decoration: none; margin-bottom: 10px;">Ver Monitor Global</a>
                 <button class="btn-primary" style="background:#4B5563; width: 100%;" onclick="window.print()">Imprimir Vista Actual</button>
             </div>
@@ -57,7 +58,7 @@ ob_start();
                 <button type="submit" class="btn-primary">Buscar</button>
             </form>
 
-            <div style="overflow-x: auto;">
+            <div class="table-wrap">
                 <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

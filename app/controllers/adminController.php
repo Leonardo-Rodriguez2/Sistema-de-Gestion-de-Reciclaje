@@ -12,7 +12,7 @@ use app\models\mainModel;
 class adminController extends mainModel {
 
     public function procesarAcciones() {
-        global $mensaje_exito, $mensaje_error;
+        global $user, $mensaje_exito, $mensaje_error;
 
         $action = $_POST['action'] ?? $_POST['form_type'] ?? null;
 
@@ -114,12 +114,58 @@ class adminController extends mainModel {
             }
         }
 
-        // 5. Registrar Vivienda (Directo Admin)
+        // 5. Editar barrio
+        if ($action === 'editar_barrio') {
+            try {
+                $this->ejecutarConsulta(
+                    "UPDATE barrios SET nombre=?, ciudad=? WHERE id=?",
+                    [$_POST['nombre'], $_POST['ciudad'] ?? 'Cusco', (int)$_POST['id']]
+                );
+                $mensaje_exito = "Barrio actualizado correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al actualizar barrio.";
+            }
+        }
+
+        // 6. Editar calle
+        if ($action === 'editar_calle') {
+            try {
+                $this->ejecutarConsulta(
+                    "UPDATE calles SET nombre=?, barrio_id=? WHERE id=?",
+                    [$_POST['nombre'], (int)$_POST['barrio_id'], (int)$_POST['id']]
+                );
+                $mensaje_exito = "Calle actualizada correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al actualizar calle.";
+            }
+        }
+
+        // 7. Editar vivienda
+        if ($action === 'editar_vivienda') {
+            try {
+                $this->ejecutarConsulta(
+                    "UPDATE viviendas SET propietario=?, barrio_id=?, calle_id=?, direccion=?, numero_casa=?, referencia=? WHERE id=?",
+                    [
+                        $_POST['propietario'],
+                        (int)$_POST['barrio_id'],
+                        (int)$_POST['calle_id'],
+                        $_POST['direccion'],
+                        $_POST['numero_casa'] ?? null,
+                        $_POST['referencia'] ?? null,
+                        (int)$_POST['id']
+                    ]
+                );
+                $mensaje_exito = "Vivienda actualizada correctamente.";
+            } catch (\PDOException $e) {
+                $mensaje_error = "Error al actualizar vivienda: " . $e->getMessage();
+            }
+        }
+
+        // 8. Registrar Vivienda (Directo Admin)
         if ($action === 'nuevo_vecino_admin') {
             try {
-                // ... (existing code)
                 $this->ejecutarConsulta(
-                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, encargado_calle_id)
+                    "INSERT INTO viviendas (propietario, barrio_id, calle_id, direccion, numero_casa, referencia)
                      VALUES (?, ?, ?, ?, ?, ?)",
                     [
                         $_POST['propietario'],
@@ -127,7 +173,7 @@ class adminController extends mainModel {
                         (int)$_POST['calle_id'],
                         $_POST['direccion'],
                         $_POST['numero_casa'] ?? null,
-                        $manager_id
+                        $_POST['referencia'] ?? null
                     ]
                 );
                 $mensaje_exito = "Vivienda registrada correctamente.";
@@ -166,7 +212,7 @@ class adminController extends mainModel {
                 $this->ejecutarConsulta(
                     "INSERT INTO solicitudes_vivienda (tipo, calle_id, vivienda_id, creado_por, revisado_por, estado, fecha_revision, monto_deuda, detalles_deuda)
                      VALUES ('Baja', ?, ?, ?, ?, 'Aprobado', CURRENT_TIMESTAMP, ?, ?)",
-                    [$vData['calle_id'], $vivienda_id, $_SESSION['usuario_id'], $_SESSION['usuario_id'], $monto_deuda, $detalles_deuda]
+                    [$vData['calle_id'], $vivienda_id, $user['id'], $user['id'], $monto_deuda, $detalles_deuda]
                 );
 
                 // 4. Anular servicio

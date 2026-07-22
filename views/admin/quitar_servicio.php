@@ -29,7 +29,7 @@ ob_start();
             Esta acción no requiere solicitud previa. El servicio se anulará de inmediato y se registrará la deuda actual para auditoría.
         </p>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
@@ -58,7 +58,7 @@ ob_start();
                                 <div style="font-size: 10px; color: #6B7280;">Monto al retiro</div>
                             </td>
                             <td style="padding: 12px; text-align: center;">
-                                <form method="POST" onsubmit="return confirm('¿EJECUTAR BAJA ADMINISTRATIVA? Esta acción es instantánea y permanente.')">
+                                <form method="POST" action="router.php" onsubmit="return confirm('¿EJECUTAR BAJA ADMINISTRATIVA? Esta acción es instantánea y permanente.')">
                                     <input type="hidden" name="form_type" value="ordenar_baja">
                                     <input type="hidden" name="vivienda_id" value="<?= $v['id'] ?>">
                                     <button type="submit" class="btn-primary" style="background: #111827; color: white; border: none; padding: 8px 15px; font-size: 11px; font-weight: 800; border-radius: 4px;">ANULAR SERVICIO</button>

@@ -1,6 +1,7 @@
 <?php
 // views/calle/reporte_bajas.php
 $user = check_dashboard_access([6]);
+$sid = $_SESSION['active_sid'] ?? '';
 
 // 1. Obtener la calle asignada
 $calleStmt = $pdo->prepare("SELECT calle_id FROM detalles_encargado_calle WHERE usuario_id = ?");
@@ -33,7 +34,7 @@ ob_start();
             <button onclick="window.print()" class="btn-primary" style="background: #F3F4F6; color: #374151; font-size: 11px;">🖨️ Imprimir Reporte</button>
         </div>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

@@ -49,7 +49,11 @@ class viewsController extends viewsModel {
         // 6. Procesar formularios POST del rol
         $this->procesarPost($folder);
 
-        // 6.5 Especial: Verificar deudas si el encargado entra a Reportar Pagos
+        // 6.5 Asegurar columnas de pagos (migraciones automáticas en GET y POST)
+        $this->asegurarColumnasPagos();
+        $this->asegurarExenciones();
+
+        // 6.6 Especial: Verificar deudas si el encargado entra a Reportar Pagos
         if ($page === 'reportar_pago' && $user['rol_id'] == 5) {
             $bCtrl = new \app\controllers\barrioController();
             $bCtrl->verificarDeudasBarrio($user['id']);
@@ -71,7 +75,13 @@ class viewsController extends viewsModel {
     private function procesarPost($folder) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
+        $page = $_GET['page'] ?? 'dashboard';
         $controllerClass = "app\\controllers\\{$folder}Controller";
+
+        // Route gestor_* pages to gestorController for admin
+        if ($folder === 'admin' && strpos($page, 'gestor_') === 0) {
+            $controllerClass = "app\\controllers\\gestorController";
+        }
 
         if (class_exists($controllerClass)) {
             $ctrl = new $controllerClass();

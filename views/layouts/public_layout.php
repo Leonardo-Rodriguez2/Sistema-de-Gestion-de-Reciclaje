@@ -11,7 +11,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="/reciclaje/assets/img/icono.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/reciclaje/assets/css/style.css">
     <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-wrap table { min-width: 400px; }
+
+        img { max-width: 100%; height: auto; }
+
+        @media (max-width: 768px) {
+            .container { padding-left: 15px; padding-right: 15px; }
+            h1 { font-size: 22px !important; }
+            h2 { font-size: 18px !important; }
+        }
+
         <?php echo $extra_css ?? ''; ?>
     </style>
     <?php echo $extra_head ?? ''; ?>

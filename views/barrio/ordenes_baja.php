@@ -28,7 +28,7 @@ ob_start();
             Al confirmar, el servicio se anulará en el sistema y se registrará la deuda final.
         </p>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

@@ -25,7 +25,7 @@ ob_start();
 ?>
     <div class="card" style="margin-bottom: 25px;">
         <h3 style="margin-top:0;">🌐 Estado General del Mes (<?= date('F Y') ?>)</h3>
-        <div style="overflow-x: auto;">
+            <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
@@ -90,7 +90,7 @@ ob_start();
                 <h3 style="margin: 0; color: #EF4444;">🚨 Viviendas Pendientes: <?= htmlspecialchars($bName) ?></h3>
                 <span class="badge" style="background: #FEE2E2; color: #991B1B; font-weight: 800;"><?= count($morosos) ?> casas sin pago</span>
             </div>
-            <div style="overflow-x: auto;">
+<div class="table-wrap">
                 <table class="table-mini" style="width: 100%;">
                     <thead>
                         <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

@@ -28,7 +28,7 @@ ob_start();
                 <a href="router.php?page=barrio_nuevo" class="btn-primary" style="text-decoration: none;">+ Añadir Barrio</a>
             </div>
             
-            <div style="overflow-x: auto;">
+            <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
@@ -36,6 +36,7 @@ ob_start();
                             <th>Viviendas Registradas</th>
                             <th>Recaudación Histórica</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,7 @@ ob_start();
                                 <td><?= $b['total_viviendas'] ?> casas</td>
                                 <td style="font-weight: 700; color: #10B981;">S/ <?= number_format($b['total_recaudado'] ?? 0, 2) ?></td>
                                 <td><span class="badge pagado">Activo</span></td>
+                                <td><a href="router.php?page=barrio_editar&id=<?= $b['id'] ?>" class="btn-edit">✏️ Editar</a></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

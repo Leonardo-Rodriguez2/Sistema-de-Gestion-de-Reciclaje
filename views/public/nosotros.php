@@ -380,10 +380,15 @@ $extra_css = "
         @media (max-width: 900px) {
             .section-about { grid-template-columns: 1fr; }
             .stats-grid, .values-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
             .stats-grid, .values-grid, .team-grid { grid-template-columns: 1fr; }
             .badge-float { display: none; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .cta-section h2 { font-size: 24px; }
+            .cta-section form { padding: 20px 15px; }
         }
 ";
 $extra_js = "";

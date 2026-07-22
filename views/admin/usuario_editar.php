@@ -101,7 +101,7 @@ ob_start();
         </div>
 
         <div id="role_fields_container">
-            <div id="j_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 5 ? 'block' : 'none' ?>;">
+            <div id="j_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 5 ? 'block' : 'none' ?>;" <?= $u['rol_id'] != 5 ? 'disabled' : '' ?>>
                 <h3>🏠 Encargado de Barrio</h3>
                 <div class="f-grid">
                     <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['barrio_dni'] ?>"></div>
@@ -114,10 +114,11 @@ ob_start();
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="f-group"><label>Dirección</label><input type="text" name="direccion" value="<?= $u['barrio_direccion'] ?>"></div>
                 </div>
             </div>
 
-            <div id="c_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 6 ? 'block' : 'none' ?>;">
+            <div id="c_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 6 ? 'block' : 'none' ?>;" <?= $u['rol_id'] != 6 ? 'disabled' : '' ?>>
                 <h3>📍 Encargado de Calle</h3>
                 <div class="f-grid">
                     <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['calle_dni'] ?>"></div>
@@ -135,7 +136,7 @@ ob_start();
                 </div>
             </div>
 
-            <div id="g_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 2 ? 'block' : 'none' ?>;">
+            <div id="g_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 2 ? 'block' : 'none' ?>;" <?= $u['rol_id'] != 2 ? 'disabled' : '' ?>>
                 <h3>💼 Gestor</h3>
                 <div class="f-grid">
                     <div class="f-group"><label>DNI</label><input type="text" name="dni" value="<?= $u['gestor_dni'] ?>"></div>
@@ -144,7 +145,7 @@ ob_start();
                 </div>
             </div>
 
-            <div id="r_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 3 ? 'block' : 'none' ?>;">
+            <div id="r_f" class="f-section role-section" style="display: <?= $u['rol_id'] == 3 ? 'block' : 'none' ?>;" <?= $u['rol_id'] != 3 ? 'disabled' : '' ?>>
                 <h3>👷 Personal Obrero</h3>
                 <div class="f-grid">
                     <div class="f-group">
@@ -181,10 +182,17 @@ ob_start();
 <script>
 function toggleRoleFields() {
     const r = document.getElementById('rol_id').value;
-    document.getElementById('j_f').style.display = (r == 5) ? 'block' : 'none';
-    document.getElementById('c_f').style.display = (r == 6) ? 'block' : 'none';
-    document.getElementById('g_f').style.display = (r == 2) ? 'block' : 'none';
-    document.getElementById('r_f').style.display = (r == 3) ? 'block' : 'none';
+    ['j_f','c_f','g_f','r_f'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.display = 'none';
+        el.setAttribute('disabled', 'disabled');
+    });
+    const map = {5:'j_f', 6:'c_f', 2:'g_f', 3:'r_f'};
+    if (map[r]) {
+        const el = document.getElementById(map[r]);
+        el.style.display = 'block';
+        el.removeAttribute('disabled');
+    }
 }
 </script>
 <?php

@@ -25,8 +25,8 @@ ob_start();
   <div class="login-row">
     <div class="login-left">
       <img class="login-logo" src="https://i.pinimg.com/564x/a9/46/e3/a946e3253ead512044565855265b1635.jpg" alt="Logo de reciclaje">
-      <div class="login-title">Bienvenido de nuevo</div>
-      <div class="login-subtitle">Inicia sesión en tu cuenta de reciclaje</div>
+      <div class="login-title">EcoCusco</div>
+      <div class="login-subtitle">Sistema de Gestión de Reciclaje</div>
 
       <!-- Mostrar errores -->
       <?php if (isset($error)): ?>
@@ -63,11 +63,6 @@ ob_start();
           Iniciar Sesión
         </button>
 
-        <!-- Enlace Registrarse -->
-        <div class="login-register">
-          <span>¿No tienes una cuenta? </span>
-          <a href="register.php">Regístrate</a>
-        </div>
       </form>
     </div>
 
@@ -106,7 +101,7 @@ $extra_css = "
     }
 
     .login-right {
-      background-image: url('https://img.freepik.com/vector-premium/grupo-personas-estan-sosteniendo-bolsas-basura-contenedores-reciclaje_697880-16185.jpg');
+      background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');
       background-size: cover;
       background-position: center;
     }
@@ -129,9 +124,14 @@ $extra_css = "
     }
 
     .login-error {
-      color: #EF4444;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-left: 3px solid #EF4444;
+      color: #991B1B;
+      padding: 10px 14px;
       margin-bottom: 15px;
-      font-size: 14px;
+      font-size: 13px;
+      border-radius: 3px;
     }
 
     .login-form {
@@ -199,27 +199,32 @@ $extra_css = "
       background-color: #059669;
     }
 
-    .login-register {
-      font-size: 14px;
-      color: #6B7280;
-    }
-
-    .login-register a {
-      color: #10B981;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
     @media (max-width: 768px) {
       .login-row {
         flex-direction: column;
         margin-top: 20px;
+        width: 95%;
+        gap: 0;
+        min-height: auto;
       }
       .login-right {
         display: none;
       }
+      .login-left {
+        padding: 25px 20px;
+        border-radius: 12px;
+      }
+      .login-title { font-size: 20px; }
+      .login-form { max-width: 100%; }
+      .login-form input { padding: 14px 14px 14px 40px; font-size: 16px; }
+      .login-btn { padding: 16px; font-size: 16px; }
     }
-";
+    @media (max-width: 400px) {
+      .login-left { padding: 20px 15px; }
+      .login-title { font-size: 18px; }
+      .login-logo { width: 50px; height: 50px; }
+    }
+  ";
 $content = ob_get_clean();
 include __DIR__ . '/../layouts/public_layout.php';
 ?>

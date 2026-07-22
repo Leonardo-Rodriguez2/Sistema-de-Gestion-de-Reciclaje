@@ -31,7 +31,7 @@ ob_start();
             <button onclick="window.print()" class="btn-primary" style="background:#F3F4F6; color:#111827; font-size:11px;">🖨️ Imprimir Reporte</button>
         </div>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
@@ -65,8 +65,8 @@ ob_start();
                                 </div>
                             </td>
                             <td style="padding: 12px; text-align: center;">
-                                <form method="POST" onsubmit="return confirm('¿RENOVAR SERVICIO DIRECTAMENTE? La vivienda volverá a estar activa.')">
-                                    <input type="hidden" name="form_type" value="renovar_servicio_directo">
+                                <form method="POST" action="router.php" onsubmit="return confirm('¿RENOVAR SERVICIO DIRECTAMENTE? La vivienda volverá a estar activa.')">
+                                    <input type="hidden" name="form_type" value="ordenar_baja">
                                     <input type="hidden" name="vivienda_id" value="<?= $b['id'] ?>">
                                     <button type="submit" class="btn-primary" style="background:#111827; color:white; border:none; padding: 6px 12px; font-size:10px; cursor:pointer;">🔄 Renovar</button>
                                 </form>

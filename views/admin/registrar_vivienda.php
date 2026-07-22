@@ -12,7 +12,7 @@ $header_subtitle = "Registro administrativo directo de predios en el sistema.";
 ob_start();
 ?>
 <div class="form-container" style="margin: 0 auto;">
-    <form method="POST" class="premium-form">
+    <form action="router.php" method="POST" class="premium-form">
         <input type="hidden" name="action" value="nuevo_vecino_admin">
         
         <div class="form-section">
@@ -100,6 +100,7 @@ async function updateStreets(barrioId) {
 .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px; }
 .btn-submit { background: #111827; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
 .btn-cancel { background: #F3F4F6; color: #4B5563; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; }
+@media(max-width:600px){.form-grid{grid-template-columns:1fr!important}}
 </style>
 <?php
 $content = ob_get_clean();

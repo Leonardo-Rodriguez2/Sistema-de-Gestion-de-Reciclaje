@@ -19,8 +19,8 @@ ob_start();
                 <input type="text" name="nombre" required placeholder="Ej. Urbanización Los Álamos">
             </div>
             <div class="form-group" style="margin-top: 15px;">
-                <label>Referencia Geográfica (Opcional)</label>
-                <textarea name="referencia" placeholder="Ej. Sector Norte, cerca del polideportivo..." style="width: 100%; height: 80px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 13px;"></textarea>
+                <label>Ciudad</label>
+                <input type="text" name="ciudad" value="Cusco" placeholder="Ej. Cusco">
             </div>
         </div>
 

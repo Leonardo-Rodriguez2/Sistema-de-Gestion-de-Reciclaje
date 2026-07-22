@@ -12,17 +12,17 @@ $params = [];
 
 if($user['rol_id'] == 6) {
     // Calle Manager: Ver sus solicitudes procesadas
-    $sql = "SELECT s.*, v.propietario, v.numero_casa 
+    $sql = "SELECT s.*, v.propietario as v_prop, v.numero_casa as v_casa
             FROM solicitudes_vivienda s
-            JOIN viviendas v ON s.vivienda_id = v.id
+            LEFT JOIN viviendas v ON s.vivienda_id = v.id
             WHERE s.creado_por = ? AND s.estado != 'Pendiente'
             ORDER BY s.fecha_revision DESC LIMIT 50";
     $params = [$user_id];
 } else {
     // Barrio Manager: Ver todas las procesadas de su barrio
-    $sql = "SELECT s.*, v.propietario, v.numero_casa, c.nombre as calle_nombre
+    $sql = "SELECT s.*, v.propietario as v_prop, v.numero_casa as v_casa, c.nombre as calle_nombre
             FROM solicitudes_vivienda s
-            JOIN viviendas v ON s.vivienda_id = v.id
+            LEFT JOIN viviendas v ON s.vivienda_id = v.id
             JOIN calles c ON v.calle_id = c.id
             JOIN detalles_encargado_barrio deb ON c.barrio_id = deb.barrio_id
             WHERE deb.usuario_id = ? AND s.estado != 'Pendiente'
@@ -46,7 +46,7 @@ ob_start();
             Este es un registro histórico de las solicitudes aprobadas o rechazadas.
         </p>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
@@ -69,9 +69,9 @@ ob_start();
                                 </span>
                             </td>
                             <td style="padding: 12px;">
-                                <div style="font-weight: 700;"><?= htmlspecialchars($h['propietario']) ?></div>
+                                <div style="font-weight: 700;"><?= htmlspecialchars($h['v_prop'] ?? $h['propietario']) ?></div>
                                 <div style="font-size: 11px; color: #6B7280;">
-                                    Casa #<?= htmlspecialchars($h['numero_casa']) ?> 
+                                    Casa #<?= htmlspecialchars($h['v_casa'] ?? $h['numero_casa']) ?> 
                                     <?= isset($h['calle_nombre']) ? ' | ' . htmlspecialchars($h['calle_nombre']) : '' ?>
                                 </div>
                             </td>

@@ -25,7 +25,8 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
-    <div class="" style="display: flex; justify-content: center; padding: 30px 15px; gap: 30px;">
+    <style>@media(max-width:768px){.config-flex{flex-direction:column!important;align-items:stretch!important}}</style>
+    <div class="config-flex" style="display: flex; justify-content: center; padding: 30px 15px; gap: 30px;">
 
     <div class="card" style="margin: 0 auto;">
         <div style="text-align: center; margin-bottom: 30px;">
@@ -73,6 +74,7 @@ ob_start();
             <h3 style="margin: 0;">Información Importante</h3>
             <p style="color: #6B7280; font-size: 14px;">Asegúrate de comunicar cualquier cambio a los residentes para evitar confusiones.</p>
         </div>
+    </div>
     </div>
 
 <?php

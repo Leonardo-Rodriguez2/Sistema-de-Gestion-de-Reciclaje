@@ -56,18 +56,19 @@ ob_start();
 ?>
     <?php render_dashboard_alerts($mensaje_exito ?? null, $mensaje_error ?? null); ?>
 
+    <style>@media(max-width:600px){.filter-group{width:100%!important;min-width:100%!important}}</style>
     <!-- Barra de Filtros -->
     <div class="card" style="margin-bottom: 20px; padding: 15px;">
         <form method="GET" action="router.php" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
             <input type="hidden" name="page" value="viviendas">
             
-            <div class="form-group" style="flex: 1; min-width: 200px;">
+            <div class="filter-group" style="flex: 1; min-width: 200px;">
                 <label style="font-size: 11px; font-weight: 700; color: #6B7280; margin-bottom: 4px; display: block;">BUSCAR PROPIETARIO / DIR</label>
                 <input type="text" name="search" value="<?= htmlspecialchars($f_search) ?>" placeholder="Nombre, calle, número..." 
                        style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
             </div>
 
-            <div class="form-group" style="width: 180px;">
+            <div class="form-group filter-group" style="width: 180px;">
                 <label style="font-size: 11px; font-weight: 700; color: #6B7280; margin-bottom: 4px; display: block;">BARRIO</label>
                 <select name="barrio_id" onchange="this.form.submit()" style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
                     <option value="">Todos</option>
@@ -77,7 +78,7 @@ ob_start();
                 </select>
             </div>
 
-            <div class="form-group" style="width: 180px;">
+            <div class="form-group filter-group" style="width: 180px;">
                 <label style="font-size: 11px; font-weight: 700; color: #6B7280; margin-bottom: 4px; display: block;">CALLE</label>
                 <select name="calle_id" onchange="this.form.submit()" <?= empty($calles) ? 'disabled' : '' ?> style="width: 100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px; font-size: 13px;">
                     <option value="">Todas</option>
@@ -101,7 +102,7 @@ ob_start();
             <a href="router.php?page=registrar_vivienda" class="btn-primary" style="text-decoration: none; padding: 8px 16px;">+ Registrar Nueva</a>
         </div>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                 <thead>
                     <tr style="background: #F9FAFB; text-align: left;">

@@ -495,4 +495,10 @@ include __DIR__ . '/../layouts/public_layout.php';
         @media (max-width: 900px) {
             .impact-container { grid-template-columns: 1fr; }
         }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 28px; }
+            .hero p { font-size: 16px; }
+            .residue-grid { grid-template-columns: 1fr; }
+            .info-panel, .form-panel { padding: 25px 20px; }
+        }
 </style>

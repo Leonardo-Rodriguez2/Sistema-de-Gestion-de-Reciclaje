@@ -43,11 +43,12 @@ $header_subtitle = "Revisión y filtrado de todas las operaciones financieras.";
 
 ob_start();
 ?>
-    <div class='card' style='margin-bottom: 20px; padding: 15px; border-top: 4px solid #3B82F6;'>
+    <style>@media(max-width:600px){.historial-filter{width:100%!important;min-width:100%!important}}</style>
+    <div class='card' style='margin-bottom: 14px; padding: 15px; border-top: 4px solid #3B82F6;'>
         <form method='GET' action='router.php' style='display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;'>
             <input type='hidden' name='page' value='historial'>
             <input type='hidden' name='sid' value='<?php echo htmlspecialchars($sid); ?>'>
-            <div style='flex: 1; min-width: 150px;'>
+            <div class='historial-filter' style='flex: 1; min-width: 150px;'>
                 <label style='font-size: 11px; font-weight: 700; color: #6B7280; display: block; margin-bottom: 5px;'>BARRIO</label>
                 <select name='f_barrio' style='width:100%; padding: 8px; border: 1px solid #E5E7EB; border-radius: 6px;'>
                     <option value=''>Todos los barrios</option>
@@ -56,11 +57,11 @@ ob_start();
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div style='width: 150px;'>
+            <div class='historial-filter' style='width: 150px;'>
                 <label style='font-size: 11px; font-weight: 700; color: #6B7280; display: block; margin-bottom: 5px;'>DESDE</label>
                 <input type='date' name='f_inicio' value='<?php echo htmlspecialchars($f_inicio); ?>' style='width:100%; padding: 7px; border: 1px solid #E5E7EB; border-radius: 6px;'>
             </div>
-            <div style='width: 150px;'>
+            <div class='historial-filter' style='width: 150px;'>
                 <label style='font-size: 11px; font-weight: 700; color: #6B7280; display: block; margin-bottom: 5px;'>HASTA</label>
                 <input type='date' name='f_fin' value='<?php echo htmlspecialchars($f_fin); ?>' style='width:100%; padding: 7px; border: 1px solid #E5E7EB; border-radius: 6px;'>
             </div>
@@ -72,7 +73,7 @@ ob_start();
     </div>
     <div class='card' style='background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);'>
         <h3 style='margin-top: 0; display: flex; align-items: center; gap: 10px;'><span>💵</span> Liquidaciones de Barrios</h3>
-        <div style='overflow-x: auto;'>
+        <div class="table-wrap">
             <table style='width: 100%; border-collapse: collapse; font-size: 13px;'>
                 <thead>
                     <tr style='border-bottom: 2px solid #F3F4F6; text-align: left;'>

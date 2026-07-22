@@ -30,7 +30,7 @@ ob_start();
             <button onclick="window.print()" class="btn-primary" style="background:#F3F4F6; color:#111827; font-size:11px;">🖨️ Exportar PDF</button>
         </div>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">

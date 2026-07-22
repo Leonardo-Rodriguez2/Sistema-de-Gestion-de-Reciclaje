@@ -105,7 +105,7 @@ ob_start();
             <h2 class="fw-bold mb-4" style="color: var(--dark); font-size: 28px;">¿Por qué cambiar a EPSIC?</h2>
             <p class="text-muted mb-4">La diferencia entre un servicio tercerizado corporativo y los métodos tradicionales.</p>
             
-            <div style="overflow-x: auto;">
+            <div class="table-wrap">
                 <table class="compare-table">
                     <thead>
                         <tr>
@@ -401,5 +401,12 @@ e gestión de recursos sólidos urbanos.
         
         @media (max-width: 900px) {
             .services-grid { grid-template-columns: 1fr; }
+            .process-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .process-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .section-title h2 { font-size: 26px; }
         }
 </style>

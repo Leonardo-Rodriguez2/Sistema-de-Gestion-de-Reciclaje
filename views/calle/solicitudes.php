@@ -8,13 +8,13 @@ $calleStmt->execute([$user['id']]);
 $calle_id = $calleStmt->fetchColumn();
 
 // 2. Obtener historial de solicitudes de esta calle (últimas 20)
-$sql = "SELECT s.*, v.propietario, v.numero_casa 
+$sql = "SELECT s.*, v.propietario as v_prop, v.numero_casa as v_casa
         FROM solicitudes_vivienda s
-        JOIN viviendas v ON s.vivienda_id = v.id
+        LEFT JOIN viviendas v ON s.vivienda_id = v.id
         WHERE s.creado_por = ? AND s.estado = 'Pendiente'
         ORDER BY s.fecha_creacion DESC";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$calle_id]);
+$stmt->execute([$user['id']]);
 $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $title = "Mis Solicitudes - EcoCusco";
@@ -31,7 +31,7 @@ ob_start();
             Aquí puedes ver si el Encargado de Barrio ya procesó tus peticiones.
         </p>
         
-        <div style="overflow-x: auto;">
+        <div class="table-wrap">
             <table class="table-mini" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #F3F4F6;">
@@ -54,8 +54,10 @@ ob_start();
                                 </span>
                             </td>
                             <td style="padding: 12px;">
-                                <div style="font-weight: 700;"><?= htmlspecialchars($s['propietario']) ?></div>
-                                <div style="font-size: 11px; color: #6B7280;">Casa #<?= htmlspecialchars($s['numero_casa']) ?></div>
+                                <?php $nombre = $s['v_prop'] ?? $s['propietario']; ?>
+                                <?php $casa = $s['v_casa'] ?? $s['numero_casa']; ?>
+                                <div style="font-weight: 700;"><?= htmlspecialchars($nombre ?? 'N/A') ?></div>
+                                <div style="font-size: 11px; color: #6B7280;">Casa #<?= htmlspecialchars($casa ?? '?') ?></div>
                             </td>
                             <td style="padding: 12px;">
                                 <?php if($s['estado'] == 'Pendiente'): ?>
