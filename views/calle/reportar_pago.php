@@ -26,9 +26,9 @@ $mesesNombres = [
 try {
     // Calle asignada — Usando alias limpio 'dc' para evitar conflictos
     $calleStmt = $pdo->prepare("SELECT dc.calle_id, c.nombre as calle_nombre 
-                               FROM detalles_encargado_calle dc 
-                               JOIN calles c ON c.id = dc.calle_id 
-                               WHERE dc.usuario_id = ?");
+                            FROM detalles_encargado_calle dc 
+                            JOIN calles c ON c.id = dc.calle_id 
+                            WHERE dc.usuario_id = ?");
     $calleStmt->execute([$user['id']]);
     $calleData = $calleStmt->fetch(PDO::FETCH_ASSOC);
     $calle_id = $calleData['calle_id'] ?? null;

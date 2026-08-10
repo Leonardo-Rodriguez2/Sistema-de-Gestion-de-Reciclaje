@@ -9,7 +9,7 @@ ob_start();
       <div class="row align-items-center">
         <div class="col-md-7">
           <span class="badge bg-light text-success mb-3 px-3 py-2 fs-6 rounded-pill">Expertos en Recolección y Reciclaje</span>
-          <h1>Líderes en Gestión Ambiental Integral</h1>
+          <h1> style="color:red";Líderes en Gestión Ambiental Integral</h1>
           <p class="lead mb-4 mt-3">Proveemos soluciones integrales de recolección de residuos para zonas comerciales y residenciales. Deja que nos encarguemos de mantener tu barrio limpio, saludable y 100% sustentable con tecnología de punta.</p>
           <a href="/reciclaje/views/public/servicios.php" class="btn btn-light text-success fw-bold px-4 py-3 me-3 rounded-pill shadow-sm">Ver Planes Disponibles</a>
           <a href="#contacto" class="btn btn-outline-light px-4 py-3 rounded-pill fw-bold">Contactar a un Asesor</a>

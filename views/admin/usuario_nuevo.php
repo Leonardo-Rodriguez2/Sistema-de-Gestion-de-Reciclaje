@@ -181,7 +181,7 @@ ob_start();
 
         <div class="form-actions">
             <a href="router.php?page=usuarios" class="btn-cancel">Ver el listado</a>
-            <button type="submit" class="btn-submit">Crear Usuario</button>
+            <button  type="submit" class="btn-submit">Crear Usuario</button>
         </div>
     </form>
 </div>
